@@ -74,9 +74,9 @@ class MenuHome(classLoader: ClassLoader, preferences:SharedPreferences) :
         val waeMenu = prefs.getBoolean("open_wae", true)
         if (!waeMenu) return
         val itemMenu = menu.add(0, 0, 9999, " " + activity.getString(R.string.app_name))
-        val iconDraw = DesignUtils.getDrawableByName("ic_settings")
-        iconDraw!!.setTint(-0x796960)
-        itemMenu.icon = iconDraw
+        DesignUtils.getDrawableByName("ic_settings")?.let { iconDraw ->
+            itemMenu.icon = DesignUtils.createWhatsAppMenuIcon(iconDraw)
+        }
         itemMenu.setOnMenuItemClickListener {
             try {
                 val intent = activity.packageManager.getLaunchIntentForPackage(

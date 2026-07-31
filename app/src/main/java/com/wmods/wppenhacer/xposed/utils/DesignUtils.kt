@@ -19,6 +19,7 @@ import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Build
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
+import kotlin.math.roundToInt
 import com.wmods.wppenhacer.WppXposed
 import com.wmods.wppenhacer.utils.IColors
 import com.wmods.wppenhacer.xposed.core.WppCore
@@ -322,6 +323,38 @@ object DesignUtils {
         icon.setBounds(0, 0, canvas.width, canvas.height)
         icon.draw(canvas)
         return BitmapDrawable(Utils.application.resources, bitmap)
+    }
+
+    /**
+     * Renders an icon with the same fixed slot used by WhatsApp's home menu.
+     * Keeping the slot separate from the glyph prevents custom icons from
+     * moving the menu title when their source drawable has a different size.
+     */
+    @JvmStatic
+    fun createWhatsAppMenuIcon(icon: Drawable): Drawable {
+        val resources = Utils.application.resources
+        val slotSize = Utils.dipToPixels(32)
+        val glyphSize = Utils.dipToPixels(24)
+        val bitmap = Bitmap.createBitmap(slotSize, slotSize, Bitmap.Config.ARGB_8888)
+        bitmap.density = resources.displayMetrics.densityDpi
+
+        val drawable = icon.mutate()
+        drawable.setTint(Color.rgb(102, 119, 129))
+
+        val sourceWidth = drawable.intrinsicWidth.coerceAtLeast(1)
+        val sourceHeight = drawable.intrinsicHeight.coerceAtLeast(1)
+        val scale = minOf(
+            glyphSize.toFloat() / sourceWidth,
+            glyphSize.toFloat() / sourceHeight
+        )
+        val drawWidth = (sourceWidth * scale).roundToInt()
+        val drawHeight = (sourceHeight * scale).roundToInt()
+        val left = (slotSize - drawWidth) / 2
+        val top = (slotSize - drawHeight) / 2
+
+        drawable.setBounds(left, top, left + drawWidth, top + drawHeight)
+        drawable.draw(Canvas(bitmap))
+        return BitmapDrawable(resources, bitmap)
     }
 
     @JvmStatic

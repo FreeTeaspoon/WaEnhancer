@@ -3,6 +3,7 @@ package com.wmods.wppenhacer.xposed.features.privacy
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.util.TypedValue
@@ -151,12 +152,9 @@ class CustomPrivacy(
 
         if (type == 0) return
 
-        val icon = DesignUtils.resizeDrawable(
-            DesignUtils.getDrawable(R.drawable.ic_privacy),
-            Utils.dipToPixels(24),
-            Utils.dipToPixels(24)
+        val icon = DesignUtils.createWhatsAppMenuIcon(
+            DesignUtils.getDrawable(R.drawable.ic_privacy)
         )
-        icon.setTint(0xff8696a0.toInt())
 
         MenuHome.addMenuItem {  menu, activity ->
             menu.add(0, 0, 0, R.string.custom_privacy)
@@ -194,7 +192,7 @@ class CustomPrivacy(
             Utils.dipToPixels(20)
         )
         imageView.layoutParams = imageParams
-        icon.setTint(0xff8696a0.toInt())
+        icon.setTint(Color.rgb(102, 119, 129))
         imageView.setImageDrawable(icon)
 
         val textContainer = LinearLayout(activity)

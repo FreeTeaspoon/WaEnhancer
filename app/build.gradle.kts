@@ -115,8 +115,7 @@ android {
             isMinifyEnabled = true
             //noinspection NotShrinkingResources
             isShrinkResources = false
-            signingConfig =
-                if (signingConfigs["config"].storeFile != null) signingConfigs["config"] else signingConfigs["debug"]
+            signingConfig = signingConfigs["config"]
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -183,6 +182,9 @@ kotlin {
 }
 
 dependencies {
+    testImplementation(libs.junit)
+    testImplementation(libs.json)
+
     implementation(libs.colorpicker)
     implementation(files("libs/dexkit-android.aar"))
     implementation(libs.flatbuffers)

@@ -7,6 +7,8 @@ documentfile = "1.1.0"
 filepicker = "9.2.5"
 flatbuffers = "23.5.26"
 jstyleparser = "4.0.1"
+junit = "4.13.2"
+json = "20260719"
 lombok = "1.18.42"
 okhttp = "5.3.2"
 xposed-legacy = "82"
@@ -30,6 +32,8 @@ core = { module = "com.github.topjohnwu.libsu:core", version.ref = "core" }
 filepicker = { module = "io.github.tutorialsandroid:filepicker", version.ref = "filepicker" }
 flatbuffers = { module = "com.google.flatbuffers:flatbuffers-java", version.ref = "flatbuffers" }
 jstyleparser = { module = "net.sf.cssbox:jstyleparser", version.ref = "jstyleparser" }
+junit = { module = "junit:junit", version.ref = "junit" }
+json = { module = "org.json:json", version.ref = "json" }
 libxposed-legacy = { group = "de.robv.android.xposed", name = "api", version.ref = "xposed-legacy" }
 
 androidx-activity = { module = "androidx.activity:activity", version = "1.12.0" }

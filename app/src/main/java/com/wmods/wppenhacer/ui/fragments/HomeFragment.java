@@ -34,6 +34,7 @@ import com.wmods.wppenhacer.databinding.DialogDiagnosticsLogBinding;
 import com.wmods.wppenhacer.databinding.FragmentHomeBinding;
 import com.wmods.wppenhacer.ui.fragments.base.BaseFragment;
 import com.wmods.wppenhacer.utils.FilePicker;
+import com.wmods.wppenhacer.utils.PreferenceSnapshot;
 import com.wmods.wppenhacer.utils.RootDiagnostics;
 import com.wmods.wppenhacer.xposed.core.FeatureLoader;
 import com.wmods.wppenhacer.xposed.utils.Utils;
@@ -219,6 +220,7 @@ public class HomeFragment extends BaseFragment {
     private void resetConfigs(Context context) {
         var prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.getAll().forEach((key, value) -> prefs.edit().remove(key).apply());
+        PreferenceSnapshot.syncNow(context, prefs);
         App.instance.restartApp(FeatureLoader.PACKAGE_WPP);
         App.instance.restartApp(FeatureLoader.PACKAGE_BUSINESS);
         Utils.showToast(context.getString(R.string.configs_reset), Toast.LENGTH_SHORT);
@@ -297,6 +299,7 @@ public class HomeFragment extends BaseFragment {
                             prefs.edit().putFloat(keyName, Float.parseFloat(String.valueOf(value))).apply();
                         }
                     }
+                    PreferenceSnapshot.syncNow(context, prefs);
                 }
                 Toast.makeText(context, context.getString(R.string.configs_imported), Toast.LENGTH_SHORT).show();
                 App.instance.restartApp(FeatureLoader.PACKAGE_WPP);

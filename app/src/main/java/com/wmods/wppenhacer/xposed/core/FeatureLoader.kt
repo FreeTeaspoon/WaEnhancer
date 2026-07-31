@@ -98,7 +98,6 @@ import com.wmods.wppenhacer.xposed.spoofer.HookBL
 import com.wmods.wppenhacer.xposed.utils.DesignUtils
 import com.wmods.wppenhacer.xposed.utils.ReflectionUtils
 import com.wmods.wppenhacer.xposed.utils.Utils
-import de.robv.android.xposed.SELinuxHelper
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
@@ -253,23 +252,44 @@ class FeatureLoader {
         }
 
         private fun getPreferences(context: Context): SharedPreferences {
-            val pref = WppXposed.getPref()
-            pref.reload()
             try {
-                val fileCanRead =
-                    SELinuxHelper.getAppDataFileService().checkFileAccess(pref.file.absolutePath, 4)
-                if (fileCanRead) {
-                    return pref
+                val remote = RemotePreferences(
+                    context,
+                    BuildConfig.APPLICATION_ID + ".preferences",
+                    BuildConfig.APPLICATION_ID + "_preferences",
+                    true
+                )
+                if (remote.all.isNotEmpty()) {
+                    XposedBridge.log("Using RemotePreferences for module settings")
+                    return remote
                 }
+
+                val legacy = loadLegacyPreferences()
+                if (legacy != null && legacy.all.isNotEmpty()) {
+                    XposedBridge.log("RemotePreferences empty, using legacy XSharedPreferences")
+                    return legacy
+                }
+
+                XposedBridge.log("Using empty RemotePreferences for module settings")
+                return remote
             } catch (e: Exception) {
-                XposedBridge.log(e)
+                XposedBridge.log("RemotePreferences unavailable: ${e.javaClass.simpleName}")
+                return loadLegacyPreferences()
+                    ?: RemotePreferences(
+                        context,
+                        BuildConfig.APPLICATION_ID + ".preferences",
+                        BuildConfig.APPLICATION_ID + "_preferences"
+                    )
             }
-            XposedBridge.log("XSharedPreferences not accessible, using RemotePreferences fallback")
-            return RemotePreferences(
-                context,
-                BuildConfig.APPLICATION_ID + ".preferences",
-                BuildConfig.APPLICATION_ID + "_preferences"
-            )
+        }
+
+        private fun loadLegacyPreferences(): SharedPreferences? {
+            return try {
+                WppXposed.getPref().apply { reload() }
+            } catch (e: Throwable) {
+                XposedBridge.log("Unable to load legacy XSharedPreferences: ${e.javaClass.simpleName}")
+                null
+            }
         }
 
         private fun initializeModuleContext() {

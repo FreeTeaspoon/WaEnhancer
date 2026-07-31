@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wmods.wppenhacer.activities.CrashReportActivity
+import com.wmods.wppenhacer.utils.PreferenceSnapshot
 import com.wmods.wppenhacer.xposed.utils.Utils
 import de.robv.android.xposed.XposedHelpers
 import rikka.material.app.LocaleDelegate.Companion.defaultLocale
@@ -33,6 +34,7 @@ class App : Application() {
 
         try {
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+            PreferenceSnapshot.initialize(this, sharedPreferences)
             val mode = sharedPreferences.getString("thememode", "0")!!.toInt()
             setThemeMode(mode)
             changeLanguage(this)

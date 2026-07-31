@@ -43,6 +43,7 @@ import com.wmods.wppenhacer.xposed.features.customization.DefaultEmoji
 import com.wmods.wppenhacer.xposed.features.customization.FilterGroups
 import com.wmods.wppenhacer.xposed.features.customization.FloatingBottomBar
 import com.wmods.wppenhacer.xposed.features.customization.HideSeenView
+import com.wmods.wppenhacer.xposed.features.customization.HideHomeCamera
 import com.wmods.wppenhacer.xposed.features.customization.HideTabs
 import com.wmods.wppenhacer.xposed.features.customization.IGStatus
 import com.wmods.wppenhacer.xposed.features.customization.SeparateGroup
@@ -517,6 +518,7 @@ class FeatureLoader {
                 HideChat::class.java,
                 HideSeen::class.java,
                 HideSeenView::class.java,
+                HideHomeCamera::class.java,
                 TagMessage::class.java,
                 HideTabs::class.java,
                 IGStatus::class.java,

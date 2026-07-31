@@ -378,6 +378,8 @@
     <string name="local_download">本地下载</string>
     <string name="show_menu_buttons_as_icons">以图标形式显示菜单按钮</string>
     <string name="show_menu_buttons_as_icons_sum">在主页工具栏上以图标形式显示菜单按钮，以方便访问</string>
+    <string name="hide_home_camera">隐藏主页相机按钮</string>
+    <string name="hide_home_camera_sum">隐藏 WhatsApp 主页工具栏上的相机按钮</string>
     <string name="starting_cache">在 WhatsApp 中启动 Hook 缓存。这可能需要一段时间。</string>
     <string name="bridge_error">Bridge Failed: Enable System Framework in Lsposed and reboot device</string>
     <string name="disable_battery_optimization">禁用电池优化</string>

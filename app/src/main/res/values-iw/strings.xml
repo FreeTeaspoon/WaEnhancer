@@ -380,6 +380,8 @@
     <string name="local_download">הורדה מקומית</string>
     <string name="show_menu_buttons_as_icons">הצג כפתורי תפריט כסמלים</string>
     <string name="show_menu_buttons_as_icons_sum">מציג לחצני תפריט במסך הבית כסמלים</string>
+    <string name="hide_home_camera">הסתר את כפתור המצלמה במסך הבית</string>
+    <string name="hide_home_camera_sum">הסתר את כפתור המצלמה מסרגל הכלים של מסך הבית ב-WhatsApp</string>
     <string name="starting_cache">הפעלת מטמון בוואטסאפ. זה עשוי לקחת זמן.</string>
     <string name="bridge_error">הפעולה נכשלה: הפעל את מסגרת המערכת ב-Lsposed ואתחל את הטלפון מחדש</string>
     <string name="disable_battery_optimization">השבת את אופטימיזציית הסוללה</string>

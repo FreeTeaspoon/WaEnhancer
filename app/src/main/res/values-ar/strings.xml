@@ -378,6 +378,8 @@
     <string name="local_download">مكان التحميل</string>
     <string name="show_menu_buttons_as_icons">إظهار أزرار القائمة كأيقونات</string>
     <string name="show_menu_buttons_as_icons_sum">إظهار أزرار القائمة على الشاشة الرئيسية كأيقونات لتسهيل الوصول إليها</string>
+    <string name="hide_home_camera">إخفاء زر الكاميرا في الشاشة الرئيسية</string>
+    <string name="hide_home_camera_sum">إخفاء زر الكاميرا من شريط أدوات شاشة واتساب الرئيسية</string>
     <string name="starting_cache">بدء ربط ذاكرة التخزين المؤقت في واتساب. قد يستغرق ذلك بعض الوقت.</string>
     <string name="bridge_error">فشل الربط: تمكين إطار النظام في Lsposed وإعادة تشغيل الجهاز</string>
     <string name="disable_battery_optimization">تعطيل تحسين البطارية</string>

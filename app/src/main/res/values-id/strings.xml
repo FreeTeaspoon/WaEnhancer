@@ -389,6 +389,8 @@ Saat Anda mengaktifkan bekukan \"terakhir dilihat dan online\", Anda tidak dapat
     <string name="local_download">Unduhan Lokal</string>
     <string name="show_menu_buttons_as_icons">Tampilkan tombol menu sebagai ikon</string>
     <string name="show_menu_buttons_as_icons_sum">Menampilkan tombol menu di layar beranda sebagai ikon agar mudah diakses</string>
+    <string name="hide_home_camera">Sembunyikan Tombol Kamera di Layar Beranda</string>
+    <string name="hide_home_camera_sum">Sembunyikan tombol kamera dari toolbar layar beranda WhatsApp</string>
     <string name="starting_cache">Memulai cache hook di WhatsApp. Ini mungkin membutuhkan waktu.</string>
     <string name="bridge_error">Jembatan gagal: Aktifkan Kerangka Kerja Sistem di Lposed dan mulai ulang perangkat</string>
     <string name="disable_battery_optimization">Nonaktifkan pengoptimalan baterai</string>

@@ -378,6 +378,8 @@
     <string name="local_download">Percorso di download</string>
     <string name="show_menu_buttons_as_icons">Mostra pulsanti menù come icone</string>
     <string name="show_menu_buttons_as_icons_sum">Mostra i pulsanti del menù come icone nella parte superiore della Home, per un facile accesso</string>
+    <string name="hide_home_camera">Nascondi pulsante fotocamera nella Home</string>
+    <string name="hide_home_camera_sum">Nasconde il pulsante fotocamera dalla barra degli strumenti della Home di WhatsApp</string>
     <string name="starting_cache">Avvio hook cache in WhatsApp. Potrebbe volerci un po\' di tempo.</string>
     <string name="bridge_error">Bridge non riuscito: Abilita il framework di sistema in LSPosed e riavvia il dispositivo</string>
     <string name="disable_battery_optimization">Disabilita Ottimizzazione Batteria</string>

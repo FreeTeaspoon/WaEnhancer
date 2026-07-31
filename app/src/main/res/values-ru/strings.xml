@@ -378,6 +378,8 @@
     <string name="local_download">Локальная загрузка</string>
     <string name="show_menu_buttons_as_icons">Отображать кнопки меню в виде значков</string>
     <string name="show_menu_buttons_as_icons_sum">Отображает кнопки меню на главном экране в виде значков для быстрого доступа к ним</string>
+    <string name="hide_home_camera">Скрыть кнопку камеры на главном экране</string>
+    <string name="hide_home_camera_sum">Скрыть кнопку камеры на панели инструментов главного экрана WhatsApp</string>
     <string name="starting_cache">Запуск кэша хуков в WhatsApp. Это может занять некоторое время.</string>
     <string name="bridge_error">Сбой моста: включите системную структуру в Lsposed и перезагрузите устройство</string>
     <string name="disable_battery_optimization">Отключить оптимизацию батареи</string>

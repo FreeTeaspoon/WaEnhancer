@@ -378,6 +378,8 @@
     <string name="local_download">Directorio para las descargas</string>
     <string name="show_menu_buttons_as_icons">Mostrar botones de menú como iconos</string>
     <string name="show_menu_buttons_as_icons_sum">Muestra los botones de menú en la pantalla de inicio como iconos para un fácil acceso a ellos</string>
+    <string name="hide_home_camera">Ocultar botón de cámara de inicio</string>
+    <string name="hide_home_camera_sum">Oculta el botón de cámara de la barra de herramientas de la pantalla de inicio de WhatsApp</string>
     <string name="starting_cache">Iniciando procesos de WAE en WhatsApp. Esto puede tardar un rato.</string>
     <string name="bridge_error">Fallo del Bridge: Habilita Framework del Sistema en Lsposed y reinicia el dispositivo</string>
     <string name="disable_battery_optimization">Desactivar la optimización de batería</string>

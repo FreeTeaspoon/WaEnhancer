@@ -155,6 +155,14 @@ public class FeatureCatalog {
                 "homescreen",
                 Arrays.asList("menu", "icons", "buttons")));
 
+        catalog.add(new SearchableFeature("hide_home_camera",
+                context.getString(R.string.hide_home_camera),
+                context.getString(R.string.hide_home_camera_sum),
+                SearchableFeature.Category.GENERAL_HOMESCREEN,
+                SearchableFeature.FragmentType.GENERAL,
+                "homescreen",
+                Arrays.asList("camera", "hide", "toolbar", "button")));
+
         catalog.add(new SearchableFeature("shownamehome",
                 context.getString(R.string.showname),
                 context.getString(R.string.showname_sum),

@@ -378,6 +378,8 @@
     <string name="local_download">Local de download das mídias</string>
     <string name="show_menu_buttons_as_icons">Mostrar botões na tela inicial</string>
     <string name="show_menu_buttons_as_icons_sum">Mostre os botões ativados no Wa Enhancer na barra superior da tela inicial do WhatsApp</string>
+    <string name="hide_home_camera">Ocultar botão da câmera na tela inicial</string>
+    <string name="hide_home_camera_sum">Oculta o botão da câmera da barra superior da tela inicial do WhatsApp</string>
     <string name="starting_cache">Iniciando hook cache no WhatsApp. Isso pode demorar um pouco.</string>
     <string name="bridge_error">Bridge Failed: Ative o Framework do Sistema no LSPosed e reinicie o dispositivo</string>
     <string name="disable_battery_optimization">Desativar otimização da bateria</string>

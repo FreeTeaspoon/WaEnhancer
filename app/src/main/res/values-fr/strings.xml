@@ -378,6 +378,8 @@
     <string name="local_download">Téléchargement local</string>
     <string name="show_menu_buttons_as_icons">Afficher les boutons de menu sous forme d\'icônes</string>
     <string name="show_menu_buttons_as_icons_sum">Affiche les boutons de menu sur l\'écran d\'accueil sous forme d\'icônes pour y accéder facilement</string>
+    <string name="hide_home_camera">Masquer le bouton appareil photo de l\'écran d\'accueil</string>
+    <string name="hide_home_camera_sum">Masquer le bouton appareil photo de la barre d\'outils de l\'écran d\'accueil de WhatsApp</string>
     <string name="starting_cache">Démarrage du cache de hook dans WhatsApp. Cela peut prendre un certain temps.</string>
     <string name="bridge_error">Échec du pont : activez Système Framework dans Lsposed et redémarrez l\'appareil</string>
     <string name="disable_battery_optimization">Désactiver l\'optimisation de la batterie</string>

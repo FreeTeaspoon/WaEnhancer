@@ -386,6 +386,8 @@ Harap gunakan versi WhatsApp yang didukung!</string>
     <string name="local_download">Lokasi Unduhan</string>
     <string name="show_menu_buttons_as_icons">Tombol Menu Ikon</string>
     <string name="show_menu_buttons_as_icons_sum">Tampilkan tombol menu di layar beranda sebagai ikon untuk memudahkan akses ke tombol tersebut</string>
+    <string name="hide_home_camera">Sembunyikan Tombol Kamera di Layar Beranda</string>
+    <string name="hide_home_camera_sum">Sembunyikan tombol kamera dari toolbar layar beranda WhatsApp</string>
     <string name="starting_cache">Muat ulang cache di WhatsApp. Ini mungkin memerlukan waktu cukup lama.</string>
     <string name="bridge_error">Bridge Gagal: Aktifkan Kerangka Sistem di LSPosed dan reboot perangkat</string>
     <string name="disable_battery_optimization">Nonaktifkan Pengoptimalan Baterai</string>

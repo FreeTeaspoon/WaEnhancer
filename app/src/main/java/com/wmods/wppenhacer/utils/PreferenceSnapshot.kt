@@ -105,6 +105,26 @@ internal object PreferenceSnapshotCodec {
     }
 }
 
+internal class SharedPreferencesListenerRegistry {
+    // SharedPreferences keeps change listeners weakly, so the registry must retain the listener
+    // strongly while the preference instance is registered.
+    private val listeners =
+        WeakHashMap<SharedPreferences, SharedPreferences.OnSharedPreferenceChangeListener>()
+
+    fun hasRetainedListener(preferences: SharedPreferences): Boolean {
+        return listeners[preferences] != null
+    }
+
+    fun register(
+        preferences: SharedPreferences,
+        listener: SharedPreferences.OnSharedPreferenceChangeListener
+    ) {
+        if (hasRetainedListener(preferences)) return
+        listeners[preferences] = listener
+        preferences.registerOnSharedPreferenceChangeListener(listener)
+    }
+}
+
 internal object PreferenceSnapshot {
     private const val TAG = "WaEnhancerPrefs"
     private const val FILE_NAME = "wae_preferences_snapshot.json"
@@ -114,16 +134,15 @@ internal object PreferenceSnapshot {
     private const val VALUES_KEY = "values"
 
     private val lock = Any()
-    private val registeredPreferences = WeakHashMap<SharedPreferences, Boolean>()
+    private val registeredPreferences = SharedPreferencesListenerRegistry()
 
     fun initialize(context: Context, preferences: SharedPreferences) {
         val applicationContext = context.applicationContext
         synchronized(lock) {
-            if (registeredPreferences.containsKey(preferences)) return
+            if (registeredPreferences.hasRetainedListener(preferences)) return
 
             val snapshotFile = snapshotFile(applicationContext)
             val currentValues = readCurrentValues(preferences) ?: return
-            registeredPreferences[preferences] = true
             when (val stored = readSnapshot(snapshotFile)) {
                 SnapshotReadResult.Missing -> {
                     writeSnapshot(snapshotFile, currentValues)
@@ -149,9 +168,10 @@ internal object PreferenceSnapshot {
                 }
             }
 
-            preferences.registerOnSharedPreferenceChangeListener { _, _ ->
+            val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
                 syncNow(applicationContext, preferences)
             }
+            registeredPreferences.register(preferences, listener)
         }
     }
 

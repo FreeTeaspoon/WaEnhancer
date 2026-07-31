@@ -39,19 +39,21 @@ jobs:
         env:
           KEY_STORE: ${{ secrets.KEY_STORE }}
         run: |
-          if [ ! -z "$KEY_STORE" ]; then
+          if [ -z "$KEY_STORE" ]; then
+            echo "KEY_STORE is required for a release build"
+            exit 1
+          fi
           echo androidStorePassword='${{ secrets.KEY_STORE_PASSWORD }}' >> gradle.properties
           echo androidKeyAlias='${{ secrets.ALIAS }}' >> gradle.properties
           echo androidKeyPassword='${{ secrets.KEY_PASSWORD }}' >> gradle.properties
           echo androidStoreFile='key.jks' >> gradle.properties
           echo "$KEY_STORE" | base64 --decode > key.jks
-          fi
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build all variants
-        run: ./gradlew assembleWhatsappDebug assembleBusinessDebug -Pminify=true
+      - name: Build all release variants
+        run: ./gradlew assembleWhatsappRelease assembleBusinessRelease
 
       - name: Upload to GitHub release
         uses: softprops/action-gh-release@v3
@@ -60,8 +62,8 @@ jobs:
           name: WaEnhancer ${{ steps.vars.outputs.version }}
           body_path: changelog.txt
           files: |
-            app/build/outputs/apk/whatsapp/debug/WaEnhancer*.apk
-            app/build/outputs/apk/business/debug/WaEnhancer-Business*.apk
+            app/build/outputs/apk/whatsapp/release/WaEnhancer*.apk
+            app/build/outputs/apk/business/release/WaEnhancer-Business*.apk
           tag_name: ${{ steps.vars.outputs.tag }}
 
       - name: Read changelog

@@ -554,4 +554,129 @@
     <string name="diag_hma_blocked">Hide My App List is hiding WaEnhancer from:</string>
     <string name="diag_hma_disable">Disable the block for WhatsApp/Business in Hide My App List so WaEnhancer can work correctly.</string>
     <string name="diag_copied">Line copied to clipboard</string>
+
+    <!-- Native Miuix manager -->
+    <string translatable="false" name="manager_home">Home</string>
+    <string translatable="false" name="manager_features">Features</string>
+    <string translatable="false" name="manager_customize">Customize</string>
+    <string translatable="false" name="manager_tools">Tools</string>
+    <string translatable="false" name="manager_back">Back</string>
+    <string translatable="false" name="manager_search">Search settings</string>
+    <string translatable="false" name="manager_search_features">Search features</string>
+    <string translatable="false" name="manager_module_status">Module status</string>
+    <string translatable="false" name="manager_app_status">Applications</string>
+    <string translatable="false" name="manager_configuration">Configuration</string>
+    <string translatable="false" name="manager_configuration_summary">Import, export, or reset WaEnhancer settings</string>
+    <string translatable="false" name="manager_quick_actions">Quick actions</string>
+    <string translatable="false" name="manager_whatsapp">WhatsApp</string>
+    <string translatable="false" name="manager_whatsapp_business">WhatsApp Business</string>
+    <string translatable="false" name="manager_not_installed">Not installed</string>
+    <string translatable="false" name="manager_not_running">Not running or not activated in LSPosed</string>
+    <string translatable="false" name="manager_restart">Restart</string>
+    <string translatable="false" name="manager_check_updates">Check for updates</string>
+    <string translatable="false" name="manager_battery_optimization">Battery optimization</string>
+    <string translatable="false" name="manager_battery_optimization_summary">Allow WaEnhancer to run without battery restrictions</string>
+    <string translatable="false" name="manager_import_summary">Restore settings from a WaEnhancer JSON backup</string>
+    <string translatable="false" name="manager_export_summary">Save all current settings to a JSON backup</string>
+    <string translatable="false" name="manager_reset_summary">Clear settings and restart WhatsApp</string>
+    <string translatable="false" name="manager_reset_confirm">Clear every WaEnhancer setting? This cannot be undone.</string>
+    <string translatable="false" name="manager_feature_groups">Feature groups</string>
+    <string translatable="false" name="manager_general_summary">Manager, language, timestamps, automation, and global behaviour</string>
+    <string translatable="false" name="manager_home_screen_summary">Home toolbar, filters, tabs, profile, and chat-list behaviour</string>
+    <string translatable="false" name="manager_conversation_summary">Messages, reactions, notifications, and conversation behaviour</string>
+    <string translatable="false" name="manager_status_summary">Status playback and status notifications</string>
+    <string translatable="false" name="manager_privacy_summary">Read receipts, presence, view-once, calls, and per-contact privacy</string>
+    <string translatable="false" name="manager_media_summary">Images, video, downloads, audio, transcription, and recording</string>
+    <string translatable="false" name="manager_customization_summary">WhatsApp colours, wallpaper, menus, bubbles, home, and status styling</string>
+    <string translatable="false" name="manager_recordings_summary">Browse, play, group, share, and delete call recordings</string>
+    <string translatable="false" name="manager_diagnostics_summary">Analyze root, sepolicy, and Hide My App List configuration</string>
+    <string translatable="false" name="manager_appearance">Appearance</string>
+    <string translatable="false" name="manager_appearance_summary">Theme, effects, scale, and navigation style</string>
+    <string translatable="false" name="manager_theme_manager_summary">Create, import, edit, and export WhatsApp CSS themes</string>
+    <string translatable="false" name="manager_about_summary">Version, project links, licence, and contributors</string>
+    <string translatable="false" name="manager_no_results">No settings match your search</string>
+    <string translatable="false" name="manager_value">Current value: %1$s</string>
+    <string translatable="false" name="manager_choose_value">Choose a value</string>
+    <string translatable="false" name="manager_edit_value">Edit value</string>
+    <string translatable="false" name="manager_choose_contacts">Choose contacts</string>
+    <string translatable="false" name="manager_choose_file">Choose a file or folder</string>
+    <string translatable="false" name="manager_color_value">Colour #%1$08X</string>
+    <string translatable="false" name="manager_invalid_value">Enter a valid value</string>
+    <string translatable="false" name="manager_permission_denied">The required permission was not granted</string>
+    <string translatable="false" name="manager_storage_required">Storage access is required for this feature</string>
+    <string translatable="false" name="manager_settings_imported">Settings imported successfully</string>
+    <string translatable="false" name="manager_settings_exported">Settings exported successfully</string>
+    <string translatable="false" name="manager_operation_failed">Operation failed: %1$s</string>
+    <string translatable="false" name="manager_loading">Loading…</string>
+    <string translatable="false" name="manager_empty">Nothing to show</string>
+    <string translatable="false" name="manager_section_theme">Colour and theme</string>
+    <string translatable="false" name="manager_theme_mode">Theme mode</string>
+    <string translatable="false" name="manager_theme_follow_system">Follow system</string>
+    <string translatable="false" name="manager_theme_light">Light</string>
+    <string translatable="false" name="manager_theme_dark">Dark</string>
+    <string translatable="false" name="manager_monet">Monet colours</string>
+    <string translatable="false" name="manager_monet_summary">Use the system dynamic colour palette when available</string>
+    <string translatable="false" name="manager_palette_style">Colour style</string>
+    <string translatable="false" name="manager_accent_colour">Accent colour</string>
+    <string translatable="false" name="manager_pure_black">Pure black background</string>
+    <string translatable="false" name="manager_pure_black_summary">Use a pure black background in dark Monet mode</string>
+    <string translatable="false" name="manager_section_effects">Interface and effects</string>
+    <string translatable="false" name="manager_blur">Blur effects</string>
+    <string translatable="false" name="manager_blur_summary">Enable blur effects for bars and layered surfaces</string>
+    <string translatable="false" name="manager_predictive_back">Predictive back gesture</string>
+    <string translatable="false" name="manager_predictive_back_summary">Animate manager screens with Android predictive back</string>
+    <string translatable="false" name="manager_interface_scale">Interface scale</string>
+    <string translatable="false" name="manager_interface_scale_summary">Adjust the manager display scale from 80% to 110%</string>
+    <string translatable="false" name="manager_section_navigation">Bottom navigation</string>
+    <string translatable="false" name="manager_floating_navigation">Floating bottom bar</string>
+    <string translatable="false" name="manager_floating_navigation_summary">Use a floating bottom navigation bar on phones</string>
+    <string translatable="false" name="manager_floating_style">Floating bar style</string>
+    <string translatable="false" name="manager_floating_miuix">Miuix</string>
+    <string translatable="false" name="manager_floating_liquid">Liquid Glass</string>
+    <string translatable="false" name="manager_navigation_content">Bottom bar options</string>
+    <string translatable="false" name="manager_icons_and_text">Icon and text</string>
+    <string translatable="false" name="manager_icons_only">Icon only</string>
+    <string translatable="false" name="manager_system_colour">System colour</string>
+    <string translatable="false" name="manager_enabled_features">Enabled features</string>
+    <string translatable="false" name="manager_all_features">All features</string>
+    <string translatable="false" name="manager_module_version">Module version</string>
+    <string translatable="false" name="manager_restart_summary">Restart the app to apply current module settings</string>
+    <string translatable="false" name="manager_device_model">Device model</string>
+    <string translatable="false" name="manager_android_version">Android version</string>
+    <string translatable="false" name="manager_licence">Licence</string>
+    <string translatable="false" name="manager_licence_summary">GNU General Public License v3.0</string>
+    <string translatable="false" name="manager_dependencies">Open-source components</string>
+    <string translatable="false" name="manager_dependencies_summary">compose-miuix-ui 0.9.3 (Apache-2.0)</string>
+    <string translatable="false" name="manager_project_repository">Project repository</string>
+    <string translatable="false" name="manager_support_channel">Telegram support</string>
+    <string translatable="false" name="manager_version">Version %1$s</string>
+    <string translatable="false" name="manager_contributors">Contributors</string>
+    <string translatable="false" name="manager_recording_failed_delete">Unable to delete the selected recording</string>
+    <string translatable="false" name="manager_recordings_deleted">Deleted %1$d recording(s)</string>
+    <string translatable="false" name="manager_root_checking">Checking root access…</string>
+    <string translatable="false" name="manager_crash_report">WaEnhancer crashed</string>
+    <string translatable="false" name="manager_crash_summary">Copy or share this report when requesting support.</string>
+    <string translatable="false" name="manager_activated">Activated</string>
+    <string translatable="false" name="manager_not_activated">Not activated</string>
+    <string translatable="false" name="manager_installed">Installed</string>
+    <string translatable="false" name="manager_running_version">Running version %1$s</string>
+    <string translatable="false" name="manager_recordings">Recordings</string>
+    <string translatable="false" name="manager_call_recording_summary">Recording mode, selected contacts, output path, and root verification</string>
+    <string translatable="false" name="manager_root_diagnostics">Root diagnostics</string>
+    <string translatable="false" name="manager_search_results">Results</string>
+    <string translatable="false" name="manager_non_root_mode">Non-root mode</string>
+    <string translatable="false" name="manager_root_mode">Root mode</string>
+    <string translatable="false" name="manager_group_by_contact">Group by contact</string>
+    <plurals translatable="false" name="manager_recording_count">
+        <item quantity="one">%1$d recording</item>
+        <item quantity="other">%1$d recordings</item>
+    </plurals>
+    <string translatable="false" name="manager_default_theme">Default theme</string>
+    <string translatable="false" name="manager_selected">Selected</string>
+    <string translatable="false" name="manager_edit_theme">Edit %1$s</string>
+    <string translatable="false" name="manager_select_recordings">Select recordings</string>
+    <string translatable="false" name="manager_sort">Sort recordings</string>
+    <string translatable="false" name="manager_select_all">Select all</string>
+    <string translatable="false" name="manager_selected_count">%1$d selected</string>
+    <string translatable="false" name="manager_delete_recordings_confirm">Delete %1$d selected recording(s)?</string>
 </resources>

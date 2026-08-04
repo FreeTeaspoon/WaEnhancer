@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.materialthemebuilder)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kspPlugin)
 }
 
@@ -27,7 +28,7 @@ val gitHash: String = getGitHashCommit().uppercase(Locale.getDefault())
 android {
     namespace = "com.wmods.wppenhacer"
     //noinspection GradleDependency
-    compileSdk = 36
+    compileSdk = 37
     ndkVersion = "28.2.13676358"
 
     flavorDimensions += "version"
@@ -128,6 +129,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        compose = true
         buildConfig = true
         aidl = true
         resValues = true
@@ -184,6 +186,9 @@ kotlin {
 dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.json)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     implementation(libs.colorpicker)
     implementation(files("libs/dexkit-android.aar"))
@@ -193,6 +198,12 @@ dependencies {
 
     implementation(libs.core)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigationevent.compose)
+    implementation(libs.hidden.api.bypass)
     implementation(libs.androidx.documentfile)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.fragment)
@@ -215,6 +226,11 @@ dependencies {
     annotationProcessor(libs.lombok)
     implementation(libs.markwon.core)
     implementation(libs.remote.preferences)
+    implementation(libs.miuix.ui)
+    implementation(libs.miuix.icons)
+    implementation(libs.miuix.preference)
+    implementation(libs.miuix.blur)
+    implementation(libs.miuix.navigation3)
 }
 
 

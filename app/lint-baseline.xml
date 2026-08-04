@@ -8,30 +8,30 @@
         errorLine2="                                       ~~~~~~~~">
         <location
             file="src/main/java/com/wmods/wppenhacer/preference/FileSelectPreference.java"
-            line="214"
+            line="175"
             column="40"/>
     </issue>
 
     <issue
         id="ApplySharedPref"
         message="Consider using `apply()` instead; `commit` writes its data to persistent storage immediately, whereas `apply` will handle it in the background"
-        errorLine1="                cachePrefs.edit().remove(cacheKey).commit();"
-        errorLine2="                                                   ~~~~~~~~">
+        errorLine1="                cachePrefs?.edit()?.remove(cacheKey)?.commit()"
+        errorLine2="                                                      ~~~~~~~~">
         <location
-            file="src/main/java/com/wmods/wppenhacer/xposed/utils/ReflectionUtils.java"
-            line="167"
-            column="52"/>
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/ReflectionUtils.kt"
+            line="179"
+            column="55"/>
     </issue>
 
     <issue
         id="ApplySharedPref"
         message="Consider using `apply()` instead; `commit` writes its data to persistent storage immediately, whereas `apply` will handle it in the background"
-        errorLine1="                cachePrefs.edit().putString(cacheKey, field.getName()).commit();"
-        errorLine2="                                                                       ~~~~~~~~">
+        errorLine1="            cachePrefs?.edit()?.putString(cacheKey, field.name)?.commit()"
+        errorLine2="                                                                 ~~~~~~~~">
         <location
-            file="src/main/java/com/wmods/wppenhacer/xposed/utils/ReflectionUtils.java"
-            line="175"
-            column="72"/>
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/ReflectionUtils.kt"
+            line="186"
+            column="66"/>
     </issue>
 
     <issue
@@ -43,17 +43,6 @@
             file="src/main/java/com/wmods/wppenhacer/activities/TextEditorActivity.java"
             line="160"
             column="68"/>
-    </issue>
-
-    <issue
-        id="DefaultLocale"
-        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
-        errorLine1="        return switch (animationName.toLowerCase()) {"
-        errorLine2="                                     ~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/xposed/utils/AnimationUtil.java"
-            line="16"
-            column="38"/>
     </issue>
 
     <issue
@@ -81,23 +70,23 @@
     <issue
         id="DefaultLocale"
         message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
-        errorLine1="                var name = param.thisObject.getClass().getSimpleName().toLowerCase();"
-        errorLine2="                                                                       ~~~~~~~~~~~">
+        errorLine1="                    var isNewVersion = !BuildConfig.VERSION_NAME.toLowerCase().contains(hash.toLowerCase());"
+        errorLine2="                                                                 ~~~~~~~~~~~">
         <location
-            file="src/main/java/com/wmods/wppenhacer/xposed/features/others/BackupRestore.java"
-            line="43"
-            column="72"/>
+            file="src/main/java/com/wmods/wppenhacer/ui/fragments/HomeFragment.java"
+            line="414"
+            column="66"/>
     </issue>
 
     <issue
         id="DefaultLocale"
         message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
-        errorLine1="                            tv.setText(tv.getText().toString().toLowerCase());"
-        errorLine2="                                                               ~~~~~~~~~~~">
+        errorLine1="                    var isNewVersion = !BuildConfig.VERSION_NAME.toLowerCase().contains(hash.toLowerCase());"
+        errorLine2="                                                                                             ~~~~~~~~~~~">
         <location
-            file="src/main/java/com/wmods/wppenhacer/xposed/features/customization/CustomView.java"
-            line="750"
-            column="64"/>
+            file="src/main/java/com/wmods/wppenhacer/ui/fragments/HomeFragment.java"
+            line="414"
+            column="94"/>
     </issue>
 
     <issue
@@ -199,40 +188,6 @@
             column="42"/>
     </issue>
 
-
-    <issue
-        id="DefaultLocale"
-        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
-        errorLine1="            boolean isNewVersion = !packageInfo.versionName.toLowerCase().contains(hash.toLowerCase().trim());"
-        errorLine2="                                                            ~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/UpdateChecker.java"
-            line="94"
-            column="61"/>
-    </issue>
-
-    <issue
-        id="DefaultLocale"
-        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
-        errorLine1="            boolean isNewVersion = !packageInfo.versionName.toLowerCase().contains(hash.toLowerCase().trim());"
-        errorLine2="                                                                                        ~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/UpdateChecker.java"
-            line="94"
-            column="89"/>
-    </issue>
-
-    <issue
-        id="InlinedApi"
-        message="Field requires API level 30 (current min is 28): `android.Manifest.permission#MANAGE_EXTERNAL_STORAGE`"
-        errorLine1="    private static final List&lt;String> sdk30Permissions = List.of(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE);"
-        errorLine2="                                                                                                                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/xposed/permission/AndroidPermissions.java"
-            line="18"
-            column="153"/>
-    </issue>
-
     <issue
         id="LocaleFolder"
         message="The locale folder &quot;`id`&quot; should be called &quot;`in`&quot; instead; see the `java.util.Locale` documentation">
@@ -269,19 +224,19 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/com/wmods/wppenhacer/views/WallpaperView.java"
-            line="93"
+            line="92"
             column="13"/>
     </issue>
 
     <issue
         id="AppBundleLocaleChanges"
         message="Found dynamic locale changes, but did not find corresponding Play Core library calls for downloading languages and splitting by language is not disabled in the `bundle` configuration"
-        errorLine1="        config.setLocale(LocaleDelegate.getDefaultLocale());"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="            config.setLocale(defaultLocale)"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/wmods/wppenhacer/App.java"
-            line="134"
-            column="9"/>
+            file="src/main/java/com/wmods/wppenhacer/App.kt"
+            line="145"
+            column="13"/>
     </issue>
 
     <issue
@@ -331,39 +286,6 @@
     <issue
         id="AppCompatResource"
         message="Should use `android:showAsAction` when not using the appcompat library"
-        errorLine1="        app:showAsAction=&quot;never&quot; />"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/menu/menu_deleted_messages.xml"
-            line="7"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="AppCompatResource"
-        message="Should use `android:showAsAction` when not using the appcompat library"
-        errorLine1="        app:showAsAction=&quot;never&quot; />"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/menu/menu_deleted_messages.xml"
-            line="11"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="AppCompatResource"
-        message="Should use `android:showAsAction` when not using the appcompat library"
-        errorLine1="        app:showAsAction=&quot;never&quot; />"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/menu/menu_deleted_messages.xml"
-            line="15"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="AppCompatResource"
-        message="Should use `android:showAsAction` when not using the appcompat library"
         errorLine1="        app:showAsAction=&quot;ifRoom&quot; />"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -407,23 +329,12 @@
 
     <issue
         id="AndroidGradlePluginVersion"
-        message="A newer version of Gradle than 8.13 is available: 8.14.5"
-        errorLine1="distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/wrapper/gradle-wrapper.properties"
-            line="4"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="AndroidGradlePluginVersion"
-        message="A newer version of com.android.application than 8.13.2 is available: 9.2.1"
+        message="A newer version of com.android.application than 8.13.2 is available: 9.3.1"
         errorLine1="agp = &quot;8.13.2&quot;"
         errorLine2="      ~~~~~~~~">
         <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/libs.versions.toml"
-            line="12"
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="15"
             column="7"/>
     </issue>
 
@@ -433,8 +344,8 @@
         errorLine1="nav = &quot;2.9.6&quot;"
         errorLine2="      ~~~~~~~">
         <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/libs.versions.toml"
-            line="15"
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="18"
             column="7"/>
     </issue>
 
@@ -444,9 +355,53 @@
         errorLine1="nav = &quot;2.9.6&quot;"
         errorLine2="      ~~~~~~~">
         <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/libs.versions.toml"
-            line="15"
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="18"
             column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity-compose than 1.12.0 is available: 1.13.0"
+        errorLine1="activityCompose = &quot;1.12.0&quot;"
+        errorLine2="                  ~~~~~~~~">
+        <location
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="22"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-compose than 2.10.0 is available: 2.11.0"
+        errorLine1="lifecycle = &quot;2.10.0&quot;"
+        errorLine2="            ~~~~~~~~">
+        <location
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="23"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.10.0 is available: 2.11.0"
+        errorLine1="lifecycle = &quot;2.10.0&quot;"
+        errorLine2="            ~~~~~~~~">
+        <location
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="23"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation3:navigation3-runtime than 1.1.4 is available: 1.1.5"
+        errorLine1="navigation3 = &quot;1.1.4&quot;"
+        errorLine2="              ~~~~~~~">
+        <location
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="24"
+            column="15"/>
     </issue>
 
     <issue
@@ -455,9 +410,20 @@
         errorLine1="androidx-activity = { module = &quot;androidx.activity:activity&quot;, version = &quot;1.12.0&quot; }"
         errorLine2="                                                                       ~~~~~~~~">
         <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/libs.versions.toml"
-            line="32"
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="46"
             column="72"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.constraintlayout:constraintlayout than 2.2.1 is available: 2.2.2"
+        errorLine1="androidx-constraintlayout = { module = &quot;androidx.constraintlayout:constraintlayout&quot;, version = &quot;2.2.1&quot; }"
+        errorLine2="                                                                                               ~~~~~~~">
+        <location
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="48"
+            column="96"/>
     </issue>
 
     <issue
@@ -466,29 +432,18 @@
         errorLine1="material = { module = &quot;com.google.android.material:material&quot;, version = &quot;1.13.0&quot; }"
         errorLine2="                                                                        ~~~~~~~~">
         <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/libs.versions.toml"
-            line="45"
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="67"
             column="73"/>
     </issue>
 
     <issue
-        id="GradleDependency"
-        message="A newer version of com.google.devtools.ksp than 2.3.0 is available: 2.3.9"
-        errorLine1="kspPlugin = { id = &quot;com.google.devtools.ksp&quot;, version = &quot;2.3.0&quot; }"
-        errorLine2="                                                        ~~~~~~~">
-        <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/libs.versions.toml"
-            line="52"
-            column="57"/>
-    </issue>
-
-    <issue
         id="NewerVersionAvailable"
-        message="A newer version of org.bouncycastle:bcpkix-jdk18on than 1.83 is available: 1.84"
+        message="A newer version of org.bouncycastle:bcpkix-jdk18on than 1.83 is available: 1.85"
         errorLine1="bcpkix-jdk18on = &quot;1.83&quot;"
         errorLine2="                 ~~~~~~">
         <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/libs.versions.toml"
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
             line="3"
             column="18"/>
     </issue>
@@ -499,8 +454,8 @@
         errorLine1="filepicker = &quot;9.2.5&quot;"
         errorLine2="             ~~~~~~~">
         <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/libs.versions.toml"
-            line="6"
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="7"
             column="14"/>
     </issue>
 
@@ -510,8 +465,8 @@
         errorLine1="flatbuffers = &quot;23.5.26&quot;"
         errorLine2="              ~~~~~~~~~">
         <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/libs.versions.toml"
-            line="7"
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="8"
             column="15"/>
     </issue>
 
@@ -521,8 +476,8 @@
         errorLine1="lombok = &quot;1.18.42&quot;"
         errorLine2="         ~~~~~~~~~">
         <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/libs.versions.toml"
-            line="9"
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="12"
             column="10"/>
     </issue>
 
@@ -532,19 +487,8 @@
         errorLine1="okhttp = &quot;5.3.2&quot;"
         errorLine2="         ~~~~~~~">
         <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/libs.versions.toml"
-            line="10"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="NewerVersionAvailable"
-        message="A newer version of org.jetbrains.kotlin.android than 2.2.21 is available: 2.4.0"
-        errorLine1="kotlin = &quot;2.2.21&quot;"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/libs.versions.toml"
-            line="16"
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="13"
             column="10"/>
     </issue>
 
@@ -554,261 +498,393 @@
         errorLine1="rikkax-material = { module = &quot;dev.rikka.rikkax.material:material&quot;, version = &quot;2.7.0&quot; }"
         errorLine2="                                                                             ~~~~~~~">
         <location
-            file="$HOME/StudioProjects/WaEnhancer/gradle/libs.versions.toml"
-            line="42"
+            file="$HOME/Developer/WaEnhancer/gradle/libs.versions.toml"
+            line="64"
             column="78"/>
     </issue>
 
     <issue
-        id="DiscouragedApi"
-        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
-        errorLine1="        var colorRes = Resources.getSystem().getIdentifier(resourceName, &quot;color&quot;, &quot;android&quot;);"
-        errorLine2="                                             ~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/xposed/features/customization/CustomThemeV2.java"
-            line="378"
-            column="46"/>
-    </issue>
-
-    <issue
         id="MissingTranslation"
-        message="&quot;whatsapp_crash_report&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;whatsapp_crash_report&quot;>WhatsApp crash report&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        message="&quot;floating_bottom_bar&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;floating_bottom_bar&quot;>Floating Bottom Bar&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="205"
+            line="167"
             column="13"/>
     </issue>
 
     <issue
         id="MissingTranslation"
-        message="&quot;crash_info&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;crash_info&quot;>Crash info&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="206"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;crash_trace&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;crash_trace&quot;>Trace&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="207"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;whatsapp_version&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;whatsapp_version&quot;>WhatsApp version&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="208"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;whatsapp_package&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;whatsapp_package&quot;>WhatsApp package&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="209"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;wae_version&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;wae_version&quot;>WAE version&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="210"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;crash_android_version&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;crash_android_version&quot;>Android version&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="211"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;call_type_buttons_busy&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_busy&quot;>Busy (On another call)&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="263"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;disable_ads&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;disable_ads&quot;>Disable Ads&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="454"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;disable_ads_sum&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;disable_ads_sum&quot;>Blocks ads from appearing in WhatsApp&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="455"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;picker_loading_contacts&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;picker_loading_contacts&quot;>Loading contacts…&lt;/string>"
+        message="&quot;floating_bottom_bar_sum&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;floating_bottom_bar_sum&quot;>Enable iOS-style floating bottom navigation bar&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="491"
+            line="168"
             column="13"/>
     </issue>
 
     <issue
         id="MissingTranslation"
-        message="&quot;mode_all&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;mode_all&quot;>All&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~">
+        message="&quot;floating_bottom_bar_radius&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;floating_bottom_bar_radius&quot;>Bottom Bar Corner Radius&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="492"
+            line="169"
             column="13"/>
     </issue>
 
     <issue
         id="MissingTranslation"
-        message="&quot;picker_contacts&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;picker_contacts&quot;>Contacts&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        message="&quot;floating_bottom_bar_radius_sum&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;floating_bottom_bar_radius_sum&quot;>Adjust the border radius of the floating bottom bar&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="493"
+            line="170"
             column="13"/>
     </issue>
 
     <issue
         id="MissingTranslation"
-        message="&quot;groups&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;groups&quot;>Groups&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~">
+        message="&quot;force_disable_emojis&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;force_disable_emojis&quot;>Force Disable Emojis&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="494"
+            line="243"
             column="13"/>
     </issue>
 
     <issue
         id="MissingTranslation"
-        message="&quot;picker_no_results&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;picker_no_results&quot;>No contacts found&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        message="&quot;force_disable_emojis_sum&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;force_disable_emojis_sum&quot;>Blocks WhatsApp emoji assets, making emojis invisible (use keyboard emoji instead).&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="495"
+            line="244"
             column="13"/>
     </issue>
 
     <issue
         id="MissingTranslation"
-        message="&quot;picker_group&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;picker_group&quot;>Group&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        message="&quot;force_disable_emojis_alert_title&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;force_disable_emojis_alert_title&quot;>Force Disable Emojis&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="496"
+            line="245"
             column="13"/>
     </issue>
 
     <issue
         id="MissingTranslation"
-        message="&quot;picker_contact&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;picker_contact&quot;>Contact&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        message="&quot;force_disable_emojis_alert_msg&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;force_disable_emojis_alert_msg&quot;>This feature will make emojis invisible in the emoji selector. To send emojis, use your device\&apos;s keyboard emoji instead.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="497"
+            line="246"
             column="13"/>
     </issue>
 
     <issue
         id="MissingTranslation"
-        message="&quot;converting_audio&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;converting_audio&quot;>Converting audio, wait a few minutes until it is complete...&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        message="&quot;checking_if_contact_added&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;checking_if_contact_added&quot;>Checking if the contact added you...&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="498"
+            line="465"
             column="13"/>
     </issue>
 
     <issue
         id="MissingTranslation"
-        message="&quot;preview_image&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;preview_image&quot;>Preview Image&lt;/string>"
+        message="&quot;show_contact_added_status&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;show_contact_added_status&quot;>Show Contact Added Status in Conversation&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="466"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;show_contact_added_status_sum&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;show_contact_added_status_sum&quot;>This option verifies whether the contact added you or has a public profile photo.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="467"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;contact_added&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;contact_added&quot;>The contact added you or has a public profile photo.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="499"
+            line="468"
             column="13"/>
     </issue>
 
     <issue
         id="MissingTranslation"
-        message="&quot;preview_video&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;preview_video&quot;>Preview Video&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        message="&quot;alert_module_notfound&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;alert_module_notfound&quot;>WaEnhancer module not found, HMA is probably hiding the module, remove WhatsApp from the HMA list and try again.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="500"
+            line="529"
             column="13"/>
     </issue>
 
     <issue
         id="MissingTranslation"
-        message="&quot;downloading&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;downloading&quot;>\&quot;Downloading... \&quot;&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="501"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;decrypting&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
-        errorLine1="    &lt;string name=&quot;decrypting&quot;>Decrypting...&lt;/string>"
+        message="&quot;diag_title&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_title&quot;>Root Diagnostics&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="502"
+            line="531"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_summary&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_summary&quot;>Check for sepolicy issues and Hide My App List blocks affecting WhatsApp.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="532"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_button&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_button&quot;>Analyze Device&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="533"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_dialog_title&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_dialog_title&quot;>Diagnostic Log&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="534"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_root_granted&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_root_granted&quot;>Root access granted.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="535"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_root_denied&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_root_denied&quot;>Root access denied. Diagnostics require root access.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="536"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_close&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_close&quot;>Close&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="537"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_sepolicy_checking&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_sepolicy_checking&quot;>Checking sepolicy log...&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="540"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_sepolicy_not_found&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_sepolicy_not_found&quot;>LSPosed verbose log not found or empty.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="541"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_sepolicy_no_issues&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_sepolicy_no_issues&quot;>No sepolicy issues found in the log.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="542"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_sepolicy_found&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_sepolicy_found&quot;>Sepolicy issue found:&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="543"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_sepolicy_broken&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_sepolicy_broken&quot;>Broken sepolicy detected. The root solution and the kernel patch must be the same version. If the error persists, switch to another root provider compatible with your device.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="544"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_hma_checking&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_hma_checking&quot;>Checking Hide My App List status...&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="547"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_hma_not_active&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_hma_not_active&quot;>Hide My App List is not active.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="548"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_hma_zygisk_active&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_hma_zygisk_active&quot;>Hide My App List (Zygisk) is active.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="549"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_hma_lsposed_active&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_hma_lsposed_active&quot;>Hide My App List (LSPosed) is active.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="550"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_hma_not_found&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_hma_not_found&quot;>Hide My App List configuration not found.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="551"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_hma_invalid&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_hma_invalid&quot;>Hide My App List configuration is invalid.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="552"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_hma_no_blocks&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_hma_no_blocks&quot;>No Hide My App List blocks detected for WhatsApp.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="553"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_hma_blocked&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_hma_blocked&quot;>Hide My App List is hiding WaEnhancer from:&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="554"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_hma_disable&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_hma_disable&quot;>Disable the block for WhatsApp/Business in Hide My App List so WaEnhancer can work correctly.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="555"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;diag_copied&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;diag_copied&quot;>Line copied to clipboard&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="556"
             column="13"/>
     </issue>
 
@@ -1347,7 +1423,7 @@
         errorLine2="                                      ~~~~~">
         <location
             file="src/main/res/values-es/strings.xml"
-            line="216"
+            line="223"
             column="39"/>
     </issue>
 
@@ -1358,7 +1434,7 @@
         errorLine2="                                                                                                        ~~~~~">
         <location
             file="src/main/res/values-es/strings.xml"
-            line="218"
+            line="225"
             column="105"/>
     </issue>
 
@@ -1369,140 +1445,8 @@
         errorLine2="                                            ~~~~~">
         <location
             file="src/main/res/values-es/strings.xml"
-            line="402"
+            line="411"
             column="45"/>
-    </issue>
-
-    <issue
-        id="ExtraTranslation"
-        message="&quot;call_type_buttons_declined&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_declined&quot;>تم رفض المكالمة&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-ar/strings.xml"
-            line="253"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ExtraTranslation"
-        message="&quot;call_type_buttons_declined&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_declined&quot;>Anruf abgelehnt&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-de/strings.xml"
-            line="253"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ExtraTranslation"
-        message="&quot;call_type_buttons_declined&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_declined&quot;>Llamada rechazada&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-es/strings.xml"
-            line="253"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ExtraTranslation"
-        message="&quot;call_type_buttons_declined&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_declined&quot;>Appel refusé&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-fr/strings.xml"
-            line="253"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ExtraTranslation"
-        message="&quot;call_type_buttons_declined&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_declined&quot;>Chiamata rifiutata&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-it/strings.xml"
-            line="253"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ExtraTranslation"
-        message="&quot;call_type_buttons_declined&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_declined&quot;>Chamada recusada&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-pt/strings.xml"
-            line="253"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ExtraTranslation"
-        message="&quot;call_type_buttons_declined&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_declined&quot;>Звонок отклонен&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-ru/strings.xml"
-            line="253"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ExtraTranslation"
-        message="&quot;call_type_buttons_declined&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_declined&quot;>Arama reddedildi&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-tr/strings.xml"
-            line="253"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ExtraTranslation"
-        message="&quot;call_type_buttons_declined&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_declined&quot;>来电被拒绝&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-zh/strings.xml"
-            line="253"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ExtraTranslation"
-        message="&quot;call_type_buttons_declined&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_declined&quot;>השיחה נדחתה&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-iw/strings.xml"
-            line="254"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ExtraTranslation"
-        message="&quot;call_type_buttons_declined&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_declined&quot;>Panggilan ditolak&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-in/strings.xml"
-            line="261"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ExtraTranslation"
-        message="&quot;call_type_buttons_declined&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_declined&quot;>Panggilan ditolak&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-id/strings.xml"
-            line="264"
-            column="13"/>
     </issue>
 
     <issue
@@ -1512,7 +1456,40 @@
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="283"
+            line="291"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="PluralsCandidate"
+        message="Formatting %d followed by words (&quot;recording&quot;): This should probably be a plural rather than a string"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_recordings_deleted&quot;>Deleted %1$d recording(s)&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="646"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="PluralsCandidate"
+        message="Formatting %d followed by words (&quot;selected&quot;): This should probably be a plural rather than a string"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_selected_count&quot;>%1$d selected&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="671"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="PluralsCandidate"
+        message="Formatting %d followed by words (&quot;selected&quot;): This should probably be a plural rather than a string"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_delete_recordings_confirm&quot;>Delete %1$d selected recording(s)?&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="672"
             column="5"/>
     </issue>
 
@@ -1554,105 +1531,6 @@
         message="`checkServerTrusted` is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers">
         <location
             file="$GRADLE_USER_HOME/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk18on/1.83/3f4300d0441459bfa64a481c80062b002ff0cf65/bcpkix-jdk18on-1.83.jar"/>
-    </issue>
-
-    <issue
-        id="ExportedContentProvider"
-        message="Exported content providers can provide access to potentially sensitive data"
-        errorLine1="        &lt;provider"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="62"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/adapter/DeletedMessagesAdapter.java"
-            line="42"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/adapter/DeletedMessagesAdapter.java"
-            line="225"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/adapter/DeletedMessagesAdapter.java"
-            line="230"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="            adapter.notifyDataSetChanged();"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/ui/fragments/DeletedMessagesFragment.java"
-            line="93"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="                adapter.notifyDataSetChanged();"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/ui/fragments/DeletedMessagesFragment.java"
-            line="105"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/adapter/MessageListAdapter.java"
-            line="41"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/adapter/MessageListAdapter.java"
-            line="160"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/adapter/MessageListAdapter.java"
-            line="165"
-            column="9"/>
     </issue>
 
     <issue
@@ -1707,6 +1585,182 @@
         <location
             file="src/main/java/com/wmods/wppenhacer/adapter/SearchAdapter.java"
             line="60"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="                database.query("
+        errorLine2="                         ~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/general/AboutContactPicker.kt"
+            line="986"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="            val cursor0 = MessageStore.getInstance().getDatabase()?.rawQuery(query, null)"
+        errorLine2="                                                                    ~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/media/MediaPreview.kt"
+            line="246"
+            column="69"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="            db.query(&quot;message_ftsv2_content&quot;, columns, selection, selectionArgs, null, null, null)"
+        errorLine2="               ~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/core/db/MessageStore.kt"
+            line="50"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="            db.query(&quot;message&quot;, columns, selection, selectionArgs, null, null, null).use { cursor ->"
+        errorLine2="               ~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/core/db/MessageStore.kt"
+            line="68"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="            db.query(&quot;message&quot;, columns, selection, selectionArgs, null, null, null).use { cursor ->"
+        errorLine2="               ~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/core/db/MessageStore.kt"
+            line="85"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="            db.query(&quot;message_media&quot;, columns, selection, selectionArgs, null, null, null)"
+        errorLine2="               ~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/core/db/MessageStore.kt"
+            line="102"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="            db.query(&quot;message&quot;, columns, selection, selectionArgs, null, null, null).use { cursor ->"
+        errorLine2="               ~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/core/db/MessageStore.kt"
+            line="120"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="            db.rawQuery(sql, null).use { cursor ->"
+        errorLine2="               ~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/core/db/MessageStore.kt"
+            line="137"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="            db.rawQuery(sql, messageList.toTypedArray()).use { cursor ->"
+        errorLine2="               ~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/core/db/MessageStore.kt"
+            line="158"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="                    rawQuery("
+        errorLine2="                    ~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/core/db/MessageStore.kt"
+            line="275"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="                    rawQuery("
+        errorLine2="                    ~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/core/db/MessageStore.kt"
+            line="297"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="            db.rawQuery("
+        errorLine2="               ~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/core/db/MessageStore.kt"
+            line="338"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="        db.rawQuery(sql, arrayOf(&quot;g.us&quot;, &quot;g.us&quot;)).use { cursor ->"
+        errorLine2="           ~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/customization/SeparateGroup.kt"
+            line="193"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="        sql.query(&quot;message&quot;, null, &quot;_id = ?&quot;, arrayOf(id.toString()), null, null, null)"
+        errorLine2="            ~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/others/ToastViewer.kt"
+            line="150"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `Cursor` should be freed up after use with `#close()`"
+        errorLine1="                    sql.query("
+        errorLine2="                        ~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/others/ToastViewer.kt"
+            line="173"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields; this is a memory leak"
+        errorLine1="        lateinit var moduleContext: Context"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/core/FeatureLoader.kt"
+            line="118"
             column="9"/>
     </issue>
 
@@ -1833,6 +1887,28 @@
 
     <issue
         id="UnusedResources"
+        message="The resource `R.drawable.bg_message_received` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/bg_message_received.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.bg_message_sent` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/bg_message_sent.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
         message="The resource `R.drawable.border_background` appears to be unused"
         errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
         errorLine2="^">
@@ -1904,6 +1980,17 @@
         errorLine2="^">
         <location
             file="src/main/res/anim/card_enter.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.circle_bg` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/circle_bg.xml"
             line="2"
             column="1"/>
     </issue>
@@ -2482,12 +2569,45 @@
 
     <issue
         id="UnusedResources"
+        message="The resource `R.drawable.ic_back` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_back.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_baseline_arrow_back_24` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_baseline_arrow_back_24.xml"
+            line="20"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
         message="The resource `R.drawable.ic_contacts` appears to be unused"
         errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2="^">
         <location
             file="src/main/res/drawable/ic_contacts.xml"
             line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_delete` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_delete.xml"
+            line="1"
             column="1"/>
     </issue>
 
@@ -2537,6 +2657,17 @@
 
     <issue
         id="UnusedResources"
+        message="The resource `R.drawable.ic_person` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_person.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
         message="The resource `R.drawable.ic_restore` appears to be unused"
         errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2="^">
@@ -2548,33 +2679,11 @@
 
     <issue
         id="UnusedResources"
-        message="The resource `R.drawable.ic_round_bug_report_24` appears to be unused"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2="^">
-        <location
-            file="src/main/res/drawable/ic_round_bug_report_24.xml"
-            line="20"
-            column="1"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
         message="The resource `R.drawable.ic_round_settings_24` appears to be unused"
         errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2="^">
         <location
             file="src/main/res/drawable/ic_round_settings_24.xml"
-            line="20"
-            column="1"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.drawable.ic_round_update_24` appears to be unused"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2="^">
-        <location
-            file="src/main/res/drawable/ic_round_update_24.xml"
             line="20"
             column="1"/>
     </issue>
@@ -2603,22 +2712,33 @@
 
     <issue
         id="UnusedResources"
-        message="The resource `R.layout.item_deleted_message` appears to be unused"
-        errorLine1="&lt;com.google.android.material.card.MaterialCardView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        message="The resource `R.layout.item_contact_row` appears to be unused"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2="^">
         <location
-            file="src/main/res/layout/item_deleted_message.xml"
+            file="src/main/res/layout/item_contact_row.xml"
             line="2"
             column="1"/>
     </issue>
 
     <issue
         id="UnusedResources"
-        message="The resource `R.layout.item_deleted_message_contact` appears to be unused"
-        errorLine1="&lt;com.google.android.material.card.MaterialCardView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        message="The resource `R.layout.item_message_received` appears to be unused"
+        errorLine1="&lt;androidx.constraintlayout.widget.ConstraintLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2="^">
         <location
-            file="src/main/res/layout/item_deleted_message_contact.xml"
+            file="src/main/res/layout/item_message_received.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.item_message_sent` appears to be unused"
+        errorLine1="&lt;androidx.constraintlayout.widget.ConstraintLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/item_message_sent.xml"
             line="2"
             column="1"/>
     </issue>
@@ -2641,6 +2761,28 @@
         errorLine2="^">
         <location
             file="src/main/res/layout/list_item_suggestion.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.menu.menu_context_delete` appears to be unused"
+        errorLine1="&lt;menu xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/menu/menu_context_delete.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.menu.menu_message_list` appears to be unused"
+        errorLine1="&lt;menu xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/menu/menu_message_list.xml"
             line="2"
             column="1"/>
     </issue>
@@ -2790,12 +2932,23 @@
 
     <issue
         id="UnusedResources"
+        message="The resource `R.string.floating_bottom_bar_radius_sum` appears to be unused"
+        errorLine1="    &lt;string name=&quot;floating_bottom_bar_radius_sum&quot;>Adjust the border radius of the floating bottom bar&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="170"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
         message="The resource `R.string.remove_limit_edit_message` appears to be unused"
         errorLine1="    &lt;string name=&quot;remove_limit_edit_message&quot;>Remove Limit To Edit message&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="215"
+            line="219"
             column="13"/>
     </issue>
 
@@ -2806,18 +2959,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="216"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.string.call_type_buttons_declined` appears to be unused"
-        errorLine1="    &lt;string name=&quot;call_type_buttons_declined&quot;>تم رفض المكالمة&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-ar/strings.xml"
-            line="253"
+            line="220"
             column="13"/>
     </issue>
 
@@ -2828,7 +2970,7 @@
         errorLine2="            ~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="278"
+            line="286"
             column="13"/>
     </issue>
 
@@ -2839,7 +2981,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="289"
+            line="297"
             column="13"/>
     </issue>
 
@@ -2850,7 +2992,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="290"
+            line="298"
             column="13"/>
     </issue>
 
@@ -2861,7 +3003,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="291"
+            line="299"
             column="13"/>
     </issue>
 
@@ -2872,7 +3014,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="327"
+            line="335"
             column="13"/>
     </issue>
 
@@ -2883,7 +3025,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="328"
+            line="336"
             column="13"/>
     </issue>
 
@@ -2894,7 +3036,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="331"
+            line="339"
             column="13"/>
     </issue>
 
@@ -2905,7 +3047,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="353"
+            line="361"
             column="13"/>
     </issue>
 
@@ -2916,7 +3058,7 @@
         errorLine2="            ~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="354"
+            line="362"
             column="13"/>
     </issue>
 
@@ -2927,7 +3069,7 @@
         errorLine2="            ~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="355"
+            line="363"
             column="13"/>
     </issue>
 
@@ -2938,7 +3080,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="362"
+            line="370"
             column="13"/>
     </issue>
 
@@ -2949,7 +3091,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="363"
+            line="371"
             column="13"/>
     </issue>
 
@@ -2960,7 +3102,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="377"
+            line="385"
             column="13"/>
     </issue>
 
@@ -2971,7 +3113,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="378"
+            line="386"
             column="13"/>
     </issue>
 
@@ -2982,7 +3124,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="379"
+            line="387"
             column="13"/>
     </issue>
 
@@ -2993,18 +3135,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="380"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.string.not_available` appears to be unused"
-        errorLine1="    &lt;string name=&quot;not_available&quot;>not available&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="389"
+            line="388"
             column="13"/>
     </issue>
 
@@ -3015,7 +3146,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="401"
+            line="411"
             column="13"/>
     </issue>
 
@@ -3026,7 +3157,73 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="402"
+            line="412"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.possible_block_detected` appears to be unused"
+        errorLine1="    &lt;string name=&quot;possible_block_detected&quot;>Possible block detected&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="459"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.block_not_detected` appears to be unused"
+        errorLine1="    &lt;string name=&quot;block_not_detected&quot;>Block not detected&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="460"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.checking_if_the_contact_is_blocked` appears to be unused"
+        errorLine1="    &lt;string name=&quot;checking_if_the_contact_is_blocked&quot;>Checking if the contact is blocked...&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="461"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.show_contact_blocked` appears to be unused"
+        errorLine1="    &lt;string name=&quot;show_contact_blocked&quot;>Show Contact Blocked in Conversation&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="462"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.show_contact_blocked_sum` appears to be unused"
+        errorLine1="    &lt;string name=&quot;show_contact_blocked_sum&quot;>This option verifies whether the contact may have blocked you (note: false positives may occur).&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="463"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.block_unverified` appears to be unused"
+        errorLine1="    &lt;string name=&quot;block_unverified&quot;>Block Unverified&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="464"
             column="13"/>
     </issue>
 
@@ -3037,7 +3234,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="463"
+            line="480"
             column="13"/>
     </issue>
 
@@ -3048,7 +3245,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="465"
+            line="482"
             column="13"/>
     </issue>
 
@@ -3059,7 +3256,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="466"
+            line="483"
             column="13"/>
     </issue>
 
@@ -3070,7 +3267,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="467"
+            line="484"
             column="13"/>
     </issue>
 
@@ -3081,7 +3278,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="468"
+            line="485"
             column="13"/>
     </issue>
 
@@ -3092,7 +3289,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="469"
+            line="486"
             column="13"/>
     </issue>
 
@@ -3103,7 +3300,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="470"
+            line="487"
             column="13"/>
     </issue>
 
@@ -3114,7 +3311,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="471"
+            line="488"
             column="13"/>
     </issue>
 
@@ -3125,7 +3322,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="472"
+            line="489"
             column="13"/>
     </issue>
 
@@ -3136,7 +3333,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="478"
+            line="495"
             column="13"/>
     </issue>
 
@@ -3147,7 +3344,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="481"
+            line="496"
             column="13"/>
     </issue>
 
@@ -3158,7 +3355,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="483"
+            line="497"
             column="13"/>
     </issue>
 
@@ -3169,7 +3366,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="484"
+            line="498"
             column="13"/>
     </issue>
 
@@ -3180,8 +3377,261 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="485"
+            line="499"
             column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_app_status` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_app_status&quot;>Applications&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="566"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_restart` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_restart&quot;>Restart&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="573"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_customization_summary` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_customization_summary&quot;>WhatsApp colours, wallpaper, menus, bubbles, home, and status styling&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="588"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_theme_manager_summary` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_theme_manager_summary&quot;>Create, import, edit, and export WhatsApp CSS themes&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="593"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_value` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_value&quot;>Current value: %1$s&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="596"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_choose_value` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_choose_value&quot;>Choose a value&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="597"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_edit_value` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_edit_value&quot;>Edit value&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="598"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_color_value` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_color_value&quot;>Colour #%1$08X&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="601"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_invalid_value` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_invalid_value&quot;>Enter a valid value&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="602"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_permission_denied` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_permission_denied&quot;>The required permission was not granted&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="603"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_storage_required` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_storage_required&quot;>Storage access is required for this feature&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="604"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_theme_follow_system` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_theme_follow_system&quot;>Follow system&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="611"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_theme_light` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_theme_light&quot;>Light&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="612"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_theme_dark` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_theme_dark&quot;>Dark&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="613"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_interface_scale_summary` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_interface_scale_summary&quot;>Adjust the manager display scale from 80% to 110%&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="626"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_floating_miuix` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_floating_miuix&quot;>Miuix&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="631"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_floating_liquid` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_floating_liquid&quot;>Liquid Glass&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="632"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_icons_and_text` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_icons_and_text&quot;>Icon and text&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="634"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_icons_only` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_icons_only&quot;>Icon only&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="635"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_system_colour` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_system_colour&quot;>System colour&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="636"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_recording_failed_delete` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_recording_failed_delete&quot;>Unable to delete the selected recording&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="645"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_recordings_deleted` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_recordings_deleted&quot;>Deleted %1$d recording(s)&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="646"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.manager_installed` appears to be unused"
+        errorLine1="    &lt;string translatable=&quot;false&quot; name=&quot;manager_installed&quot;>Installed&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="652"
+            column="34"/>
     </issue>
 
     <issue
@@ -3351,17 +3801,6 @@
 
     <issue
         id="UnusedResources"
-        message="The resource `R.style.NoActionBarTheme` appears to be unused"
-        errorLine1="    &lt;style name=&quot;NoActionBarTheme&quot; parent=&quot;AppTheme&quot;>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/styles.xml"
-            line="76"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
         message="The resource `R.style.MyActionBar` appears to be unused"
         errorLine1="    &lt;style name=&quot;MyActionBar&quot; parent=&quot;@style/Widget.Material3.ActionBar.Solid&quot;>"
         errorLine2="           ~~~~~~~~~~~~~~~~~~">
@@ -3477,7 +3916,7 @@
         errorLine2="                             ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-de/strings.xml"
-            line="203"
+            line="210"
             column="30"/>
     </issue>
 
@@ -3488,7 +3927,7 @@
         errorLine2="                                      ~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-pt/strings.xml"
-            line="271"
+            line="278"
             column="39"/>
     </issue>
 
@@ -3499,7 +3938,7 @@
         errorLine2="                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-pt/strings.xml"
-            line="272"
+            line="279"
             column="39"/>
     </issue>
 
@@ -3510,7 +3949,7 @@
         errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-ar/strings.xml"
-            line="438"
+            line="450"
             column="55"/>
     </issue>
 
@@ -3521,7 +3960,7 @@
         errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-de/strings.xml"
-            line="438"
+            line="450"
             column="55"/>
     </issue>
 
@@ -3532,7 +3971,7 @@
         errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-es/strings.xml"
-            line="438"
+            line="450"
             column="55"/>
     </issue>
 
@@ -3543,7 +3982,7 @@
         errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-fr/strings.xml"
-            line="438"
+            line="450"
             column="55"/>
     </issue>
 
@@ -3554,7 +3993,7 @@
         errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-it/strings.xml"
-            line="438"
+            line="450"
             column="55"/>
     </issue>
 
@@ -3565,7 +4004,7 @@
         errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-pt/strings.xml"
-            line="438"
+            line="450"
             column="55"/>
     </issue>
 
@@ -3576,7 +4015,7 @@
         errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-ru/strings.xml"
-            line="438"
+            line="450"
             column="55"/>
     </issue>
 
@@ -3587,7 +4026,7 @@
         errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-tr/strings.xml"
-            line="438"
+            line="450"
             column="55"/>
     </issue>
 
@@ -3598,7 +4037,7 @@
         errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-zh/strings.xml"
-            line="438"
+            line="450"
             column="55"/>
     </issue>
 
@@ -3609,7 +4048,7 @@
         errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-iw/strings.xml"
-            line="440"
+            line="452"
             column="55"/>
     </issue>
 
@@ -3620,7 +4059,18 @@
         errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-in/strings.xml"
-            line="447"
+            line="458"
+            column="55"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;checking_if_the_contact_is_blocked&quot;>Memeriksa apakah kontak tersebut diblokir...&lt;/string>"
+        errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-id/strings.xml"
+            line="461"
             column="55"/>
     </issue>
 
@@ -3631,19 +4081,19 @@
         errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="448"
+            line="461"
             column="55"/>
     </issue>
 
     <issue
         id="TypographyEllipsis"
         message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
-        errorLine1="    &lt;string name=&quot;checking_if_the_contact_is_blocked&quot;>Checking if the contact is blocked...&lt;/string>"
-        errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="    &lt;string name=&quot;checking_if_contact_added&quot;>Checking if the contact added you...&lt;/string>"
+        errorLine2="                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/values-id/strings.xml"
-            line="450"
-            column="55"/>
+            file="src/main/res/values/strings.xml"
+            line="465"
+            column="46"/>
     </issue>
 
     <issue
@@ -3653,7 +4103,7 @@
         errorLine2="                                        ~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-ar/strings.xml"
-            line="463"
+            line="477"
             column="41"/>
     </issue>
 
@@ -3664,7 +4114,7 @@
         errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-de/strings.xml"
-            line="463"
+            line="477"
             column="41"/>
     </issue>
 
@@ -3675,7 +4125,7 @@
         errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-es/strings.xml"
-            line="463"
+            line="477"
             column="41"/>
     </issue>
 
@@ -3686,7 +4136,7 @@
         errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-fr/strings.xml"
-            line="463"
+            line="477"
             column="41"/>
     </issue>
 
@@ -3697,7 +4147,7 @@
         errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-it/strings.xml"
-            line="463"
+            line="477"
             column="41"/>
     </issue>
 
@@ -3708,7 +4158,7 @@
         errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-pt/strings.xml"
-            line="463"
+            line="477"
             column="41"/>
     </issue>
 
@@ -3719,7 +4169,7 @@
         errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-ru/strings.xml"
-            line="463"
+            line="477"
             column="41"/>
     </issue>
 
@@ -3730,7 +4180,7 @@
         errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-tr/strings.xml"
-            line="463"
+            line="477"
             column="41"/>
     </issue>
 
@@ -3741,7 +4191,7 @@
         errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-zh/strings.xml"
-            line="463"
+            line="477"
             column="41"/>
     </issue>
 
@@ -3752,7 +4202,7 @@
         errorLine2="                                        ~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-iw/strings.xml"
-            line="465"
+            line="479"
             column="41"/>
     </issue>
 
@@ -3763,18 +4213,18 @@
         errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-in/strings.xml"
-            line="474"
+            line="487"
             column="41"/>
     </issue>
 
     <issue
         id="TypographyEllipsis"
         message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
-        errorLine1="    &lt;string name=&quot;search_features_hint&quot;>Search for any feature...&lt;/string>"
-        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="    &lt;string name=&quot;search_features_hint&quot;>Cari fitur apa pun...&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-id/strings.xml"
-            line="475"
+            line="488"
             column="41"/>
     </issue>
 
@@ -3785,8 +4235,382 @@
         errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="475"
+            line="492"
             column="41"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;converting_audio&quot;>جارٍ تحويل الصوت، انتظر بضع دقائق حتى يكتمل...&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ar/strings.xml"
+            line="501"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;converting_audio&quot;>Converting audio, wait a few minutes until it is complete...&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-de/strings.xml"
+            line="501"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;converting_audio&quot;>Convirtiendo audio, espere unos minutos hasta que se complete...&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-es/strings.xml"
+            line="501"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;converting_audio&quot;>Converting audio, wait a few minutes until it is complete...&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="501"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;converting_audio&quot;>Conversione audio in corso, attendere qualche minuto fino al completamento...&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="501"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;converting_audio&quot;>Convertendo áudio, aguarde alguns minutos até concluir...&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pt/strings.xml"
+            line="501"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;converting_audio&quot;>Converting audio, wait a few minutes until it is complete...&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ru/strings.xml"
+            line="501"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;converting_audio&quot;>Converting audio, wait a few minutes until it is complete...&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-tr/strings.xml"
+            line="501"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;converting_audio&quot;>Converting audio, wait a few minutes until it is complete...&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-zh/strings.xml"
+            line="501"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;converting_audio&quot;>המרת אודיו, המתן מספר דקות עד לסיום...&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-iw/strings.xml"
+            line="503"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;downloading&quot;>\&quot;تحميل... \&quot;&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ar/strings.xml"
+            line="504"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;downloading&quot;>\&quot;Downloading... \&quot;&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-de/strings.xml"
+            line="504"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;downloading&quot;>\&quot;Descargando... \&quot;&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-es/strings.xml"
+            line="504"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;downloading&quot;>\&quot;Downloading... \&quot;&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="504"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;downloading&quot;>\&quot;Scaricamento... \&quot;&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="504"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;downloading&quot;>\&quot;Downloading... \&quot;&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ru/strings.xml"
+            line="504"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;downloading&quot;>\&quot;Downloading... \&quot;&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-tr/strings.xml"
+            line="504"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;downloading&quot;>\&quot;Downloading... \&quot;&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-zh/strings.xml"
+            line="504"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;decrypting&quot;>جارٍ فك التشفير...&lt;/string>"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ar/strings.xml"
+            line="505"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;decrypting&quot;>Decrypting...&lt;/string>"
+        errorLine2="                              ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-de/strings.xml"
+            line="505"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;decrypting&quot;>Desencriptando...&lt;/string>"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-es/strings.xml"
+            line="505"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;decrypting&quot;>Decrypting...&lt;/string>"
+        errorLine2="                              ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="505"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;decrypting&quot;>Decriptando...&lt;/string>"
+        errorLine2="                              ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="505"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;decrypting&quot;>Descriptografando...&lt;/string>"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pt/strings.xml"
+            line="505"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;decrypting&quot;>Decrypting...&lt;/string>"
+        errorLine2="                              ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ru/strings.xml"
+            line="505"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;decrypting&quot;>Decrypting...&lt;/string>"
+        errorLine2="                              ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-tr/strings.xml"
+            line="505"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;decrypting&quot;>Decrypting...&lt;/string>"
+        errorLine2="                              ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-zh/strings.xml"
+            line="505"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;decrypting&quot;>מפענח...&lt;/string>"
+        errorLine2="                              ~~~~~~~~">
+        <location
+            file="src/main/res/values-iw/strings.xml"
+            line="507"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;converting_audio&quot;>Sedang mengkonversi audio, tunggu beberapa menit hingga selesai...&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-in/strings.xml"
+            line="511"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;converting_audio&quot;>Converting audio, wait a few minutes until it is complete...&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-id/strings.xml"
+            line="512"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;downloading&quot;>\&quot;Mengunduh... \&quot;&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-in/strings.xml"
+            line="514"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;downloading&quot;>\&quot;Downloading... \&quot;&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-id/strings.xml"
+            line="515"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;decrypting&quot;>Mendekripsi...&lt;/string>"
+        errorLine2="                              ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-in/strings.xml"
+            line="515"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;decrypting&quot;>Decrypting...&lt;/string>"
+        errorLine2="                              ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-id/strings.xml"
+            line="516"
+            column="31"/>
     </issue>
 
     <issue
@@ -3796,7 +4620,7 @@
         errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="498"
+            line="516"
             column="37"/>
     </issue>
 
@@ -3807,7 +4631,7 @@
         errorLine2="                               ~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="501"
+            line="519"
             column="32"/>
     </issue>
 
@@ -3818,8 +4642,30 @@
         errorLine2="                              ~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="502"
+            line="520"
             column="31"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;diag_sepolicy_checking&quot;>Checking sepolicy log...&lt;/string>"
+        errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="540"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;diag_hma_checking&quot;>Checking Hide My App List status...&lt;/string>"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="547"
+            column="38"/>
     </issue>
 
     <issue
@@ -3827,17 +4673,6 @@
         message="Found bitmap drawable `res/drawable/ic_reload.png` in densityless folder">
         <location
             file="src/main/res/drawable/ic_reload.png"/>
-    </issue>
-
-    <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="            android:textSize=&quot;10sp&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_deleted_message_contact.xml"
-            line="81"
-            column="13"/>
     </issue>
 
     <issue
@@ -3876,67 +4711,67 @@
     <issue
         id="AlwaysShowAction"
         message="Prefer &quot;`SHOW_AS_ACTION_IF_ROOM`&quot; instead of &quot;`SHOW_AS_ACTION_ALWAYS`&quot;"
-        errorLine1="            itemMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);"
+        errorLine1="            itemMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)"
         errorLine2="                                              ~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/wmods/wppenhacer/xposed/features/others/MenuHome.java"
-            line="89"
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/others/MenuHome.kt"
+            line="112"
             column="47"/>
     </issue>
 
     <issue
         id="AlwaysShowAction"
         message="Prefer &quot;`SHOW_AS_ACTION_IF_ROOM`&quot; instead of &quot;`SHOW_AS_ACTION_ALWAYS`&quot;"
-        errorLine1="            itemMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);"
+        errorLine1="            itemMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)"
         errorLine2="                                              ~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/wmods/wppenhacer/xposed/features/others/MenuHome.java"
-            line="113"
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/others/MenuHome.kt"
+            line="139"
             column="47"/>
     </issue>
 
     <issue
         id="AlwaysShowAction"
         message="Prefer &quot;`SHOW_AS_ACTION_IF_ROOM`&quot; instead of &quot;`SHOW_AS_ACTION_ALWAYS`&quot;"
-        errorLine1="            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);"
+        errorLine1="            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)"
         errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/wmods/wppenhacer/xposed/features/others/MenuHome.java"
-            line="138"
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/others/MenuHome.kt"
+            line="165"
             column="43"/>
     </issue>
 
     <issue
         id="AlwaysShowAction"
         message="Prefer &quot;`SHOW_AS_ACTION_IF_ROOM`&quot; instead of &quot;`SHOW_AS_ACTION_ALWAYS`&quot;"
-        errorLine1="            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);"
+        errorLine1="            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)"
         errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/wmods/wppenhacer/xposed/features/others/MenuHome.java"
-            line="176"
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/others/MenuHome.kt"
+            line="204"
             column="43"/>
     </issue>
 
     <issue
         id="AlwaysShowAction"
         message="Prefer &quot;`SHOW_AS_ACTION_IF_ROOM`&quot; instead of &quot;`SHOW_AS_ACTION_ALWAYS`&quot;"
-        errorLine1="                    item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);"
-        errorLine2="                                                  ~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="                        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)"
+        errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/wmods/wppenhacer/xposed/features/general/NewChat.java"
-            line="52"
-            column="51"/>
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/general/NewChat.kt"
+            line="50"
+            column="55"/>
     </issue>
 
     <issue
         id="AlwaysShowAction"
         message="Prefer &quot;`SHOW_AS_ACTION_IF_ROOM`&quot; instead of &quot;`SHOW_AS_ACTION_ALWAYS`&quot;"
-        errorLine1="                        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);"
-        errorLine2="                                                          ~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="                    menuItem?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)"
+        errorLine2="                                                       ~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/com/wmods/wppenhacer/xposed/features/general/Others.java"
-            line="106"
-            column="59"/>
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/general/Others.kt"
+            line="97"
+            column="56"/>
     </issue>
 
     <issue
@@ -3970,6 +4805,237 @@
             file="src/main/java/com/wmods/wppenhacer/xposed/features/general/SeenTick.kt"
             line="449"
             column="70"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Bitmap.scale` instead?"
+        errorLine1="                            val resized = Bitmap.createScaledBitmap(bitmap,"
+        errorLine2="                                          ^">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/customization/CustomView.kt"
+            line="456"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Bitmap.scale` instead?"
+        errorLine1="                            val resized = Bitmap.createScaledBitmap(bitmap,"
+        errorLine2="                                          ^">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/customization/CustomView.kt"
+            line="464"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Bitmap.scale` instead?"
+        errorLine1="                                                Bitmap.createScaledBitmap(bmp, w, h, true)"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/customization/CustomView.kt"
+            line="486"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Bitmap.scale` instead?"
+        errorLine1="                                    Bitmap.createScaledBitmap(bitmap, view.width, view.height, true)"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/features/customization/CustomView.kt"
+            line="496"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Int.toDrawable` instead?"
+        errorLine1="            else -> ColorDrawable(Color.BLACK)"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/DesignUtils.kt"
+            line="114"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Bitmap.toDrawable` instead?"
+        errorLine1="            return BitmapDrawable(Utils.application.resources, newBitmap)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/DesignUtils.kt"
+            line="177"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toColorInt` instead?"
+        errorLine1="            Color.parseColor(primaryColor)"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/DesignUtils.kt"
+            line="213"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toColorInt` instead?"
+        errorLine1="            Color.parseColor(color)"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/DesignUtils.kt"
+            line="255"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX function `createBitmap` instead?"
+        errorLine1="        val bitmap = Bitmap.createBitmap("
+        errorLine2="                     ^">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/DesignUtils.kt"
+            line="266"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Bitmap.get` instead?"
+        errorLine1="                val color = bitmap.getPixel(x, y)"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/DesignUtils.kt"
+            line="281"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Bitmap.get` instead?"
+        errorLine1="                val currentColor = newBitmap.getPixel(x, y)"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/DesignUtils.kt"
+            line="310"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Bitmap.set` instead?"
+        errorLine1="                    newBitmap.setPixel(x, y, newColor)"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/DesignUtils.kt"
+            line="312"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX function `createBitmap` instead?"
+        errorLine1="        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)"
+        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/DesignUtils.kt"
+            line="321"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Bitmap.toDrawable` instead?"
+        errorLine1="        return BitmapDrawable(Utils.application.resources, bitmap)"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/DesignUtils.kt"
+            line="325"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX function `createBitmap` instead?"
+        errorLine1="        val bitmap = Bitmap.createBitmap(slotSize, slotSize, Bitmap.Config.ARGB_8888)"
+        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/DesignUtils.kt"
+            line="338"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Bitmap.toDrawable` instead?"
+        errorLine1="        return BitmapDrawable(resources, bitmap)"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/DesignUtils.kt"
+            line="357"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="                cachePrefs?.edit()?.remove(cacheKey)?.commit()"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/ReflectionUtils.kt"
+            line="179"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            cachePrefs?.edit()?.putString(cacheKey, field.name)?.commit()"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/ReflectionUtils.kt"
+            line="186"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="                cachePrefs?.edit()?.remove(cacheKey)?.apply()"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/ReflectionUtils.kt"
+            line="213"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            cachePrefs?.edit()?.putString(cacheKey, field.name)?.apply()"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/ReflectionUtils.kt"
+            line="220"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))"
+        errorLine2="                                                       ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wmods/wppenhacer/xposed/utils/Utils.kt"
+            line="318"
+            column="56"/>
     </issue>
 
     <issue
@@ -4033,28 +5099,6 @@
         errorLine1="            &lt;ImageView"
         errorLine2="             ~~~~~~~~~">
         <location
-            file="src/main/res/layout/item_deleted_message.xml"
-            line="59"
-            column="14"/>
-    </issue>
-
-    <issue
-        id="ContentDescription"
-        message="Missing `contentDescription` attribute on image"
-        errorLine1="        &lt;ImageView"
-        errorLine2="         ~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_deleted_message_contact.xml"
-            line="20"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="ContentDescription"
-        message="Missing `contentDescription` attribute on image"
-        errorLine1="            &lt;ImageView"
-        errorLine2="             ~~~~~~~~~">
-        <location
             file="src/main/res/layout/item_message_received.xml"
             line="73"
             column="14"/>
@@ -4080,17 +5124,6 @@
             file="src/main/res/layout/item_recording.xml"
             line="28"
             column="10"/>
-    </issue>
-
-    <issue
-        id="SetTextI18n"
-        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
-        errorLine1="        holder.lastMessage.setText(senderPrefix + text);"
-        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/wmods/wppenhacer/adapter/DeletedMessagesAdapter.java"
-            line="152"
-            column="36"/>
     </issue>
 
     <issue
@@ -4265,7 +5298,7 @@
         errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/fragment_home.xml"
-            line="226"
+            line="292"
             column="29"/>
     </issue>
 
@@ -4276,7 +5309,7 @@
         errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/fragment_home.xml"
-            line="234"
+            line="300"
             column="29"/>
     </issue>
 
@@ -4321,94 +5354,6 @@
         <location
             file="src/main/res/layout/item_contact_row.xml"
             line="77"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;Sender Name&quot;, should use `@string` resource"
-        errorLine1="            android:text=&quot;Sender Name&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_deleted_message.xml"
-            line="21"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;00:00&quot;, should use `@string` resource"
-        errorLine1="            android:text=&quot;00:00&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_deleted_message.xml"
-            line="34"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;Message Content goes here...&quot;, should use `@string` resource"
-        errorLine1="            android:text=&quot;Message Content goes here...&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_deleted_message.xml"
-            line="45"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;Caption&quot;, should use `@string` resource"
-        errorLine1="                android:text=&quot;Caption&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_deleted_message.xml"
-            line="73"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;Contact Name&quot;, should use `@string` resource"
-        errorLine1="            android:text=&quot;Contact Name&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_deleted_message_contact.xml"
-            line="39"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;00:00&quot;, should use `@string` resource"
-        errorLine1="            android:text=&quot;00:00&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_deleted_message_contact.xml"
-            line="51"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;Last deleted message...&quot;, should use `@string` resource"
-        errorLine1="            android:text=&quot;Last deleted message...&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_deleted_message_contact.xml"
-            line="62"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;1&quot;, should use `@string` resource"
-        errorLine1="            android:text=&quot;1&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_deleted_message_contact.xml"
-            line="79"
             column="13"/>
     </issue>
 
@@ -4541,39 +5486,6 @@
         <location
             file="src/main/res/menu/menu_context_delete.xml"
             line="7"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;Show All&quot;, should use `@string` resource"
-        errorLine1="        android:title=&quot;Show All&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/menu/menu_deleted_messages.xml"
-            line="6"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;Show WhatsApp Only&quot;, should use `@string` resource"
-        errorLine1="        android:title=&quot;Show WhatsApp Only&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/menu/menu_deleted_messages.xml"
-            line="10"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;Show WA Business Only&quot;, should use `@string` resource"
-        errorLine1="        android:title=&quot;Show WA Business Only&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/menu/menu_deleted_messages.xml"
-            line="14"
             column="9"/>
     </issue>
 

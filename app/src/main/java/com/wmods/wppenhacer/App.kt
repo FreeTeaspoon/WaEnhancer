@@ -17,9 +17,11 @@ import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wmods.wppenhacer.activities.CrashReportActivity
+import com.wmods.wppenhacer.ui.miuix.MiuixCrashReportActivity
 import com.wmods.wppenhacer.utils.PreferenceSnapshot
 import com.wmods.wppenhacer.xposed.utils.Utils
 import de.robv.android.xposed.XposedHelpers
+import org.lsposed.hiddenapibypass.HiddenApiBypass
 import rikka.material.app.LocaleDelegate.Companion.defaultLocale
 import java.io.File
 import java.util.Locale
@@ -51,13 +53,25 @@ class App : Application() {
                 e.printStackTrace()
             }
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            HiddenApiBypass.addHiddenApiExemptions(
+                "Landroid/content/pm/ApplicationInfo;->setEnableOnBackInvokedCallback"
+            )
+            setEnableOnBackInvokedCallback(
+                applicationInfo,
+                sharedPreferences?.getBoolean(
+                    com.wmods.wppenhacer.ui.miuix.ManagerAppearanceSettings.KEY_PREDICTIVE_BACK,
+                    false
+                ) == true
+            )
+        }
     }
 
     private fun installCrashHandler() {
         val previousHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
             try {
-                val intent = Intent(this, CrashReportActivity::class.java)
+                val intent = Intent(this, MiuixCrashReportActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 intent.putExtra(CrashReportActivity.EXTRA_CRASH_INFO, buildCrashInfo())
@@ -94,6 +108,21 @@ class App : Application() {
     }
 
     companion object {
+
+        fun setEnableOnBackInvokedCallback(
+            appInfo: android.content.pm.ApplicationInfo,
+            enable: Boolean
+        ) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) return
+            runCatching {
+                val method = android.content.pm.ApplicationInfo::class.java.getDeclaredMethod(
+                    "setEnableOnBackInvokedCallback",
+                    Boolean::class.javaPrimitiveType
+                )
+                method.isAccessible = true
+                method.invoke(appInfo, enable)
+            }
+        }
 
         @JvmField
         var instance: App? = null

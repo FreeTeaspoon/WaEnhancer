@@ -13,17 +13,10 @@ plugins {
     alias(libs.plugins.kspPlugin)
 }
 
-fun getGitHashCommit(): String {
-    return try {
-        val processBuilder = ProcessBuilder("git", "rev-parse", "HEAD")
-        val process = processBuilder.start()
-        process.inputStream.bufferedReader().readText().trim().substring(0,8)
-    } catch (_: Exception) {
-        "unknown"
-    }
-}
-
-val gitHash: String = getGitHashCommit().uppercase(Locale.getDefault())
+val gitHash: String = providers.exec {
+    commandLine("git", "rev-parse", "HEAD")
+    isIgnoreExitValue = true
+}.standardOutput.asText.map { it.trim().uppercase(Locale.getDefault()).substring(0,8) }.getOrElse("UNKNOWN")
 
 android {
     namespace = "com.wmods.wppenhacer"
@@ -101,7 +94,7 @@ android {
     buildTypes {
 
         debug {
-            isMinifyEnabled = project.hasProperty("minify") && project.properties["minify"].toString().toBoolean()
+            isMinifyEnabled = project.hasProperty("minify") && project.findProperty("minify").toString().toBoolean()
             //noinspection NotShrinkingResources
             isShrinkResources = false
             signingConfig =
@@ -174,7 +167,6 @@ android {
         // rikka.material >= 2.0.0 provides such attributes
         generatePalette = true
     }
-
 }
 
 kotlin {
@@ -209,6 +201,7 @@ dependencies {
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
+    implementation(libs.androidx.preference)
     implementation(libs.androidx.room.runtime)
     implementation(libs.rikkax.appcompat)
     implementation(libs.rikkax.core)
@@ -222,8 +215,6 @@ dependencies {
     implementation(libs.betterypermissionhelper)
     implementation(libs.bcpkix.jdk18on)
     implementation(libs.arscblamer)
-    compileOnly(libs.lombok)
-    annotationProcessor(libs.lombok)
     implementation(libs.markwon.core)
     implementation(libs.remote.preferences)
     implementation(libs.miuix.ui)
@@ -264,7 +255,7 @@ afterEvaluate {
                             "shell",
                             "am",
                             "force-stop",
-                            project.properties["debug_package_name"]?.toString()
+                            project.findProperty("debug_package_name")?.toString()
                         )
                     }
                     injected.execOps.exec {
@@ -273,7 +264,7 @@ afterEvaluate {
                             "shell",
                             "monkey",
                             "-p",
-                            project.properties["debug_package_name"].toString(),
+                            project.findProperty("debug_package_name")?.toString(),
                             "1"
                         )
                     }

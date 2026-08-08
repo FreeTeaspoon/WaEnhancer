@@ -400,7 +400,7 @@ class HomeFragment : BaseFragment() {
                     .build()
 
                 val request = Request.Builder()
-                    .url("https://api.github.com/repos/Dev4Mod/WaEnhancer/releases/latest")
+                    .url(BuildConfig.LATEST_RELEASE_API)
                     .build()
 
                 client.newCall(request).execute().use { response ->

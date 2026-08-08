@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.button.MaterialButton;
 import com.wmods.wppenhacer.R;
+import com.wmods.wppenhacer.BuildConfig;
 import com.wmods.wppenhacer.activities.base.BaseActivity;
 import com.wmods.wppenhacer.databinding.ActivityAboutBinding;
 
@@ -44,7 +45,7 @@ public class AboutActivity extends BaseActivity {
         setContentView(binding.getRoot());
 
         binding.btnTelegram.setOnClickListener(v -> openUrl("https://t.me/waenhancer"));
-        binding.btnGithub.setOnClickListener(view -> openUrl("https://github.com/Dev4Mod/WaEnhancer"));
+        binding.btnGithub.setOnClickListener(view -> openUrl(BuildConfig.GITHUB_REPOSITORY_URL));
 
         int topMargin = getResources().getDimensionPixelSize(R.dimen.spacing_small);
         for (int i = 0; i < CONTRIBUTORS.length; i++) {

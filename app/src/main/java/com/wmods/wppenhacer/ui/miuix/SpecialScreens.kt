@@ -345,7 +345,7 @@ internal fun ManagerAboutScreen(onBack: () -> Unit) {
         managerSection(projectTitle, "links")
         item("links") {
             ManagerGroupCard {
-                ArrowPreference(projectTitle, onClick = { open("https://github.com/Dev4Mod/WaEnhancer") })
+                ArrowPreference(projectTitle, onClick = { open(BuildConfig.GITHUB_REPOSITORY_URL) })
                 ArrowPreference(stringResource(R.string.manager_support_channel), onClick = { open("https://t.me/waenhancer") })
             }
         }
@@ -416,7 +416,7 @@ internal fun ManagerUpdatesScreen(onBack: () -> Unit) {
     LaunchedEffect(Unit) {
         runCatching {
             withContext(Dispatchers.IO) {
-                OkHttpClient().newCall(Request.Builder().url("https://api.github.com/repos/Dev4Mod/WaEnhancer/releases/latest").build()).execute().use { response ->
+                OkHttpClient().newCall(Request.Builder().url(BuildConfig.LATEST_RELEASE_API).build()).execute().use { response ->
                     check(response.isSuccessful)
                     JSONObject(response.body.string())
                 }

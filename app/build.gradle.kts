@@ -66,6 +66,9 @@ android {
         }
 
         buildConfigField("Boolean", "RESET_ON_INSTALL", "false")
+        buildConfigField("String", "GITHUB_REPOSITORY", "\"FreeTeaspoon/WaEnhancer\"")
+        buildConfigField("String", "GITHUB_REPOSITORY_URL", "\"https://github.com/FreeTeaspoon/WaEnhancer\"")
+        buildConfigField("String", "LATEST_RELEASE_API", "\"https://api.github.com/repos/FreeTeaspoon/WaEnhancer/releases/latest\"")
 
     }
 

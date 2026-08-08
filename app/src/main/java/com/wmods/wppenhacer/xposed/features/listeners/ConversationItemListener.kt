@@ -17,6 +17,7 @@ import android.content.SharedPreferences
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import java.util.WeakHashMap
+import java.util.concurrent.CopyOnWriteArraySet
 
 class ConversationItemListener(
     loader: ClassLoader,
@@ -33,7 +34,7 @@ class ConversationItemListener(
         private const val FIELD_BOUND_MESSAGE_ID = "conversation_item_bound_message_id"
 
         @JvmField
-        val conversationListeners = HashSet<OnConversationItemListener>()
+        val conversationListeners = CopyOnWriteArraySet<OnConversationItemListener>()
 
         var adapter: ListAdapter? = null
 
@@ -72,8 +73,11 @@ class ConversationItemListener(
     @Throws(Throwable::class)
     override fun doHook() {
         WppCore.addListenerActivity { activity, type ->
-            if (activity.javaClass.simpleName == "Conversation" && type == WppCore.ActivityChangeState.ChangeType.DESTROYED)
+            if (activity.javaClass.simpleName == "Conversation" && type == WppCore.ActivityChangeState.ChangeType.DESTROYED) {
                 hooked?.unhook()
+                hooked = null
+                adapter = null
+            }
         }
 
         XposedHelpers.findAndHookMethod(
@@ -83,6 +87,7 @@ class ConversationItemListener(
             object : XC_MethodHook() {
                 @Throws(Throwable::class)
                 override fun beforeHookedMethod(param: MethodHookParam) {
+                    if (conversationListeners.isEmpty()) return
                     val currentActivity = WppCore.getCurrentActivity()
                     if (currentActivity == null || currentActivity.javaClass.simpleName != "Conversation") {
                         return
@@ -120,13 +125,15 @@ class ConversationItemListener(
                     hooked = XposedBridge.hookMethod(method, object : XC_MethodHook() {
                         @Throws(Throwable::class)
                         override fun afterHookedMethod(param: MethodHookParam) {
-                            if (param.thisObject !== adapter) return
+                            if (conversationListeners.isEmpty()) return
+                            val activeAdapter = adapter ?: return
+                            if (param.thisObject !== activeAdapter) return
 
                             val position = param.args[0] as Int
                             val convertView = param.args[1] as? View
                             val viewGroup = param.result as? ViewGroup ?: return
 
-                            val fMessageObj = adapter!!.getItem(position) ?: return
+                            val fMessageObj = activeAdapter.getItem(position) ?: return
 
                             val fMessage = FMessageWpp(fMessageObj)
 

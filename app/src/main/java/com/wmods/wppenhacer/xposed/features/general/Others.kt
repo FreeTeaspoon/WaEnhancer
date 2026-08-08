@@ -29,7 +29,8 @@ import com.wmods.wppenhacer.xposed.utils.ReflectionUtils
 import com.wmods.wppenhacer.xposed.utils.Utils
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodReplacement
-import android.content.SharedPreferences 
+import android.content.SharedPreferences
+import com.wmods.wppenhacer.xposed.core.components.SharedPreferencesWrapper
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import okhttp3.OkHttpClient
@@ -40,9 +41,11 @@ import org.luckypray.dexkit.util.DexSignUtil
 import java.io.File
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
+import java.util.Collections
 import java.util.Properties
 import java.util.WeakHashMap
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.max
 
 class Others(loader: ClassLoader, preferences:SharedPreferences) : Feature(loader, preferences) {
@@ -50,12 +53,14 @@ class Others(loader: ClassLoader, preferences:SharedPreferences) : Feature(loade
     companion object {
 
         @JvmField
-        val propsBoolean = HashMap<Int, Boolean>()
+        val propsBoolean = ConcurrentHashMap<Int, Boolean>()
         @JvmField
-        val propsInteger = HashMap<Int, Int>()
+        val propsInteger = ConcurrentHashMap<Int, Int>()
     }
 
     private lateinit var properties: Properties
+    private val hiddenHomeFilterViews =
+        Collections.synchronizedMap(WeakHashMap<View, Boolean>())
 
     override fun doHook() {
         properties = Utils.getProperties(prefs, "custom_css", "custom_filters")
@@ -174,6 +179,13 @@ class Others(loader: ClassLoader, preferences:SharedPreferences) : Feature(loade
         propsBoolean[0x32cb] = true
 
         if (disableMetaAI) {
+            SharedPreferencesWrapper.addHook { key, value ->
+                if (key == "bonsai_meta_ai_button_setting_enabled") {
+                    return@addHook false
+                }
+                value
+            }
+
             propsInteger[15535] = 0
             propsBoolean[8025] = false
             propsBoolean[6251] = false
@@ -285,17 +297,25 @@ class Others(loader: ClassLoader, preferences:SharedPreferences) : Feature(loade
         propsBoolean[13408] = true
 
         val filterView = Unobfuscator.loadChatFilterView(classLoader)
+        XposedHelpers.findAndHookMethod(
+            View::class.java,
+            "setVisibility",
+            Int::class.javaPrimitiveType,
+            object : XC_MethodHook() {
+                override fun beforeHookedMethod(param: MethodHookParam) {
+                    val visibility = param.args[0] as Int
+                    if (visibility == View.GONE) return
+                    if (hiddenHomeFilterViews.containsKey(param.thisObject as View)) {
+                        param.args[0] = View.GONE
+                    }
+                }
+            })
+
         XposedBridge.hookAllConstructors(filterView, object : XC_MethodHook() {
             override fun afterHookedMethod(param: MethodHookParam) {
                 val view = param.thisObject as View
-                view.visibility = View.GONE
-                XposedHelpers.findAndHookMethod(View::class.java, "setVisibility", Int::class.javaPrimitiveType, object : XC_MethodHook() {
-                    override fun beforeHookedMethod(param: MethodHookParam) {
-                        if (view === param.thisObject && param.args[0] as Int != View.GONE) {
-                            param.result = View.GONE
-                        }
-                    }
-                })
+                hiddenHomeFilterViews[view] = true
+                if (view.visibility != View.GONE) view.visibility = View.GONE
             }
         })
     }
@@ -627,12 +647,12 @@ class Others(loader: ClassLoader, preferences:SharedPreferences) : Feature(loade
 
 
     private fun filterItems(filterItems: String) {
-        val idsFilter: List<Int> by lazy {
+        val idsFilter: Set<Int> by lazy {
             filterItems.split("\n").map {
                 Utils.getID(it.trim(), "id")
             }.filter {
                 it > 0
-            }
+            }.toSet()
         }
         XposedHelpers.findAndHookMethod(View::class.java, "invalidate", Boolean::class.javaPrimitiveType, object : XC_MethodHook() {
             override fun afterHookedMethod(param: MethodHookParam) {

@@ -6,15 +6,36 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import top.yukonga.miuix.kmp.nav.core.NavBackStack
+import top.yukonga.miuix.kmp.nav.core.NavKey
 import com.wmods.wppenhacer.ui.miuix.navigation.ManagerStackNavigator
+import com.wmods.wppenhacer.ui.miuix.navigation.ManagerStackRoute
+import com.wmods.wppenhacer.ui.miuix.navigation.MANAGER_ROOT_ROUTE
 
-private const val MANAGER_ROOT_ROUTE = "manager-root"
-
-private val ManagerRouteStackSaver = listSaver<SnapshotStateList<String>, String>(
-    save = { it.toList() },
-    restore = { restored -> mutableStateListOf<String>().apply { addAll(restored.ifEmpty { listOf(MANAGER_ROOT_ROUTE) }) } },
+private val ManagerRouteStackSaver = listSaver<NavBackStack, String>(
+    save = { stack ->
+        stack.map { route ->
+            when (route) {
+                ManagerStackRoute.Root -> MANAGER_ROOT_ROUTE
+                is ManagerStackRoute.Screen -> route.encoded
+                else -> MANAGER_ROOT_ROUTE
+            }
+        }
+    },
+    restore = { restored ->
+        mutableStateListOf<NavKey>().apply {
+            addAll(
+                restored.ifEmpty { listOf(MANAGER_ROOT_ROUTE) }.map { encoded ->
+                    if (encoded == MANAGER_ROOT_ROUTE) {
+                        ManagerStackRoute.Root
+                    } else {
+                        ManagerStackRoute.Screen(encoded)
+                    }
+                },
+            )
+        }
+    },
 )
 
 @Composable
@@ -25,13 +46,15 @@ internal fun WaEnhancerManagerApp(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val activity = LocalActivity.current
     val routeStack = rememberSaveable(saver = ManagerRouteStackSaver) {
-        mutableStateListOf(MANAGER_ROOT_ROUTE)
+        mutableStateListOf<NavKey>(ManagerStackRoute.Root)
     }
 
     ManagerTheme(state.appearance) {
         ManagerStackNavigator(routeStack, onExitRoot = { activity?.finish() }) { encoded, push, pop ->
             val navigate: (ManagerRoute) -> Unit = { route ->
-                if (route.encode() != routeStack.lastOrNull()) push(route.encode())
+                if ((routeStack.lastOrNull() as? ManagerStackRoute.Screen)?.encoded != route.encode()) {
+                    push(route.encode())
+                }
             }
             val route = encoded.takeUnless { it == MANAGER_ROOT_ROUTE }?.let(ManagerRoute::decode)
             if (route == null) {

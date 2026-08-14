@@ -1,4 +1,3 @@
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -7,8 +6,6 @@ import kotlin.time.Duration.Companion.milliseconds
 
 plugins {
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.materialthemebuilder)
-    alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kspPlugin)
 }
@@ -120,8 +117,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
         viewBinding = true
@@ -137,44 +134,24 @@ android {
         baseline = file("lint-baseline.xml")
     }
 
-    applicationVariants.all {
-        val appName = when (flavorName) {
-            "business" -> "WaEnhancer-Business"
-            else -> "WaEnhancer"
-        }
+}
 
-        outputs.all {
-            (this as BaseVariantOutputImpl).outputFileName = "$appName-$versionName.apk"
+androidComponents {
+    onVariants { variant ->
+        val appName = if (variant.flavorName == "business") {
+            "WaEnhancer-Business"
+        } else {
+            "WaEnhancer"
         }
-    }
-
-    materialThemeBuilder {
-        themes {
-            for ((name, color) in listOf(
-                "Green" to "4FAF50",
-                "Blue" to "3B82F6",
-                "Cyan" to "06B6D4",
-                "Purple" to "8B5CF6",
-                "Orange" to "F97316",
-                "Red" to "EF4444",
-                "Pink" to "EC4899"
-            )) {
-                create("Material$name") {
-                    lightThemeFormat = "ThemeOverlay.Light.%s"
-                    darkThemeFormat = "ThemeOverlay.Dark.%s"
-                    primaryColor = "#$color"
-                }
-            }
+        variant.outputs.forEach { output ->
+            output.outputFileName.set("$appName-${output.versionName.get()}.apk")
         }
-        // Add Material Design 3 color tokens (such as palettePrimary100) in generated theme
-        // rikka.material >= 2.0.0 provides such attributes
-        generatePalette = true
     }
 }
 
 kotlin {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 }
 
@@ -196,8 +173,6 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.navigation3.runtime)
-    implementation(libs.androidx.navigationevent.compose)
     implementation(libs.hidden.api.bypass)
     implementation(libs.androidx.documentfile)
     implementation(libs.androidx.constraintlayout)
@@ -224,7 +199,7 @@ dependencies {
     implementation(libs.miuix.icons)
     implementation(libs.miuix.preference)
     implementation(libs.miuix.blur)
-    implementation(libs.miuix.navigation3)
+    implementation(libs.miuix.nav)
 }
 
 

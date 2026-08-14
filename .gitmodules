@@ -7,3 +7,6 @@
 [submodule "app/src/main/cpp/ogg"]
 	path = app/src/main/cpp/ogg
 	url = https://github.com/xiph/ogg
+[submodule "third_party/miuix"]
+	path = third_party/miuix
+	url = https://github.com/compose-miuix-ui/miuix.git

@@ -10,9 +10,11 @@ import androidx.preference.PreferenceManager
 import com.wmods.wppenhacer.App
 import com.wmods.wppenhacer.R
 import java.io.File
+import top.yukonga.miuix.kmp.basic.SnackbarHostState
 
 class MiuixMainActivity : ComponentActivity() {
     private val viewModel: ManagerViewModel by viewModels()
+    private val snackbarHostState = SnackbarHostState()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         App.changeLanguage(this)
@@ -23,6 +25,7 @@ class MiuixMainActivity : ComponentActivity() {
         setContent {
             WaEnhancerManagerApp(
                 viewModel = viewModel,
+                snackbarHostState = snackbarHostState,
                 onPredictiveBackChange = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                     { enabled ->
                         App.setEnableOnBackInvokedCallback(applicationInfo, enabled)

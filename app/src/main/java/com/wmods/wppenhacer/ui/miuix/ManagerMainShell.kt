@@ -41,6 +41,8 @@ import top.yukonga.miuix.kmp.basic.NavigationRail
 import top.yukonga.miuix.kmp.basic.NavigationRailItem
 import top.yukonga.miuix.kmp.basic.NavigationRailValue
 import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.SnackbarHost
+import top.yukonga.miuix.kmp.basic.SnackbarHostState
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.rememberNavigationRailState
 import top.yukonga.miuix.kmp.blur.BlendColorEntry
@@ -62,6 +64,7 @@ import androidx.navigationevent.compose.rememberNavigationEventState
 internal fun ManagerMainShell(
     state: ManagerUiState,
     onNavigate: (ManagerRoute) -> Unit,
+    snackbarHostState: SnackbarHostState,
     isBackHandlerEnabled: Boolean = true,
 ) {
     val destinations = listOf(
@@ -104,25 +107,31 @@ internal fun ManagerMainShell(
                 initialValue = if (expanded) NavigationRailValue.Expanded else NavigationRailValue.Collapsed,
             )
             LaunchedEffect(expanded) { if (expanded) rail.expand() else rail.collapse() }
-            Row(Modifier.fillMaxSize().background(MiuixTheme.colorScheme.surface)) {
-                NavigationRail(state = rail) {
-                    destinations.forEachIndexed { index, item ->
-                        NavigationRailItem(
-                            selected = navigation.selectedPage == index,
-                            onClick = { navigation.navigateTo(index) },
-                            icon = item.icon,
-                            label = item.label,
-                            modifier = Modifier.testTag(primaryNavigationTag(index)),
-                        )
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                snackbarHost = { SnackbarHost(state = snackbarHostState) },
+            ) { _ ->
+                Row(Modifier.fillMaxSize().background(MiuixTheme.colorScheme.surface)) {
+                    NavigationRail(state = rail) {
+                        destinations.forEachIndexed { index, item ->
+                            NavigationRailItem(
+                                selected = navigation.selectedPage == index,
+                                onClick = { navigation.navigateTo(index) },
+                                icon = item.icon,
+                                label = item.label,
+                                modifier = Modifier.testTag(primaryNavigationTag(index)),
+                            )
+                        }
                     }
+                    content(Modifier.weight(1f), 0.dp)
                 }
-                content(Modifier.weight(1f), 0.dp)
             }
         } else {
             val backdrop = rememberManagerBackdrop()
             val appearance = state.appearance
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
+                snackbarHost = { SnackbarHost(state = snackbarHostState) },
                 bottomBar = {
                     when {
                         appearance.floatingNavigation && appearance.floatingStyle == ManagerFloatingStyle.LIQUID_GLASS ->

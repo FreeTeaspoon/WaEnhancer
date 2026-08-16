@@ -18,6 +18,7 @@ import android.os.Looper
 import android.text.TextUtils
 import android.util.TypedValue
 import android.widget.Toast
+import com.wmods.wppenhacer.ui.miuix.ManagerSnackbarEvents
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.wmods.wppenhacer.App
@@ -202,6 +203,7 @@ object Utils {
     @JvmOverloads
     fun showToast(message: String?, length: Int = 0) {
         if (message == null) return
+        if (ManagerSnackbarEvents.tryShow(message)) return
         if (Looper.myLooper() == Looper.getMainLooper()) {
             Toast.makeText(application, message, length).show()
         } else {

@@ -1226,22 +1226,22 @@ object Unobfuscator {
     @JvmStatic
     fun loadNewMessageMethod(loader: ClassLoader): Method {
         return UnobfuscatorCache.getInstance().getMethod(loader) {
-            val clazzMessageName = loadFMessageClass(loader).name
-            val listMethods = bridge.findMethod {
-                searchPackages("com.whatsapp")
+            val methodList = bridge.findMethod {
                 matcher {
-                    addUsingString("extra_payment_note", StringMatchType.Equals)
+                    usingStrings(listOf("INSERT_TABLE_MESSAGE_QUOTED"), StringMatchType.Equals)
                 }
             }
-            if (listMethods.isEmpty()) throw Exception("NewMessage method not found")
-            val invokes = listMethods[0].invokes
-            val method = invokes.parallelStream()
-                .filter { invoke ->
-                    clazzMessageName == invoke.declaredClass?.name &&
-                            invoke.returnType != null &&
-                            invoke.returnType?.name == "java.lang.String"
-                }.findFirst().orElse(null) ?: throw RuntimeException("NewMessage method not found")
-            method.getMethodInstance(loader)
+            if (methodList.isEmpty()) throw Exception("NewMessage method not found")
+
+            val methodData = methodList[0]
+            val invokes = methodData.invokes
+            val clazzMessageName = loadFMessageClass(loader).name
+
+            val method = invokes.firstOrNull { invoke ->
+                clazzMessageName == invoke.declaredClass?.name && invoke.returnType?.name == "java.lang.String"
+            } ?: throw RuntimeException("NewMessage method not found")
+
+            return@getMethod method.getMethodInstance(loader)
         }
     }
 
@@ -1255,30 +1255,6 @@ object Unobfuscator {
                 "FMessageUtil/getOriginalMessageKeyIfEdited"
             )
                 ?: throw RuntimeException("MessageEdit method not found")
-        }
-    }
-
-    @Throws(Exception::class)
-    @JvmStatic
-    fun loadNewMessageWithMediaMethod(loader: ClassLoader): Method {
-        return UnobfuscatorCache.getInstance().getMethod(loader) {
-            val methodList = bridge.findMethod {
-                matcher {
-                    addUsingString("INSERT_TABLE_MESSAGE_QUOTED", StringMatchType.Equals)
-                }
-            }
-            if (methodList.isEmpty()) throw Exception("NewMessageWithMedia method not found")
-            val methodData = methodList[0]
-            val invokes = methodData.invokes
-            val clazzMessageName = loadFMessageClass(loader).name
-            val method = invokes.parallelStream()
-                .filter { invoke ->
-                    clazzMessageName == invoke.declaredClass?.name &&
-                            invoke.returnType != null &&
-                            invoke.returnType?.name == "java.lang.String"
-                }.findFirst().orElse(null)
-                ?: throw RuntimeException("NewMessageWithMedia method not found")
-            method.getMethodInstance(loader)
         }
     }
 
@@ -2604,19 +2580,84 @@ object Unobfuscator {
         }
     }
 
-    @Throws(Exception::class)
     @JvmStatic
-    fun loadChatFilterView(classLoader: ClassLoader): Class<*>? {
-        return UnobfuscatorCache.getInstance().getClass(classLoader) {
-            val value = Utils.getID("conversations_inbox_filters_stub", "id")
-            val clazz = bridge.findClass {
+    @Throws(Exception::class)
+    fun loadFilterDimenId(classLoader: ClassLoader): Int {
+        return UnobfuscatorCache.getInstance().getNumber(classLoader) {
+            val methodData = bridge.findClass {
                 matcher {
-                    addMethod {
-                        addUsingNumber(value)
-                    }
+                    className(".ConversationsFragment", StringMatchType.EndsWith)
                 }
-            }.singleOrNull() ?: return@getClass null
-            clazz.getInstance(classLoader)
+            }.findMethod {
+                matcher {
+                    returnType = "int"
+                    paramCount = 0
+                    modifiers = Modifier.PRIVATE
+                }
+            }.firstOrNull() ?: throw Exception("ConversationsFragment A00 method not found")
+
+            val dimenId = methodData.usingNumbers.map { n ->
+                java.lang.Float.floatToIntBits(n.toFloat())
+            }.firstOrNull { idInt ->
+                (idInt ushr 24) == 0x7F && ((idInt ushr 16) and 0xFF) == 0x07
+            } ?: throw Exception("Filter dimen ID not found in ConversationsFragment")
+            dimenId
+        }.toInt()
+    }
+
+    @JvmStatic
+    @Throws(Exception::class)
+    fun loadChatFilterViewMethod(classLoader: ClassLoader): Method {
+        return UnobfuscatorCache.getInstance().getMethod(classLoader) {
+            val value = Utils.getID("conversations_swipe_to_reveal_filter_recycler_view", "id")
+            val method = bridge.findMethod {
+                matcher {
+                    usingNumbers(value)
+                    modifiers = Modifier.PUBLIC or Modifier.STATIC
+                }
+            }.firstOrNull() ?: throw RuntimeException("ChatFilterView method not found")
+            return@getMethod method.getMethodInstance(classLoader)
+        }
+    }
+
+
+    @JvmStatic
+    @Throws(Exception::class)
+    fun loadConversationsHeightMethod(classLoader: ClassLoader): Method {
+        return UnobfuscatorCache.getInstance().getMethod(classLoader) {
+            val methodData = bridge.findClass {
+                matcher {
+                    className(".ConversationsFragment", StringMatchType.EndsWith)
+                }
+            }.findMethod {
+                matcher {
+                    returnType = "int"
+                    paramCount = 0
+                    modifiers = Modifier.PRIVATE
+                }
+            }.firstOrNull() ?: throw RuntimeException("ConversationsFragment height calculation method not found")
+            return@getMethod methodData.getMethodInstance(classLoader)
+        }
+    }
+
+    @JvmStatic
+    @Throws(Exception::class)
+    fun loadConversationsUpdateLayoutMethod(classLoader: ClassLoader): Method {
+        return UnobfuscatorCache.getInstance().getMethod(classLoader) {
+            val classData = bridge.findClass {
+                matcher {
+                    className(".ConversationsFragment", StringMatchType.EndsWith)
+                }
+            }
+            val methodData = classData.findMethod {
+                matcher {
+                    paramCount = 1
+                    paramTypes(classData.first().name)
+                    returnType = "void"
+                    modifiers = Modifier.PUBLIC or Modifier.STATIC
+                }
+            }.firstOrNull() ?: throw RuntimeException("ConversationsFragment update layout method not found")
+            return@getMethod methodData.getMethodInstance(classLoader)
         }
     }
 
@@ -3343,6 +3384,17 @@ object Unobfuscator {
                     superClass = PopupWindow::class.java.name
                 }
             }.single().getInstance(classLoader)
+        }
+    }
+
+    fun loadSwipeUpInGroupMethod(classLoader: ClassLoader): Method {
+        return UnobfuscatorCache.getInstance().getMethod(classLoader) {
+            val id = UnobfuscatorCache.getInstance().getOfuscateIDString("Keep holding to talk")
+            bridge.findMethod {
+                matcher {
+                    usingNumbers(id)
+                }
+            }.single().getMethodInstance(classLoader)
         }
     }
 

@@ -31,6 +31,7 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodReplacement
 import android.content.SharedPreferences
 import com.wmods.wppenhacer.xposed.core.components.SharedPreferencesWrapper
+import com.wmods.wppenhacer.xposed.utils.collapseAndHide
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import okhttp3.OkHttpClient
@@ -47,6 +48,7 @@ import java.util.WeakHashMap
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.max
+import kotlin.text.set
 
 class Others(loader: ClassLoader, preferences:SharedPreferences) : Feature(loader, preferences) {
 
@@ -279,8 +281,21 @@ class Others(loader: ClassLoader, preferences:SharedPreferences) : Feature(loade
         if (!filterSeen) {
             disableHomeFilters()
         }
+
+        if (prefs.getBoolean("disable_swipe_up_in_group", false)) {
+            disableSwipeUpInGroup()
+        }
+
     }
 
+
+    private fun disableSwipeUpInGroup() {
+        XposedBridge.hookMethod(Unobfuscator.loadSwipeUpInGroupMethod(classLoader), object : XC_MethodHook() {
+            override fun beforeHookedMethod(param: MethodHookParam) {
+                param.result = ReflectionUtils.getDefaultValue((param.method as Method).returnType)
+            }
+        })
+    }
 
     private fun getNewSettingsVariant(): Int {
         val type = prefs.getString("configui_mode", "-1")?.toInt() ?: -1
@@ -292,32 +307,35 @@ class Others(loader: ClassLoader, preferences:SharedPreferences) : Feature(loade
     }
 
     private fun disableHomeFilters() {
-        propsBoolean[15345] = true
-        propsBoolean[13546] = false
-        propsBoolean[13408] = true
+        XposedBridge.hookMethod(Unobfuscator.loadChatFilterViewMethod(classLoader), object : XC_MethodHook() {
+            override fun afterHookedMethod(param: MethodHookParam) {
+                val filterView = param.args[0] as? View ?: return
+                filterView.collapseAndHide()
+            }
+        })
 
-        val filterView = Unobfuscator.loadChatFilterView(classLoader)
-        XposedHelpers.findAndHookMethod(
-            View::class.java,
-            "setVisibility",
-            Int::class.javaPrimitiveType,
-            object : XC_MethodHook() {
-                override fun beforeHookedMethod(param: MethodHookParam) {
-                    val visibility = param.args[0] as Int
-                    if (visibility == View.GONE) return
-                    if (hiddenHomeFilterViews.containsKey(param.thisObject as View)) {
-                        param.args[0] = View.GONE
+        val filterDimenId = try {
+            Unobfuscator.loadFilterDimenId(classLoader)
+        } catch (e: Throwable) {
+            logDebug(e)
+            return
+        }
+
+        try {
+            XposedBridge.hookMethod(Unobfuscator.loadConversationsHeightMethod(classLoader), object : XC_MethodHook() {
+                override fun afterHookedMethod(param: MethodHookParam) {
+                    val context = Utils.application
+                    if (filterDimenId != 0) {
+                        val filterViewHeight =
+                            context.resources.getDimensionPixelSize(filterDimenId)
+                        val originalHeight = param.result as Int
+                        param.result = max(originalHeight - filterViewHeight, 0)
                     }
                 }
             })
-
-        XposedBridge.hookAllConstructors(filterView, object : XC_MethodHook() {
-            override fun afterHookedMethod(param: MethodHookParam) {
-                val view = param.thisObject as View
-                hiddenHomeFilterViews[view] = true
-                if (view.visibility != View.GONE) view.visibility = View.GONE
-            }
-        })
+        } catch (e: Throwable) {
+            logDebug(e)
+        }
     }
 
     private fun disableAds() {
@@ -549,9 +567,11 @@ class Others(loader: ClassLoader, preferences:SharedPreferences) : Feature(loade
         
         XposedBridge.hookMethod(playBackSpeed, object : XC_MethodHook() {
             override fun beforeHookedMethod(param: MethodHookParam) {
-                super.beforeHookedMethod(param)
-                if (param.args[1] as Float == 2.0f) {
-                    param.args[1] = voicenoteSpeed
+                val index = ReflectionUtils.findIndexOfType(param.args, Float::class.javaPrimitiveType!!)
+                if (index != -1) {
+                    if (param.args[index] as? Float == 2.0f) {
+                        param.args[index] = voicenoteSpeed
+                    }
                 }
             }
         })

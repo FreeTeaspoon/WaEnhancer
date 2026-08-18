@@ -67,6 +67,8 @@ private fun ManagerSearchScreen(
                     value = query,
                     onValueChange = { query = it },
                     modifier = Modifier.fillMaxWidth(),
+                    label = stringResource(R.string.manager_search),
+                    useLabelAsPlaceholder = true,
                     singleLine = true,
                 )
             }

@@ -22,6 +22,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.maxLength
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -84,7 +89,7 @@ internal fun ManagerAppearanceScreen(
     var densityDraft by remember(appearance.interfaceScale) {
         mutableStateOf(appearance.interfaceScale * 100f)
     }
-    var densityText by remember { mutableStateOf("") }
+    val densityTextState = rememberTextFieldState()
     var showDensityDialog by remember { mutableStateOf(false) }
     val themeModes = ManagerThemeMode.entries
     val themeItems = listOf(
@@ -236,7 +241,7 @@ internal fun ManagerAppearanceScreen(
                             )
                         },
                         onClick = {
-                            densityText = densityDraft.toInt().toString()
+                            densityTextState.setTextAndPlaceCursorAtEnd(densityDraft.toInt().toString())
                             showDensityDialog = true
                         },
                         holdDownState = showDensityDialog,
@@ -303,10 +308,11 @@ internal fun ManagerAppearanceScreen(
         onDismissRequest = { showDensityDialog = false },
     ) {
         TextField(
-            value = densityText,
-            onValueChange = { value -> densityText = value.filter(Char::isDigit).take(3) },
+            state = densityTextState,
+            inputTransformation = DensityDigitsOnlyTransformation.maxLength(3),
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            lineLimits = TextFieldLineLimits.SingleLine,
             trailingIcon = { Text("%", modifier = Modifier.padding(horizontal = 16.dp)) },
         )
         Spacer(Modifier.height(12.dp))
@@ -321,13 +327,19 @@ internal fun ManagerAppearanceScreen(
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    val percent = densityText.toIntOrNull()?.coerceIn(80, 110) ?: densityDraft.toInt()
+                    val percent = densityTextState.text.toString().toIntOrNull()
+                        ?.coerceIn(80, 110)
+                        ?: densityDraft.toInt()
                     controller.putManagerFloat(ManagerAppearanceSettings.KEY_SCALE, percent / 100f)
                     showDensityDialog = false
                 },
             )
         }
     }
+}
+
+private val DensityDigitsOnlyTransformation = InputTransformation {
+    if (!asCharSequence().all { it.isDigit() }) revertAllChanges()
 }
 
 private fun String.readable() = lowercase().replace('_', ' ').replaceFirstChar(Char::titlecase)

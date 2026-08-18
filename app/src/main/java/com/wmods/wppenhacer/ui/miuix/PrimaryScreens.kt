@@ -159,6 +159,7 @@ private fun ManagerFeaturesScreen(
                     .padding(horizontal = 12.dp, vertical = 12.dp)
                     .fillMaxWidth(),
                 label = stringResource(R.string.manager_search_features),
+                useLabelAsPlaceholder = true,
                 leadingIcon = {
                     Icon(
                         imageVector = MiuixIcons.Search,

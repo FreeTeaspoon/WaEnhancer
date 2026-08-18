@@ -56,16 +56,13 @@ import top.yukonga.miuix.kmp.icon.extended.Settings
 import top.yukonga.miuix.kmp.icon.extended.Tasks
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import androidx.compose.ui.res.stringResource
-import androidx.navigationevent.NavigationEventInfo
-import androidx.navigationevent.compose.NavigationBackHandler
-import androidx.navigationevent.compose.rememberNavigationEventState
 
 @Composable
 internal fun ManagerMainShell(
     state: ManagerUiState,
     onNavigate: (ManagerRoute) -> Unit,
     snackbarHostState: SnackbarHostState,
-    isBackHandlerEnabled: Boolean = true,
+    rootTabBack: RootTabBackState,
 ) {
     val destinations = listOf(
         NavigationItem(stringResource(R.string.manager_home), MiuixIcons.Home),
@@ -73,14 +70,16 @@ internal fun ManagerMainShell(
         NavigationItem(stringResource(R.string.manager_tools), MiuixIcons.Settings),
     )
     val pager = rememberPagerState(pageCount = { destinations.size })
-    val navigation = rememberPrimaryPagerNavigationState(pager, rememberSystemAnimationsEnabled())
+    val navigation = rememberPrimaryPagerNavigationState(
+        pager,
+        rememberSystemAnimationsEnabled(),
+        rootTabBack,
+    )
     LaunchedEffect(pager.currentPage) { navigation.syncPage() }
     DisposableEffect(navigation) { onDispose(navigation::dispose) }
-    NavigationBackHandler(
-        state = rememberNavigationEventState(NavigationEventInfo.None),
-        isBackEnabled = isBackHandlerEnabled && navigation.selectedPage != 0,
-        onBackCompleted = { navigation.navigateTo(0) },
-    )
+    rootTabBack.onBack = remember(navigation) {
+        { navigation.navigateTo(0) }
+    }
 
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val wide = maxWidth >= 600.dp

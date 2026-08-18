@@ -24,6 +24,7 @@ internal class PrimaryPagerNavigationState(
     val pagerState: PagerState,
     private val scope: CoroutineScope,
     private val animationsEnabled: Boolean,
+    private val rootTabBack: RootTabBackState,
 ) {
     var selectedPage by mutableIntStateOf(pagerState.currentPage)
         private set
@@ -37,6 +38,7 @@ internal class PrimaryPagerNavigationState(
         val currentRequest = ++request
         job?.cancel()
         selectedPage = page
+        rootTabBack.targetPage.value = page
         navigatingTo = page
         job = scope.launch {
             try {
@@ -60,6 +62,7 @@ internal class PrimaryPagerNavigationState(
                 if (currentRequest == request) {
                     navigatingTo = null
                     selectedPage = pagerState.currentPage
+                    rootTabBack.targetPage.value = selectedPage
                     job = null
                 }
             }
@@ -67,7 +70,10 @@ internal class PrimaryPagerNavigationState(
     }
 
     fun syncPage() {
-        if (navigatingTo == null) selectedPage = pagerState.currentPage
+        if (navigatingTo == null) {
+            selectedPage = pagerState.currentPage
+            rootTabBack.targetPage.value = selectedPage
+        }
     }
 
     fun dispose() {
@@ -82,7 +88,8 @@ internal class PrimaryPagerNavigationState(
 internal fun rememberPrimaryPagerNavigationState(
     pagerState: PagerState,
     animationsEnabled: Boolean,
+    rootTabBack: RootTabBackState,
     scope: CoroutineScope = rememberCoroutineScope(),
-): PrimaryPagerNavigationState = remember(pagerState, animationsEnabled, scope) {
-    PrimaryPagerNavigationState(pagerState, scope, animationsEnabled)
+): PrimaryPagerNavigationState = remember(pagerState, animationsEnabled, rootTabBack, scope) {
+    PrimaryPagerNavigationState(pagerState, scope, animationsEnabled, rootTabBack)
 }

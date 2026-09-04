@@ -2,6 +2,7 @@ package com.wmods.wppenhacer.ui.miuix
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.media.MediaMetadataRetriever
 import android.annotation.SuppressLint
@@ -72,6 +73,7 @@ import top.yukonga.miuix.kmp.preference.ArrowPreference
 import top.yukonga.miuix.kmp.preference.OverlayDropdownPreference
 import top.yukonga.miuix.kmp.preference.SwitchPreference
 import top.yukonga.miuix.kmp.blur.isRuntimeShaderSupported
+import top.yukonga.miuix.kmp.shader.isRenderEffectSupported
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.window.WindowDialog
 import java.io.File
@@ -113,8 +115,10 @@ internal fun ManagerAppearanceScreen(
         stringResource(R.string.manager_icons_and_text),
         stringResource(R.string.manager_icons_only),
     )
-    val blurSupported = isRuntimeShaderSupported()
+    val monetSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val blurSupported = isRenderEffectSupported() && isRuntimeShaderSupported()
     val themeSection = stringResource(R.string.manager_section_theme)
+    val languageSection = stringResource(R.string.manager_section_language)
     val effectsSection = stringResource(R.string.manager_section_effects)
     val navigationSection = stringResource(R.string.manager_section_navigation)
 
@@ -126,12 +130,11 @@ internal fun ManagerAppearanceScreen(
                 ManagerCardItem("mode") {
                     OverlayDropdownPreference(
                         title = stringResource(R.string.manager_theme_mode),
-                        summary = themeItems[appearance.themeMode.ordinal],
                         items = themeItems,
                         selectedIndex = appearance.themeMode.ordinal,
                         onSelectedIndexChange = { index ->
                             controller.putManagerString(
-                                "thememode",
+                                ManagerAppearanceSettings.KEY_THEME_MODE,
                                 when (themeModes[index]) {
                                     ManagerThemeMode.DARK -> "1"
                                     ManagerThemeMode.LIGHT -> "2"
@@ -145,10 +148,14 @@ internal fun ManagerAppearanceScreen(
                     SwitchPreference(
                         checked = appearance.useMonet,
                         onCheckedChange = {
-                            controller.putManagerString("wae_color_mode", if (it) "monet" else "preset")
+                            controller.putManagerString(
+                                ManagerAppearanceSettings.KEY_COLOR_MODE,
+                                if (it) "monet" else "preset",
+                            )
                         },
                         title = stringResource(R.string.manager_monet),
                         summary = stringResource(R.string.manager_monet_summary),
+                        enabled = monetSupported,
                     )
                     AnimatedVisibility(
                         visible = appearance.useMonet,
@@ -158,7 +165,6 @@ internal fun ManagerAppearanceScreen(
                         Column {
                             OverlayDropdownPreference(
                                 title = stringResource(R.string.manager_palette_style),
-                                summary = paletteItems[palettes.indexOf(appearance.paletteStyle).coerceAtLeast(0)],
                                 items = paletteItems,
                                 selectedIndex = palettes.indexOf(appearance.paletteStyle).coerceAtLeast(0),
                                 onSelectedIndexChange = {
@@ -167,11 +173,13 @@ internal fun ManagerAppearanceScreen(
                             )
                             OverlayDropdownPreference(
                                 title = stringResource(R.string.manager_accent_colour),
-                                summary = accentItems[accents.indexOf(appearance.accent).coerceAtLeast(0)],
                                 items = accentItems,
                                 selectedIndex = accents.indexOf(appearance.accent).coerceAtLeast(0),
                                 onSelectedIndexChange = {
-                                    controller.putManagerString("wae_color_preset", accents[it].name.lowercase())
+                                    controller.putManagerString(
+                                        ManagerAppearanceSettings.KEY_COLOR_PRESET,
+                                        accents[it].name.lowercase(),
+                                    )
                                 },
                             )
                             SwitchPreference(
@@ -184,6 +192,27 @@ internal fun ManagerAppearanceScreen(
                             )
                         }
                     }
+                },
+            ),
+        )
+
+        managerSection(languageSection, "language")
+        managerGroupedCardItems(
+            keyPrefix = "appearance-language",
+            items = listOf(
+                ManagerCardItem("english") {
+                    SwitchPreference(
+                        checked = appearance.forceEnglish,
+                        onCheckedChange = {
+                            controller.putManagerBoolean(
+                                ManagerAppearanceSettings.KEY_FORCE_ENGLISH,
+                                it,
+                                restart = true,
+                            )
+                        },
+                        title = stringResource(R.string.manager_force_english),
+                        summary = stringResource(R.string.manager_force_english_summary),
+                    )
                 },
             ),
         )
@@ -270,7 +299,6 @@ internal fun ManagerAppearanceScreen(
                     ) {
                         OverlayDropdownPreference(
                             title = stringResource(R.string.manager_floating_style),
-                            summary = floatingItems[floatingStyles.indexOf(appearance.floatingStyle).coerceAtLeast(0)],
                             items = floatingItems,
                             selectedIndex = floatingStyles.indexOf(appearance.floatingStyle).coerceAtLeast(0),
                             onSelectedIndexChange = {
@@ -285,7 +313,6 @@ internal fun ManagerAppearanceScreen(
                 ManagerCardItem("mode") {
                     OverlayDropdownPreference(
                         title = stringResource(R.string.manager_navigation_content),
-                        summary = navigationItems[navigationModes.indexOf(appearance.navigationContent).coerceAtLeast(0)],
                         items = navigationItems,
                         selectedIndex = navigationModes.indexOf(appearance.navigationContent).coerceAtLeast(0),
                         onSelectedIndexChange = {
@@ -496,7 +523,6 @@ internal fun ManagerRecordingsScreen(onBack: () -> Unit) {
     var selectionMode by rememberSaveable { mutableStateOf(false) }
     var selectedPaths by rememberSaveable { mutableStateOf(setOf<String>()) }
     var sort by rememberSaveable { mutableStateOf(RecordingSort.DATE) }
-    var showSort by rememberSaveable { mutableStateOf(false) }
     var confirmDelete by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         recordings = withContext(Dispatchers.IO) { scanRecordings(prefs.getString("call_recording_path", null)) }
@@ -512,7 +538,12 @@ internal fun ManagerRecordingsScreen(onBack: () -> Unit) {
         item("mode") { ManagerGroupCard {
             SwitchPreference(grouped, { grouped = it }, stringResource(R.string.manager_group_by_contact))
             SwitchPreference(selectionMode, { enabled -> selectionMode = enabled; if (!enabled) selectedPaths = emptySet() }, stringResource(R.string.manager_select_recordings))
-            ArrowPreference(stringResource(R.string.manager_sort), summary = sort.name.readable(), onClick = { showSort = true })
+            OverlayDropdownPreference(
+                title = stringResource(R.string.manager_sort),
+                items = RecordingSort.entries.map { it.name.readable() },
+                selectedIndex = sort.ordinal,
+                onSelectedIndexChange = { index -> sort = RecordingSort.entries[index] },
+            )
             if (selectionMode) {
                 ArrowPreference(stringResource(R.string.manager_select_all), summary = resources.getString(R.string.manager_selected_count, selectedPaths.size), onClick = { selectedPaths = visible.orEmpty().map { it.file.absolutePath }.toSet() })
                 ArrowPreference(stringResource(R.string.share), enabled = selectedPaths.isNotEmpty(), onClick = {
@@ -546,9 +577,6 @@ internal fun ManagerRecordingsScreen(onBack: () -> Unit) {
                     )
             } } }
         }
-    }
-    WindowDialog(show = showSort, title = stringResource(R.string.manager_sort), onDismissRequest = { showSort = false }) {
-        RecordingSort.entries.forEach { option -> ArrowPreference(option.name.readable(), onClick = { sort = option; showSort = false }) }
     }
     WindowDialog(show = confirmDelete, title = stringResource(R.string.delete), summary = stringResource(R.string.manager_delete_recordings_confirm, selectedPaths.size), onDismissRequest = { confirmDelete = false }) {
         DialogActionButtons({ confirmDelete = false }) {

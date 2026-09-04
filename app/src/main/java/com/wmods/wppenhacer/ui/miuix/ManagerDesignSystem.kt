@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -39,18 +40,22 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.SmallTopAppBar
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.blur.BlendColorEntry
 import top.yukonga.miuix.kmp.blur.BlurColors
 import top.yukonga.miuix.kmp.blur.LayerBackdrop
+import top.yukonga.miuix.kmp.blur.ProgressiveBlur
 import top.yukonga.miuix.kmp.blur.isRuntimeShaderSupported
 import top.yukonga.miuix.kmp.blur.layerBackdrop
+import top.yukonga.miuix.kmp.blur.progressiveTextureBlur
 import top.yukonga.miuix.kmp.blur.rememberLayerBackdrop
 import top.yukonga.miuix.kmp.blur.textureBlur
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Back
+import top.yukonga.miuix.kmp.shader.isRenderEffectSupported
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.squircle.squircleSurface
@@ -61,7 +66,6 @@ internal object ManagerTokens {
     val OuterMargin = 12.dp
     val CardCorner = 16.dp
     val PageItemBottomSpacing = 6.dp
-    val TouchTarget = 48.dp
     val MaxContentWidth = 880.dp
 }
 
@@ -73,7 +77,11 @@ internal fun Modifier.managerPageItem(): Modifier = padding(
 
 @Composable
 internal fun rememberManagerBackdrop(): LayerBackdrop? {
-    if (!LocalManagerBlurEnabled.current || !isRuntimeShaderSupported()) return null
+    if (
+        !LocalManagerBlurEnabled.current ||
+        !isRenderEffectSupported() ||
+        !isRuntimeShaderSupported()
+    ) return null
     val surface = MiuixTheme.colorScheme.surface
     return rememberLayerBackdrop {
         drawRect(surface)
@@ -85,9 +93,11 @@ internal fun rememberManagerBackdrop(): LayerBackdrop? {
 internal fun ManagerBlurredBar(
     backdrop: LayerBackdrop?,
     alpha: Float = 0.8f,
+    progressive: Boolean = false,
+    scrollBehavior: ScrollBehavior? = null,
     content: @Composable () -> Unit,
 ) {
-    val modifier = if (backdrop == null) Modifier else Modifier.textureBlur(
+    val modifier = if (backdrop == null || progressive) Modifier else Modifier.textureBlur(
         backdrop = backdrop,
         shape = RectangleShape,
         blurRadius = 25f,
@@ -95,7 +105,31 @@ internal fun ManagerBlurredBar(
             blendColors = listOf(BlendColorEntry(MiuixTheme.colorScheme.surface.copy(alpha = alpha))),
         ),
     )
-    Box(modifier = modifier, contentAlignment = Alignment.Center) { content() }
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        if (backdrop != null && progressive) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .graphicsLayer {
+                        this.alpha = scrollBehavior?.state
+                            ?.let { (-it.contentOffset / 48.dp.toPx()).coerceIn(0f, 1f) }
+                            ?: 1f
+                    }
+                    .progressiveTextureBlur(
+                        backdrop = backdrop,
+                        shape = RectangleShape,
+                        gradient = ProgressiveBlur.Top.copy(curve = 2.2f),
+                        blurRadius = 10f,
+                        colors = BlurColors(
+                            blendColors = listOf(
+                                BlendColorEntry(MiuixTheme.colorScheme.surface.copy(alpha = 0.3f)),
+                            ),
+                        ),
+                    ),
+            )
+        }
+        content()
+    }
 }
 
 @Composable
@@ -195,16 +229,21 @@ internal fun ManagerDetailScaffold(
         modifier = modifier,
         containerColor = MiuixTheme.colorScheme.surface,
         topBar = {
-            ManagerBlurredBar(backdrop) {
+            ManagerBlurredBar(backdrop, progressive = true, scrollBehavior = behavior) {
                 val navigation: (@Composable () -> Unit)? = onBack?.let { callback ->
                     {
-                        IconButton(onClick = callback, modifier = Modifier.size(ManagerTokens.TouchTarget)) {
+                        IconButton(onClick = callback) {
                             Icon(imageVector = MiuixIcons.Back, contentDescription = stringResource(R.string.manager_back))
                         }
                     }
                 }
                 if (wide) {
-                    SmallTopAppBar(title = title, color = managerBarColor(backdrop), navigationIcon = { navigation?.invoke() })
+                    SmallTopAppBar(
+                        title = title,
+                        color = managerBarColor(backdrop),
+                        navigationIcon = { navigation?.invoke() },
+                        scrollBehavior = behavior,
+                    )
                 } else {
                     TopAppBar(
                         title = title,

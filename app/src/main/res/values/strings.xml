@@ -583,7 +583,7 @@
     <string translatable="false" name="manager_reset_summary">Clear settings and restart WhatsApp</string>
     <string translatable="false" name="manager_reset_confirm">Clear every WaEnhancer setting? This cannot be undone.</string>
     <string translatable="false" name="manager_feature_groups">Feature groups</string>
-    <string translatable="false" name="manager_general_summary">Manager, language, timestamps, automation, and global behaviour</string>
+    <string translatable="false" name="manager_general_summary">WhatsApp behaviour, timestamps, automation, and global features</string>
     <string translatable="false" name="manager_home_screen_summary">Home toolbar, filters, tabs, profile, and chat-list behaviour</string>
     <string translatable="false" name="manager_conversation_summary">Messages, reactions, notifications, and conversation behaviour</string>
     <string translatable="false" name="manager_status_summary">Status playback and status notifications</string>
@@ -622,6 +622,9 @@
     <string translatable="false" name="manager_accent_colour">Accent colour</string>
     <string translatable="false" name="manager_pure_black">Pure black background</string>
     <string translatable="false" name="manager_pure_black_summary">Use a pure black background in dark Monet mode</string>
+    <string translatable="false" name="manager_section_language">Manager language</string>
+    <string translatable="false" name="manager_force_english">English language</string>
+    <string translatable="false" name="manager_force_english_summary">Use English for WaEnhancer settings and tools</string>
     <string translatable="false" name="manager_section_effects">Interface and effects</string>
     <string translatable="false" name="manager_blur">Blur effects</string>
     <string translatable="false" name="manager_blur_summary">Enable blur effects for bars and layered surfaces</string>

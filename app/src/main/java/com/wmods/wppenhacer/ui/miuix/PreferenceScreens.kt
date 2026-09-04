@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,12 +36,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
+import top.yukonga.miuix.kmp.basic.DropdownEntry
+import top.yukonga.miuix.kmp.basic.DropdownItem
 import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.basic.SliderDefaults
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.preference.ArrowPreference
+import top.yukonga.miuix.kmp.preference.OverlayDropdownPreference
 import top.yukonga.miuix.kmp.preference.SwitchPreference
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.window.WindowDialog
@@ -61,7 +63,7 @@ internal fun PreferencePageScreen(
 ) {
     val title = preferenceSourceTitle(source)
     var editing by remember { mutableStateOf<PreferenceSpec?>(null) }
-    val specs = state.specs.filter { it.source == source }
+    val specs = state.specs.filter { it.source == source && !it.isManagerAppearancePreference() }
     val highlightedIndex = specs.indexOfFirst { it.key == highlightKey }
     val listState = rememberLazyListState()
     LaunchedEffect(highlightedIndex) {
@@ -121,6 +123,51 @@ private fun PreferenceSpecRow(
             summary = summary,
             enabled = enabled,
         )
+        PreferenceKind.LIST -> {
+            val selectedValue = value?.toString()
+            val selectedIndex = (spec.entryValues.indexOf(selectedValue)
+                .takeIf { it in spec.entries.indices }
+                ?: spec.entries.indexOf(selectedValue).takeIf { it >= 0 }
+                ?: 0)
+            if (spec.entries.isEmpty()) {
+                ArrowPreference(title, summary = summary, enabled = enabled, onClick = null)
+            } else {
+                OverlayDropdownPreference(
+                    title = title,
+                    summary = summary,
+                    items = spec.entries,
+                    selectedIndex = selectedIndex,
+                    enabled = enabled,
+                    onSelectedIndexChange = { index ->
+                        onPut(spec.entryValues.getOrNull(index) ?: spec.entries[index])
+                    },
+                )
+            }
+        }
+        PreferenceKind.MULTI_LIST -> {
+            val selected = (value as? Set<*>)?.filterIsInstance<String>()?.toSet().orEmpty()
+            val entries = spec.entries.mapIndexed { index, label ->
+                val option = spec.entryValues.getOrNull(index) ?: label
+                DropdownItem(
+                    text = label,
+                    selected = option in selected,
+                    onClick = {
+                        onPut(if (option in selected) selected - option else selected + option)
+                    },
+                )
+            }
+            if (entries.isEmpty()) {
+                ArrowPreference(title, summary = summary, enabled = enabled, onClick = null)
+            } else {
+                OverlayDropdownPreference(
+                    title = title,
+                    summary = summary,
+                    entry = DropdownEntry(entries),
+                    enabled = enabled,
+                    collapseOnSelection = false,
+                )
+            }
+        }
         PreferenceKind.INTEGER_SLIDER, PreferenceKind.FLOAT_SLIDER -> {
             val current = (value as? Number)?.toFloat() ?: spec.defaultValue?.toFloatOrNull() ?: spec.minimum
             var pendingValue by remember(spec.key, current) { mutableFloatStateOf(current) }
@@ -158,10 +205,6 @@ private fun PreferenceSpecRow(
 @Composable
 private fun PreferenceValueDialog(spec: PreferenceSpec, value: Any?, onDismiss: () -> Unit, onSave: (Any) -> Unit) {
     var input by remember(spec.key, value) { mutableStateOf(value?.toString().orEmpty()) }
-    var selected by remember(spec.key, value) {
-        @Suppress("UNCHECKED_CAST")
-        mutableStateOf((value as? Set<String>).orEmpty())
-    }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val openFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -196,27 +239,6 @@ private fun PreferenceValueDialog(spec: PreferenceSpec, value: Any?, onDismiss: 
         onDismissRequest = onDismiss,
     ) {
         when (spec.kind) {
-            PreferenceKind.LIST -> Column {
-                spec.entries.forEachIndexed { index, label ->
-                    val option = spec.entryValues.getOrNull(index) ?: label
-                    SwitchPreference(
-                        checked = value?.toString() == option,
-                        onCheckedChange = { if (it) onSave(option) },
-                        title = label,
-                    )
-                }
-            }
-            PreferenceKind.MULTI_LIST -> Column {
-                spec.entries.forEachIndexed { index, label ->
-                    val option = spec.entryValues.getOrNull(index) ?: label
-                    SwitchPreference(
-                        checked = option in selected,
-                        onCheckedChange = { checked -> selected = if (checked) selected + option else selected - option },
-                        title = label,
-                    )
-                }
-                DialogButtons(onDismiss) { onSave(selected) }
-            }
             PreferenceKind.FILE -> {
                 Text(spec.summary.orEmpty())
                 Spacer(Modifier.height(12.dp))
@@ -292,8 +314,7 @@ private fun preferenceSourceTitle(source: PreferenceSource): String = when (sour
 
 private fun preferenceSummary(spec: PreferenceSpec, value: Any?): String? {
     val display = when (spec.kind) {
-        PreferenceKind.LIST -> spec.entries.getOrNull(spec.entryValues.indexOf(value?.toString()))
-        PreferenceKind.MULTI_LIST -> (value as? Set<*>)?.joinToString()
+        PreferenceKind.LIST, PreferenceKind.MULTI_LIST -> null
         PreferenceKind.COLOR -> (value as? Number)?.toInt()?.let { "#%08X".format(it) }
         PreferenceKind.TEXT, PreferenceKind.FILE, PreferenceKind.CONTACTS, PreferenceKind.INTEGER_SLIDER, PreferenceKind.FLOAT_SLIDER -> value?.toString()
         else -> null

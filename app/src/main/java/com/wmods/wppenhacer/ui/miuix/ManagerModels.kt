@@ -99,6 +99,13 @@ internal data class PreferenceSpec(
     val step: Float = 1f,
 )
 
+internal fun PreferenceSpec.isManagerAppearancePreference(): Boolean = key in setOf(
+    ManagerAppearanceSettings.KEY_THEME_MODE,
+    ManagerAppearanceSettings.KEY_COLOR_MODE,
+    ManagerAppearanceSettings.KEY_COLOR_PRESET,
+    ManagerAppearanceSettings.KEY_FORCE_ENGLISH,
+)
+
 internal data class PreferenceGroup(
     val title: String,
     val preferences: List<PreferenceSpec>,
@@ -112,11 +119,13 @@ internal fun searchPreferenceSpecs(
     if (normalizedQuery.isEmpty()) return emptyList()
 
     return specs.filter { spec ->
-        spec.title.contains(normalizedQuery, ignoreCase = true) ||
-            spec.summary.orEmpty().contains(normalizedQuery, ignoreCase = true) ||
-            spec.key.contains(normalizedQuery, ignoreCase = true) ||
-            spec.category.contains(normalizedQuery, ignoreCase = true) ||
-            spec.source.name.replace('_', ' ').contains(normalizedQuery, ignoreCase = true)
+        !spec.isManagerAppearancePreference() && (
+            spec.title.contains(normalizedQuery, ignoreCase = true) ||
+                spec.summary.orEmpty().contains(normalizedQuery, ignoreCase = true) ||
+                spec.key.contains(normalizedQuery, ignoreCase = true) ||
+                spec.category.contains(normalizedQuery, ignoreCase = true) ||
+                spec.source.name.replace('_', ' ').contains(normalizedQuery, ignoreCase = true)
+            )
     }
 }
 
@@ -128,6 +137,7 @@ internal enum class ManagerNavigationContent { ICON_AND_TEXT, ICON_ONLY }
 
 internal data class ManagerAppearanceSettings(
     val themeMode: ManagerThemeMode = ManagerThemeMode.SYSTEM,
+    val forceEnglish: Boolean = false,
     val useMonet: Boolean = false,
     val paletteStyle: ManagerPaletteStyle = ManagerPaletteStyle.TONAL_SPOT,
     val accent: ManagerAccent = ManagerAccent.GREEN,
@@ -140,6 +150,10 @@ internal data class ManagerAppearanceSettings(
     val navigationContent: ManagerNavigationContent = ManagerNavigationContent.ICON_AND_TEXT,
 ) {
     companion object {
+        const val KEY_THEME_MODE = "thememode"
+        const val KEY_FORCE_ENGLISH = "force_english"
+        const val KEY_COLOR_MODE = "wae_color_mode"
+        const val KEY_COLOR_PRESET = "wae_color_preset"
         const val KEY_PALETTE = "manager_ui_palette_style"
         const val KEY_PURE_BLACK = "manager_ui_pure_black"
         const val KEY_BLUR = "manager_ui_blur"
@@ -161,13 +175,13 @@ internal data class ManagerAppearanceSettings(
         )
 
         fun from(values: Map<String, *>): ManagerAppearanceSettings {
-            val themeMode = when (values["thememode"] as? String) {
+            val themeMode = when (values[KEY_THEME_MODE] as? String) {
                 "1" -> ManagerThemeMode.DARK
                 "2" -> ManagerThemeMode.LIGHT
                 else -> ManagerThemeMode.SYSTEM
             }
-            val useMonet = values["wae_color_mode"] == "monet" && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-            val accent = when ((values["wae_color_preset"] as? String).orEmpty()) {
+            val useMonet = values[KEY_COLOR_MODE] == "monet" && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+            val accent = when ((values[KEY_COLOR_PRESET] as? String).orEmpty()) {
                 "system" -> ManagerAccent.SYSTEM
                 "blue" -> ManagerAccent.BLUE
                 "purple" -> ManagerAccent.PURPLE
@@ -181,6 +195,7 @@ internal data class ManagerAppearanceSettings(
             }
             return ManagerAppearanceSettings(
                 themeMode = themeMode,
+                forceEnglish = values[KEY_FORCE_ENGLISH] as? Boolean ?: false,
                 useMonet = useMonet,
                 paletteStyle = enumValue(values[KEY_PALETTE], ManagerPaletteStyle.TONAL_SPOT),
                 accent = accent,
@@ -210,7 +225,7 @@ internal data class ManagerUiState(
     val appearance: ManagerAppearanceSettings = ManagerAppearanceSettings(),
 ) {
     fun groups(source: PreferenceSource): List<PreferenceGroup> = specs
-        .filter { it.source == source }
+        .filter { it.source == source && !it.isManagerAppearancePreference() }
         .groupBy { it.category }
         .map { (title, items) -> PreferenceGroup(title, items) }
 }

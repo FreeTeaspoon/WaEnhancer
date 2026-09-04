@@ -102,7 +102,9 @@ private fun ManagerHomeScreen(
         context.sendBroadcast(Intent(BuildConfig.APPLICATION_ID + ".CHECK_WPP"))
         onDispose { runCatching { context.unregisterReceiver(receiver) } }
     }
-    val featureSwitches = state.specs.filter { it.kind == PreferenceKind.SWITCH }
+    val featureSwitches = state.specs.filter {
+        it.kind == PreferenceKind.SWITCH && !it.isManagerAppearancePreference()
+    }
     val enabledFeatures = featureSwitches.count { state.preferences[it.key] == true }
     ManagerDetailScaffold(title = stringResource(R.string.app_name), wide = wide, onBack = null) {
         item("wekit-dashboard") {

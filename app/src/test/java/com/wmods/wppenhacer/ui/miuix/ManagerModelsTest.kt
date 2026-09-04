@@ -1,6 +1,7 @@
 package com.wmods.wppenhacer.ui.miuix
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ManagerModelsTest {
@@ -54,5 +55,31 @@ class ManagerModelsTest {
         assertEquals(listOf("privacy_feature"), searchPreferenceSpecs(specs, "block").map { it.key })
         assertEquals(listOf("home_wallpaper"), searchPreferenceSpecs(specs, "home screen").map { it.key })
         assertEquals(listOf("home_wallpaper"), searchPreferenceSpecs(specs, "wallpaper").map { it.key })
+    }
+
+    @Test
+    fun managerAppearanceOptionsDoNotAppearAsWhatsAppFeatures() {
+        val specs = listOf(
+            PreferenceSpec(
+                key = ManagerAppearanceSettings.KEY_THEME_MODE,
+                source = PreferenceSource.GENERAL,
+                category = "General",
+                title = "Dark Theme Wa Enhancer",
+                summary = "Force a theme mode in Wa Enhancer",
+                kind = PreferenceKind.LIST,
+            ),
+            PreferenceSpec(
+                key = "whatsapp_feature",
+                source = PreferenceSource.GENERAL,
+                category = "General",
+                title = "Hide online status",
+                summary = null,
+                kind = PreferenceKind.SWITCH,
+            ),
+        )
+
+        assertTrue(searchPreferenceSpecs(specs, "theme").isEmpty())
+        assertEquals(listOf("whatsapp_feature"), searchPreferenceSpecs(specs, "general").map { it.key })
+        assertEquals(listOf("whatsapp_feature"), searchPreferenceSpecs(specs, "status").map { it.key })
     }
 }

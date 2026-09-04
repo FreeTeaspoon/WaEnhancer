@@ -15,7 +15,7 @@ internal class PreferenceController(
     private val preferences: SharedPreferences,
 ) {
     fun put(spec: PreferenceSpec, value: Any) {
-        preferences.edit(commit = spec.key == "force_english") {
+        preferences.edit(commit = spec.key == ManagerAppearanceSettings.KEY_FORCE_ENGLISH) {
             when (spec.kind) {
                 PreferenceKind.SWITCH -> putBoolean(spec.key, value as Boolean)
                 PreferenceKind.MULTI_LIST -> @Suppress("UNCHECKED_CAST") putStringSet(spec.key, value as Set<String>)
@@ -28,7 +28,10 @@ internal class PreferenceController(
         dispatchSideEffects(spec.key)
     }
 
-    fun putManagerBoolean(key: String, value: Boolean) = preferences.edit { putBoolean(key, value) }
+    fun putManagerBoolean(key: String, value: Boolean, restart: Boolean = false) {
+        preferences.edit(commit = restart) { putBoolean(key, value) }
+        if (restart) Utils.doRestart(context)
+    }
     fun putManagerFloat(key: String, value: Float) = preferences.edit { putFloat(key, normalizeScale(value)) }
     fun putManagerString(key: String, value: String) = preferences.edit { putString(key, value) }
 
@@ -106,10 +109,10 @@ internal class PreferenceController(
     }
 
     private fun dispatchSideEffects(key: String) {
-        if (key == "thememode") {
+        if (key == ManagerAppearanceSettings.KEY_THEME_MODE) {
             App.setThemeMode(preferences.getString(key, "0")?.toIntOrNull() ?: 0)
         }
-        if (key == "force_english") {
+        if (key == ManagerAppearanceSettings.KEY_FORCE_ENGLISH) {
             Utils.doRestart(context)
             return
         }

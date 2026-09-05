@@ -1,6 +1,9 @@
 package com.wmods.wppenhacer.ui.miuix
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.click
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onAllNodesWithText
@@ -8,6 +11,7 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTouchInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.wmods.wppenhacer.R
 import org.junit.Rule
@@ -56,5 +60,34 @@ class ManagerShellTest {
         composeRule.waitForIdle()
 
         composeRule.onNodeWithText(activity.getString(R.string.call_blocker), useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun tappingAbovePreferenceDialogWaitsForExitAnimation() {
+        val title = composeRule.activity.getString(R.string.textonahora)
+        composeRule.onNodeWithTag(primaryNavigationTag(PrimaryDestination.FEATURES.ordinal), useUnmergedTree = true).performClick()
+        composeRule.onNodeWithTag("features-search", useUnmergedTree = true).performTextInput("text_in_hour")
+        composeRule.onNodeWithText(title, useUnmergedTree = true).performClick()
+        composeRule.waitForIdle()
+        // Search highlights the matching preference in its destination page.
+        composeRule.onNodeWithText("● $title", useUnmergedTree = true).performClick()
+        composeRule.waitForIdle()
+        composeRule.onNode(isDialog()).assertExists()
+
+        composeRule.mainClock.autoAdvance = false
+        try {
+            composeRule.onNode(isDialog()).performTouchInput {
+                click(Offset(center.x, height * 0.1f))
+            }
+            composeRule.mainClock.advanceTimeBy(32)
+            composeRule.onNode(isDialog()).assertExists()
+            composeRule.mainClock.advanceTimeBy(400)
+            composeRule.onNode(isDialog()).assertDoesNotExist()
+        } finally {
+            composeRule.mainClock.autoAdvance = true
+        }
+
+        composeRule.onNodeWithText("● $title", useUnmergedTree = true).performClick()
+        composeRule.onNode(isDialog()).assertExists()
     }
 }

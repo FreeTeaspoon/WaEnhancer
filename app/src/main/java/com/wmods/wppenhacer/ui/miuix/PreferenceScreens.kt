@@ -63,6 +63,7 @@ internal fun PreferencePageScreen(
 ) {
     val title = preferenceSourceTitle(source)
     var editing by remember { mutableStateOf<PreferenceSpec?>(null) }
+    var showEditor by remember { mutableStateOf(false) }
     val specs = state.specs.filter { it.source == source && !it.isManagerAppearancePreference() }
     val highlightedIndex = specs.indexOfFirst { it.key == highlightKey }
     val listState = rememberLazyListState()
@@ -83,7 +84,7 @@ internal fun PreferencePageScreen(
                             value = state.preferences[spec.key],
                             enabled = controller.isEnabled(spec, state.preferences),
                             highlighted = spec.key == highlightKey,
-                            onEdit = { editing = spec },
+                            onEdit = { editing = spec; showEditor = true },
                             onPut = { controller.put(spec, it) },
                             onNavigate = onNavigate,
                         )
@@ -95,10 +96,13 @@ internal fun PreferencePageScreen(
     }
     editing?.let { spec ->
         PreferenceValueDialog(
+            show = showEditor,
             spec = spec,
             value = state.preferences[spec.key],
-            onDismiss = { editing = null },
-            onSave = { controller.put(spec, it); editing = null },
+            onDismiss = { showEditor = false },
+            // Keep the dialog composed until its exit animation finishes.
+            onDismissFinished = { editing = null },
+            onSave = { controller.put(spec, it); showEditor = false },
         )
     }
 }
@@ -203,7 +207,14 @@ private fun PreferenceSpecRow(
 }
 
 @Composable
-private fun PreferenceValueDialog(spec: PreferenceSpec, value: Any?, onDismiss: () -> Unit, onSave: (Any) -> Unit) {
+private fun PreferenceValueDialog(
+    show: Boolean,
+    spec: PreferenceSpec,
+    value: Any?,
+    onDismiss: () -> Unit,
+    onDismissFinished: () -> Unit,
+    onSave: (Any) -> Unit,
+) {
     var input by remember(spec.key, value) { mutableStateOf(value?.toString().orEmpty()) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -233,10 +244,11 @@ private fun PreferenceValueDialog(spec: PreferenceSpec, value: Any?, onDismiss: 
         }
     }
     WindowDialog(
-        show = true,
+        show = show,
         title = spec.title,
         summary = spec.summary,
         onDismissRequest = onDismiss,
+        onDismissFinished = onDismissFinished,
     ) {
         when (spec.kind) {
             PreferenceKind.FILE -> {

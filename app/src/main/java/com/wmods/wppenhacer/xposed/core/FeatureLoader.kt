@@ -52,6 +52,7 @@ import com.wmods.wppenhacer.xposed.features.customization.ShowOnline
 import com.wmods.wppenhacer.xposed.features.general.AboutContactPicker
 import com.wmods.wppenhacer.xposed.features.general.AntiRevoke
 import com.wmods.wppenhacer.xposed.features.general.CallType
+import com.wmods.wppenhacer.xposed.features.general.CaptureDevice
 import com.wmods.wppenhacer.xposed.features.general.ChatLimit
 import com.wmods.wppenhacer.xposed.features.general.DeleteStatus
 import com.wmods.wppenhacer.xposed.features.general.NewChat
@@ -581,7 +582,8 @@ class FeatureLoader {
                 BackupRestore::class.java,
                 JumpFirstMessage::class.java,
                 AboutContactPicker::class.java,
-                DefaultEmoji::class.java
+                DefaultEmoji::class.java,
+                CaptureDevice::class.java
             )
 
             XposedBridge.log("Loading Plugins")

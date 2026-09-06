@@ -229,6 +229,18 @@ object Unobfuscator {
 
     @Throws(Exception::class)
     @JvmStatic
+    fun loadSharedMessageProcessorHandlePlaintextMethod(classLoader: ClassLoader): Method {
+        return UnobfuscatorCache.getInstance().getMethod(classLoader) {
+            findFirstMethodUsingStrings(
+                classLoader,
+                StringMatchType.Contains,
+                "SharedMessageProcessor/handlePlaintext"
+            ) ?: throw NoSuchMethodException("SharedMessageProcessor/handlePlaintext method not found")
+        }
+    }
+
+    @Throws(Exception::class)
+    @JvmStatic
     fun loadReceiptMethod(classLoader: ClassLoader): Method {
         return UnobfuscatorCache.getInstance().getMethod(classLoader) {
             val classDeviceJid =
@@ -3444,6 +3456,19 @@ object Unobfuscator {
                 StringMatchType.Contains,
                 "outgoing-launch/cm-null-contact"
             ) ?: throw NoSuchMethodException("StartOutgoingCall method not found")
+        }
+    }
+
+    @JvmStatic
+    @Throws(Exception::class)
+    fun loadReadReceiptMethod(classLoader: ClassLoader): Method {
+        return UnobfuscatorCache.getInstance().getMethod(classLoader) {
+            findFirstMethodUsingStrings(
+                classLoader,
+                StringMatchType.Contains,
+                "ReadReceipts/sendReceiptForIncomingMessage"
+            )
+                ?: throw RuntimeException("ReadReceiptMethod method not found")
         }
     }
 }

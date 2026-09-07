@@ -64,21 +64,23 @@ internal fun PreferencePageScreen(
     val title = preferenceSourceTitle(source)
     var editing by remember { mutableStateOf<PreferenceSpec?>(null) }
     var showEditor by remember { mutableStateOf(false) }
-    val specs = state.specs.filter { it.source == source && !it.isManagerAppearancePreference() }
-    val highlightedIndex = specs.indexOfFirst { it.key == highlightKey }
+    val groups = state.groups(source)
+    val highlightedIndex = groups.preferenceItemIndex(highlightKey)
     val listState = rememberLazyListState()
-    LaunchedEffect(highlightedIndex) {
-        if (highlightedIndex >= 0) {
-            val groupsBefore = specs.take(highlightedIndex).map { it.category }.distinct().size
-            listState.animateScrollToItem((highlightedIndex + groupsBefore + 1).coerceAtLeast(0))
+    var highlightPositionApplied by rememberSaveable(source, highlightKey) { mutableStateOf(false) }
+    LaunchedEffect(source, highlightKey, highlightedIndex) {
+        if (highlightedIndex >= 0 && !highlightPositionApplied) {
+            listState.scrollToItem(highlightedIndex)
+            highlightPositionApplied = true
         }
     }
     ManagerDetailScaffoldWithState(title, wide, onBack, listState) {
-        state.groups(source).forEachIndexed { groupIndex, group ->
+        groups.forEachIndexed { groupIndex, group ->
             managerSection(group.title, "$source-$groupIndex")
-            item("$source-group-$groupIndex") {
-                ManagerGroupCard {
-                    group.preferences.forEach { spec ->
+            managerGroupedCardItems(
+                keyPrefix = source.name,
+                items = group.preferences.map { spec ->
+                    ManagerCardItem(spec.key) {
                         PreferenceSpecRow(
                             spec = spec,
                             value = state.preferences[spec.key],
@@ -89,8 +91,8 @@ internal fun PreferencePageScreen(
                             onNavigate = onNavigate,
                         )
                     }
-                }
-            }
+                },
+            )
         }
         item("bottom-$source") { Spacer(Modifier.height(bottomPadding + 18.dp)) }
     }

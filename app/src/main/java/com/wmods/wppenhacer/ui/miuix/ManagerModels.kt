@@ -111,6 +111,18 @@ internal data class PreferenceGroup(
     val preferences: List<PreferenceSpec>,
 )
 
+// Each group renders one heading followed by one lazy item per preference.
+internal fun List<PreferenceGroup>.preferenceItemIndex(key: String?): Int {
+    if (key == null) return -1
+    var index = 0
+    for (group in this) {
+        val row = group.preferences.indexOfFirst { it.key == key }
+        if (row >= 0) return index + 1 + row
+        index += 1 + group.preferences.size
+    }
+    return -1
+}
+
 internal fun searchPreferenceSpecs(
     specs: List<PreferenceSpec>,
     query: String,

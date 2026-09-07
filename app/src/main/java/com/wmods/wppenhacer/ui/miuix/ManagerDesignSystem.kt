@@ -23,6 +23,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -213,6 +216,30 @@ internal fun LazyListScope.managerGroupedCardItems(
 }
 
 @Composable
+internal fun rememberManagerListScrollBehavior(listState: LazyListState): ScrollBehavior {
+    val behavior = MiuixScrollBehavior()
+    val blurFadeDistance = with(LocalDensity.current) { 48.dp.toPx() }
+    LaunchedEffect(listState, behavior, blurFadeDistance) {
+        // Direct jumps and restored list positions do not dispatch nested scroll events.
+        // Use the measured list position to recover the bar and its blur in those cases.
+        snapshotFlow { listState.layoutInfo }
+            .collect { layout ->
+                if (layout.visibleItemsInfo.isEmpty()) return@collect
+                val offset = if (listState.firstVisibleItemIndex == 0) {
+                    listState.firstVisibleItemScrollOffset.toFloat()
+                } else {
+                    maxOf(blurFadeDistance, -behavior.state.heightOffsetLimit)
+                }
+                behavior.state.contentOffset = -offset
+                if (listState.canScrollBackward) {
+                    behavior.state.heightOffset = behavior.state.heightOffsetLimit
+                }
+            }
+    }
+    return behavior
+}
+
+@Composable
 internal fun ManagerDetailScaffold(
     title: String,
     wide: Boolean,
@@ -223,7 +250,7 @@ internal fun ManagerDetailScaffold(
     listState: LazyListState = rememberLazyListState(),
     content: LazyListScope.() -> Unit,
 ) {
-    val behavior = MiuixScrollBehavior()
+    val behavior = rememberManagerListScrollBehavior(listState)
     val backdrop = rememberManagerBackdrop()
     Scaffold(
         modifier = modifier,

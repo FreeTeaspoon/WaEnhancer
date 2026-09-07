@@ -6,6 +6,34 @@ import org.junit.Test
 
 class ManagerModelsTest {
     @Test
+    fun searchTargetsFollowRenderedGroupsIncludingRepeatedCategories() {
+        fun spec(key: String, category: String) = PreferenceSpec(
+            key = key,
+            source = PreferenceSource.GENERAL,
+            category = category,
+            title = key,
+            summary = null,
+            kind = PreferenceKind.SWITCH,
+        )
+        val state = ManagerUiState(specs = listOf(
+            spec("first", "One"),
+            spec(ManagerAppearanceSettings.KEY_THEME_MODE, "One"),
+            spec("other_group", "Two"),
+            spec("same_group", "One"),
+            spec("last", "Two"),
+        ))
+        val groups = state.groups(PreferenceSource.GENERAL)
+
+        assertEquals(1, groups.preferenceItemIndex("first"))
+        assertEquals(2, groups.preferenceItemIndex("same_group"))
+        assertEquals(4, groups.preferenceItemIndex("other_group"))
+        assertEquals(5, groups.preferenceItemIndex("last"))
+        assertEquals(-1, groups.preferenceItemIndex(ManagerAppearanceSettings.KEY_THEME_MODE))
+        assertEquals(-1, groups.preferenceItemIndex("missing"))
+        assertEquals(-1, groups.preferenceItemIndex(null))
+    }
+
+    @Test
     fun routesRoundTripIncludingSearchHighlight() {
         val routes = listOf<ManagerRoute>(
             ManagerRoute.PreferencePage(PreferenceSource.PRIVACY, "call_privacy"),

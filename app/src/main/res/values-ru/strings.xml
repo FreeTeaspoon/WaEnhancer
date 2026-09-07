@@ -107,6 +107,7 @@
     <string name="hide_tabs_on_home_sum">Скрыть вкладки на домашнем экране, такие как Актуальное, Сообщества и Звонки</string>
     <string name="communities">Сообщества</string>
     <string name="calls">Звонки</string>
+    <string name="chats">Чаты</string>
     <string name="updates">Актуальное</string>
     <string name="about">О приложении</string>
     <string name="igstatus_on_home_screen">Включить Инстаграмм подобный статус на домашнем экране</string>
@@ -382,6 +383,12 @@
     <string name="show_menu_buttons_as_icons_sum">Отображает кнопки меню на главном экране в виде значков для быстрого доступа к ним</string>
     <string name="hide_home_camera">Скрыть кнопку камеры на главном экране</string>
     <string name="hide_home_camera_sum">Скрыть кнопку камеры на панели инструментов главного экрана WhatsApp</string>
+    <string name="hide_home_fab">Скрыть плавающую кнопку нового чата</string>
+    <string name="hide_home_fab_sum">Скрыть плавающую кнопку нового чата в правом нижнем углу главного экрана</string>
+    <string name="hide_bottom_nav">Скрыть нижнюю панель навигации</string>
+    <string name="hide_bottom_nav_sum">Скрыть нижнюю панель навигации (Чаты, Актуальное, Сообщества, Звонки) на главном экране</string>
+    <string name="enable_calls_button">Включить кнопку звонков</string>
+    <string name="enable_calls_button_sum">Добавить кнопку в меню главного экрана для открытия вкладки «Звонки» (на вкладке «Звонки» возвращает в «Чаты»)</string>
     <string name="starting_cache">Запуск кэша хуков в WhatsApp. Это может занять некоторое время.</string>
     <string name="bridge_error">Сбой моста: включите системную структуру в Lsposed и перезагрузите устройство</string>
     <string name="disable_battery_optimization">Отключить оптимизацию батареи</string>

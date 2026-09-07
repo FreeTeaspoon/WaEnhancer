@@ -45,6 +45,7 @@ import com.wmods.wppenhacer.xposed.features.customization.FilterGroups
 import com.wmods.wppenhacer.xposed.features.customization.FloatingBottomBar
 import com.wmods.wppenhacer.xposed.features.customization.HideSeenView
 import com.wmods.wppenhacer.xposed.features.customization.HideHomeCamera
+import com.wmods.wppenhacer.xposed.features.customization.HideHomeViews
 import com.wmods.wppenhacer.xposed.features.customization.HideTabs
 import com.wmods.wppenhacer.xposed.features.customization.IGStatus
 import com.wmods.wppenhacer.xposed.features.customization.SeparateGroup
@@ -52,6 +53,7 @@ import com.wmods.wppenhacer.xposed.features.customization.ShowOnline
 import com.wmods.wppenhacer.xposed.features.general.AboutContactPicker
 import com.wmods.wppenhacer.xposed.features.general.AntiRevoke
 import com.wmods.wppenhacer.xposed.features.general.CallType
+import com.wmods.wppenhacer.xposed.features.general.CallsButton
 import com.wmods.wppenhacer.xposed.features.general.CaptureDevice
 import com.wmods.wppenhacer.xposed.features.general.ChatLimit
 import com.wmods.wppenhacer.xposed.features.general.DeleteStatus
@@ -545,11 +547,13 @@ class FeatureLoader {
                 HideSeen::class.java,
                 HideSeenView::class.java,
                 HideHomeCamera::class.java,
+                HideHomeViews::class.java,
                 TagMessage::class.java,
                 HideTabs::class.java,
                 IGStatus::class.java,
                 MediaQuality::class.java,
                 NewChat::class.java,
+                CallsButton::class.java,
                 Others::class.java,
                 PinnedLimit::class.java,
                 CustomTime::class.java,

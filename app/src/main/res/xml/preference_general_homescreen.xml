@@ -16,6 +16,16 @@
             app:title="@string/hide_home_camera" />
 
         <rikka.material.preference.MaterialSwitchPreference
+            app:key="hide_home_fab"
+            app:summary="@string/hide_home_fab_sum"
+            app:title="@string/hide_home_fab" />
+
+        <rikka.material.preference.MaterialSwitchPreference
+            app:key="hide_bottom_nav"
+            app:summary="@string/hide_bottom_nav_sum"
+            app:title="@string/hide_bottom_nav" />
+
+        <rikka.material.preference.MaterialSwitchPreference
             app:key="shownamehome"
             app:summary="@string/showname_sum"
             app:title="@string/showname" />
@@ -35,6 +45,11 @@
             app:key="newchat"
             app:summary="@string/enable_new_chat_button_sum"
             app:title="@string/enable_new_chat_button" />
+
+        <rikka.material.preference.MaterialSwitchPreference
+            app:key="calls_button"
+            app:summary="@string/enable_calls_button_sum"
+            app:title="@string/enable_calls_button" />
 
         <rikka.material.preference.MaterialSwitchPreference
             app:defaultValue="true"

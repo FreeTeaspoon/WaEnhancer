@@ -107,6 +107,7 @@
     <string name="hide_tabs_on_home_sum">إخفاء علامات التبويب على الشاشة الرئيسية مثل التحديثات والمجتمعات والمكالمات</string>
     <string name="communities">المجتمعات</string>
     <string name="calls">المكالمات</string>
+    <string name="chats">الدردشات</string>
     <string name="updates">التحديثات</string>
     <string name="about">حول</string>
     <string name="igstatus_on_home_screen">تفعيل ستايل الستوري مثل انستجرام على الشاشة الرئيسية </string>
@@ -382,6 +383,12 @@
     <string name="show_menu_buttons_as_icons_sum">إظهار أزرار القائمة على الشاشة الرئيسية كأيقونات لتسهيل الوصول إليها</string>
     <string name="hide_home_camera">إخفاء زر الكاميرا في الشاشة الرئيسية</string>
     <string name="hide_home_camera_sum">إخفاء زر الكاميرا من شريط أدوات شاشة واتساب الرئيسية</string>
+    <string name="hide_home_fab">إخفاء زر الدردشة الجديدة العائم</string>
+    <string name="hide_home_fab_sum">إخفاء زر الدردشة الجديدة العائم في الزاوية السفلية اليمنى من الشاشة الرئيسية</string>
+    <string name="hide_bottom_nav">إخفاء شريط التنقل السفلي</string>
+    <string name="hide_bottom_nav_sum">إخفاء شريط التنقل السفلي (الدردشات، التحديثات، المجتمعات، المكالمات) في الشاشة الرئيسية</string>
+    <string name="enable_calls_button">تفعيل زر المكالمات</string>
+    <string name="enable_calls_button_sum">إضافة زر في قائمة الشاشة الرئيسية لفتح علامة تبويب المكالمات (يعود إلى الدردشات أثناء وجودك في المكالمات)</string>
     <string name="starting_cache">بدء ربط ذاكرة التخزين المؤقت في واتساب. قد يستغرق ذلك بعض الوقت.</string>
     <string name="bridge_error">فشل الربط: تمكين إطار النظام في Lsposed وإعادة تشغيل الجهاز</string>
     <string name="disable_battery_optimization">تعطيل تحسين البطارية</string>

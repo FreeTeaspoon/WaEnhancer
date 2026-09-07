@@ -107,6 +107,7 @@
     <string name="hide_tabs_on_home_sum">Allows hiding tabs on the home page such as updates, communities, calls.</string>
     <string name="communities">Communautés</string>
     <string name="calls">Appels</string>
+    <string name="chats">Discussions</string>
     <string name="updates">Mises à jour</string>
     <string name="about">À propos</string>
     <string name="igstatus_on_home_screen">Activer statut Instagram sur l\'écran d\'accueil</string>
@@ -382,6 +383,12 @@
     <string name="show_menu_buttons_as_icons_sum">Affiche les boutons de menu sur l\'écran d\'accueil sous forme d\'icônes pour y accéder facilement</string>
     <string name="hide_home_camera">Masquer le bouton appareil photo de l\'écran d\'accueil</string>
     <string name="hide_home_camera_sum">Masquer le bouton appareil photo de la barre d\'outils de l\'écran d\'accueil de WhatsApp</string>
+    <string name="hide_home_fab">Masquer le bouton flottant de nouvelle discussion</string>
+    <string name="hide_home_fab_sum">Masquer le bouton flottant de nouvelle discussion en bas à droite de l\'écran d\'accueil</string>
+    <string name="hide_bottom_nav">Masquer la barre de navigation inférieure</string>
+    <string name="hide_bottom_nav_sum">Masquer la barre de navigation inférieure (Discussions, Actus, Communautés, Appels) de l\'écran d\'accueil</string>
+    <string name="enable_calls_button">Activer le bouton Appels</string>
+    <string name="enable_calls_button_sum">Ajouter un bouton dans le menu de l\'écran d\'accueil pour ouvrir l\'onglet Appels (revient aux Discussions depuis l\'onglet Appels)</string>
     <string name="starting_cache">Démarrage du cache de hook dans WhatsApp. Cela peut prendre un certain temps.</string>
     <string name="bridge_error">Échec du pont : activez Système Framework dans Lsposed et redémarrez l\'appareil</string>
     <string name="disable_battery_optimization">Désactiver l\'optimisation de la batterie</string>

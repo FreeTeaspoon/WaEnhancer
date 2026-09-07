@@ -108,6 +108,7 @@
     <string name="hide_tabs_on_home_sum">הסתר כרטיסיות במסך הבית כגון עדכונים, קהילות ושיחות</string>
     <string name="communities">קהילות</string>
     <string name="calls">שיחות</string>
+    <string name="chats">צ\'אטים</string>
     <string name="updates">עדכונים</string>
     <string name="about">אודות</string>
     <string name="igstatus_on_home_screen">אפשר סטטוס במסך הבית (כמו אינסטגרם)</string>
@@ -384,6 +385,12 @@
     <string name="show_menu_buttons_as_icons_sum">מציג לחצני תפריט במסך הבית כסמלים</string>
     <string name="hide_home_camera">הסתר את כפתור המצלמה במסך הבית</string>
     <string name="hide_home_camera_sum">הסתר את כפתור המצלמה מסרגל הכלים של מסך הבית ב-WhatsApp</string>
+    <string name="hide_home_fab">הסתר את כפתור הצ\'אט החדש הצף</string>
+    <string name="hide_home_fab_sum">הסתר את כפתור הצ\'אט החדש הצף בפינה הימנית התחתונה של מסך הבית</string>
+    <string name="hide_bottom_nav">הסתר את סרגל הניווט התחתון</string>
+    <string name="hide_bottom_nav_sum">הסתר את סרגל הניווט התחתון (צ\'אטים, עדכונים, קהילות, שיחות) במסך הבית</string>
+    <string name="enable_calls_button">הפעל כפתור שיחות</string>
+    <string name="enable_calls_button_sum">הוסף כפתור בתפריט מסך הבית לפתיחת לשונית השיחות (חוזר לצ\'אטים בעת הצפייה בשיחות)</string>
     <string name="starting_cache">הפעלת מטמון בוואטסאפ. זה עשוי לקחת זמן.</string>
     <string name="bridge_error">הפעולה נכשלה: הפעל את מסגרת המערכת ב-Lsposed ואתחל את הטלפון מחדש</string>
     <string name="disable_battery_optimization">השבת את אופטימיזציית הסוללה</string>

@@ -109,6 +109,7 @@
     <string name="hide_tabs_on_home_sum">Hide tabs on the home screen such as Updates, Communities and Calls</string>
     <string name="communities">Communities</string>
     <string name="calls">Calls</string>
+    <string name="chats">Chats</string>
     <string name="updates">Updates</string>
     <string name="about">About</string>
     <string name="igstatus_on_home_screen">Enable IGStatus on Home Screen</string>
@@ -395,6 +396,12 @@
     <string name="show_menu_buttons_as_icons_sum">Shows menu buttons on the home screen as icons for easy access to them</string>
     <string name="hide_home_camera">Hide Home Camera Button</string>
     <string name="hide_home_camera_sum">Hide the camera button from the WhatsApp home screen toolbar</string>
+    <string name="hide_home_fab">Hide New Chat Floating Button</string>
+    <string name="hide_home_fab_sum">Hide the floating new chat button in the bottom-right corner of the home screen</string>
+    <string name="hide_bottom_nav">Hide Bottom Navigation Bar</string>
+    <string name="hide_bottom_nav_sum">Hide the bottom navigation bar (Chats, Updates, Communities, Calls) on the home screen</string>
+    <string name="enable_calls_button">Enable Calls Button</string>
+    <string name="enable_calls_button_sum">Add button in Home Screen menu to open the Calls tab (switches back to Chats while on Calls)</string>
     <string name="starting_cache">Starting hook cache in WhatsApp. This may take a while.</string>
     <string name="bridge_error">Bridge Failed: Enable System Framework in Lsposed and reboot device</string>
     <string name="disable_battery_optimization">Disable Battery Optimization</string>

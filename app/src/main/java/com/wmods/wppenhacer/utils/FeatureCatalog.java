@@ -163,6 +163,22 @@ public class FeatureCatalog {
                 "homescreen",
                 Arrays.asList("camera", "hide", "toolbar", "button")));
 
+        catalog.add(new SearchableFeature("hide_home_fab",
+                context.getString(R.string.hide_home_fab),
+                context.getString(R.string.hide_home_fab_sum),
+                SearchableFeature.Category.GENERAL_HOMESCREEN,
+                SearchableFeature.FragmentType.GENERAL,
+                "homescreen",
+                Arrays.asList("fab", "floating", "new chat", "hide", "button")));
+
+        catalog.add(new SearchableFeature("hide_bottom_nav",
+                context.getString(R.string.hide_bottom_nav),
+                context.getString(R.string.hide_bottom_nav_sum),
+                SearchableFeature.Category.GENERAL_HOMESCREEN,
+                SearchableFeature.FragmentType.GENERAL,
+                "homescreen",
+                Arrays.asList("bottom", "navigation", "bar", "tabs", "hide")));
+
         catalog.add(new SearchableFeature("shownamehome",
                 context.getString(R.string.showname),
                 context.getString(R.string.showname_sum),
@@ -194,6 +210,14 @@ public class FeatureCatalog {
                 SearchableFeature.FragmentType.GENERAL,
                 "homescreen",
                 Arrays.asList("new", "chat", "button")));
+
+        catalog.add(new SearchableFeature("calls_button",
+                context.getString(R.string.enable_calls_button),
+                context.getString(R.string.enable_calls_button_sum),
+                SearchableFeature.Category.GENERAL_HOMESCREEN,
+                SearchableFeature.FragmentType.GENERAL,
+                "homescreen",
+                Arrays.asList("calls", "button", "menu", "tab")));
 
         catalog.add(new SearchableFeature("restartbutton",
                 context.getString(R.string.enable_restart_button),

@@ -107,6 +107,7 @@
     <string name="hide_tabs_on_home_sum">Permite ocultar pestañas en la página de inicio como novedades, comunidades, llamadas</string>
     <string name="communities">Comunidades</string>
     <string name="calls">Llamadas</string>
+    <string name="chats">Chats</string>
     <string name="updates">Novedades</string>
     <string name="about">Acerca de</string>
     <string name="igstatus_on_home_screen">Habilite estilo \"Historias de Instagram\" en la pantalla de inicio</string>
@@ -382,6 +383,12 @@
     <string name="show_menu_buttons_as_icons_sum">Muestra los botones de menú en la pantalla de inicio como iconos para un fácil acceso a ellos</string>
     <string name="hide_home_camera">Ocultar botón de cámara de inicio</string>
     <string name="hide_home_camera_sum">Oculta el botón de cámara de la barra de herramientas de la pantalla de inicio de WhatsApp</string>
+    <string name="hide_home_fab">Ocultar botón flotante de nuevo chat</string>
+    <string name="hide_home_fab_sum">Oculta el botón flotante de nuevo chat en la esquina inferior derecha de la pantalla de inicio</string>
+    <string name="hide_bottom_nav">Ocultar barra de navegación inferior</string>
+    <string name="hide_bottom_nav_sum">Oculta la barra de navegación inferior (Chats, Novedades, Comunidades, Llamadas) de la pantalla de inicio</string>
+    <string name="enable_calls_button">Activar botón de llamadas</string>
+    <string name="enable_calls_button_sum">Añade un botón en el menú de la pantalla de inicio para abrir la pestaña de llamadas (vuelve a Chats mientras estás en Llamadas)</string>
     <string name="starting_cache">Iniciando procesos de WAE en WhatsApp. Esto puede tardar un rato.</string>
     <string name="bridge_error">Fallo del Bridge: Habilita Framework del Sistema en Lsposed y reinicia el dispositivo</string>
     <string name="disable_battery_optimization">Desactivar la optimización de batería</string>

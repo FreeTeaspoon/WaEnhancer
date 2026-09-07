@@ -107,6 +107,7 @@
     <string name="hide_tabs_on_home_sum">隐藏主页上的导航栏，例如更新、社区和通话</string>
     <string name="communities">社区</string>
     <string name="calls">通话</string>
+    <string name="chats">聊天</string>
     <string name="updates">更新</string>
     <string name="about">关于</string>
     <string name="igstatus_on_home_screen">在主页启用IGStatus</string>
@@ -382,6 +383,12 @@
     <string name="show_menu_buttons_as_icons_sum">在主页工具栏上以图标形式显示菜单按钮，以方便访问</string>
     <string name="hide_home_camera">隐藏主页相机按钮</string>
     <string name="hide_home_camera_sum">隐藏 WhatsApp 主页工具栏上的相机按钮</string>
+    <string name="hide_home_fab">隐藏新聊天悬浮按钮</string>
+    <string name="hide_home_fab_sum">隐藏主页右下角的新聊天悬浮按钮</string>
+    <string name="hide_bottom_nav">隐藏底部导航栏</string>
+    <string name="hide_bottom_nav_sum">隐藏主页的底部导航栏（聊天、更新、社群、通话）</string>
+    <string name="enable_calls_button">启用通话按钮</string>
+    <string name="enable_calls_button_sum">在主页菜单中添加按钮以打开通话标签页（在通话页时可切换回聊天）</string>
     <string name="starting_cache">在 WhatsApp 中启动 Hook 缓存。这可能需要一段时间。</string>
     <string name="bridge_error">Bridge Failed: Enable System Framework in Lsposed and reboot device</string>
     <string name="disable_battery_optimization">禁用电池优化</string>

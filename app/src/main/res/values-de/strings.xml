@@ -107,6 +107,7 @@
     <string name="hide_tabs_on_home_sum">Ausblenden von Aktuelles, Chats, Gruppen oder Anrufe.</string>
     <string name="communities">Gruppen</string>
     <string name="calls">Anrufe</string>
+    <string name="chats">Chats</string>
     <string name="updates">Aktuelles</string>
     <string name="about">Über</string>
     <string name="igstatus_on_home_screen">Aktiviere IGStatus auf dem Startbildschirm</string>
@@ -382,6 +383,12 @@
     <string name="show_menu_buttons_as_icons_sum">Zeigt auf dem Startbildschirm Symbole zum Zugriff auf Menüs an</string>
     <string name="hide_home_camera">Kamerataste auf dem Startbildschirm ausblenden</string>
     <string name="hide_home_camera_sum">Kamerataste in der WhatsApp-Startbildschirm-Symbolleiste ausblenden</string>
+    <string name="hide_home_fab">Schwebende Neuer-Chat-Taste ausblenden</string>
+    <string name="hide_home_fab_sum">Die schwebende Neuer-Chat-Taste unten rechts auf dem Startbildschirm ausblenden</string>
+    <string name="hide_bottom_nav">Untere Navigationsleiste ausblenden</string>
+    <string name="hide_bottom_nav_sum">Die untere Navigationsleiste (Chats, Aktuelles, Communities, Anrufe) auf dem Startbildschirm ausblenden</string>
+    <string name="enable_calls_button">Anrufe-Taste aktivieren</string>
+    <string name="enable_calls_button_sum">Taste im Startbildschirm-Menü hinzufügen, um den Anrufe-Tab zu öffnen (wechselt im Anrufe-Tab zurück zu Chats)</string>
     <string name="starting_cache">Starte Hook-Cache-Erstellung in WhatsApp. Dies kann eine Weile dauern.</string>
     <string name="bridge_error">Bridge fehlgeschlagen: Aktivieren Sie das System-Framework in LSPosed und starten Sie das Gerät neu</string>
     <string name="disable_battery_optimization">Batterieoptimierung deaktivieren</string>

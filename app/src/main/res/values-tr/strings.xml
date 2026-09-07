@@ -107,6 +107,7 @@
     <string name="hide_tabs_on_home_sum">Ana ekranda Güncellemeler, Topluluklar ve Aramalar gibi sekmeleri gizle</string>
     <string name="communities">Topluluklar</string>
     <string name="calls">Aramalar</string>
+    <string name="chats">Sohbetler</string>
     <string name="updates">Güncellemeler</string>
     <string name="about">Hakkında</string>
     <string name="igstatus_on_home_screen">Ana ekranda Instagram tarzı durumu etkinleştir</string>
@@ -382,6 +383,12 @@
     <string name="show_menu_buttons_as_icons_sum">Kolay erişim için ana ekrandaki menü düğmelerini simge olarak gösterir</string>
     <string name="hide_home_camera">Ana Ekran Kamera Düğmesini Gizle</string>
     <string name="hide_home_camera_sum">WhatsApp ana ekran araç çubuğundaki kamera düğmesini gizle</string>
+    <string name="hide_home_fab">Yeni Sohbet Yüzen Düğmesini Gizle</string>
+    <string name="hide_home_fab_sum">Ana ekranın sağ alt köşesindeki yeni sohbet yüzen düğmesini gizle</string>
+    <string name="hide_bottom_nav">Alt Gezinme Çubuğunu Gizle</string>
+    <string name="hide_bottom_nav_sum">Ana ekrandaki alt gezinme çubuğunu (Sohbetler, Güncellemeler, Topluluklar, Aramalar) gizle</string>
+    <string name="enable_calls_button">Aramalar Düğmesini Etkinleştir</string>
+    <string name="enable_calls_button_sum">Aramalar sekmesini açmak için ana ekran menüsüne düğme ekle (Aramalar sekmesindeyken Sohbetler\'e geri döner)</string>
     <string name="starting_cache">WhatsApp\'ta kanca önbelleği başlatılıyor. Bu biraz zaman alabilir.</string>
     <string name="bridge_error">Köprü hatası: LSPosed\'te Sistem Çerçevesini etkinleştirin ve cihazı yeniden başlatın</string>
     <string name="disable_battery_optimization">Pil Optimizasyonunu Devre Dışı Bırak</string>

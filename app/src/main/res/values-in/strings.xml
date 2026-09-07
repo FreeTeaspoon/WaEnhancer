@@ -110,6 +110,7 @@
     <string name="hide_tabs_on_home_sum">Sembunyikan tab di layar beranda seperti: Status, Komunitas, Panggilan</string>
     <string name="communities">Komunitas</string>
     <string name="calls">Panggilan</string>
+    <string name="chats">Chat</string>
     <string name="updates">Pembaruan</string>
     <string name="about">Tentang</string>
     <string name="igstatus_on_home_screen">Aktifkan IGStatus di Layar Beranda</string>
@@ -390,6 +391,12 @@ Harap gunakan versi WhatsApp yang didukung!</string>
     <string name="show_menu_buttons_as_icons_sum">Tampilkan tombol menu di layar beranda sebagai ikon untuk memudahkan akses ke tombol tersebut</string>
     <string name="hide_home_camera">Sembunyikan Tombol Kamera di Layar Beranda</string>
     <string name="hide_home_camera_sum">Sembunyikan tombol kamera dari toolbar layar beranda WhatsApp</string>
+    <string name="hide_home_fab">Sembunyikan Tombol Mengambang Chat Baru</string>
+    <string name="hide_home_fab_sum">Sembunyikan tombol mengambang chat baru di sudut kanan bawah layar beranda</string>
+    <string name="hide_bottom_nav">Sembunyikan Bilah Navigasi Bawah</string>
+    <string name="hide_bottom_nav_sum">Sembunyikan bilah navigasi bawah (Chat, Pembaruan, Komunitas, Panggilan) di layar beranda</string>
+    <string name="enable_calls_button">Aktifkan Tombol Panggilan</string>
+    <string name="enable_calls_button_sum">Tambahkan tombol di menu Layar Beranda untuk membuka tab Panggilan (kembali ke Chat saat berada di Panggilan)</string>
     <string name="starting_cache">Muat ulang cache di WhatsApp. Ini mungkin memerlukan waktu cukup lama.</string>
     <string name="bridge_error">Bridge Gagal: Aktifkan Kerangka Sistem di LSPosed dan reboot perangkat</string>
     <string name="disable_battery_optimization">Nonaktifkan Pengoptimalan Baterai</string>

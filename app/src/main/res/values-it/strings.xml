@@ -107,6 +107,7 @@
     <string name="hide_tabs_on_home_sum">Nascondi le schede nella Home, come Aggiornamenti, Community e Chiamate</string>
     <string name="communities">Community</string>
     <string name="calls">Chiamate</string>
+    <string name="chats">Chat</string>
     <string name="updates">Aggiornamenti</string>
     <string name="about">Info</string>
     <string name="igstatus_on_home_screen">Abilita IGStatus nella Home</string>
@@ -382,6 +383,12 @@
     <string name="show_menu_buttons_as_icons_sum">Mostra i pulsanti del menù come icone nella parte superiore della Home, per un facile accesso</string>
     <string name="hide_home_camera">Nascondi pulsante fotocamera nella Home</string>
     <string name="hide_home_camera_sum">Nasconde il pulsante fotocamera dalla barra degli strumenti della Home di WhatsApp</string>
+    <string name="hide_home_fab">Nascondi pulsante flottante nuova chat</string>
+    <string name="hide_home_fab_sum">Nasconde il pulsante flottante nuova chat nell\'angolo in basso a destra della Home</string>
+    <string name="hide_bottom_nav">Nascondi barra di navigazione inferiore</string>
+    <string name="hide_bottom_nav_sum">Nasconde la barra di navigazione inferiore (Chat, Aggiornamenti, Community, Chiamate) nella Home</string>
+    <string name="enable_calls_button">Abilita pulsante Chiamate</string>
+    <string name="enable_calls_button_sum">Aggiunge un pulsante nel menu della Home per aprire la scheda Chiamate (torna a Chat mentre sei in Chiamate)</string>
     <string name="starting_cache">Avvio hook cache in WhatsApp. Potrebbe volerci un po\' di tempo.</string>
     <string name="bridge_error">Bridge non riuscito: Abilita il framework di sistema in LSPosed e riavvia il dispositivo</string>
     <string name="disable_battery_optimization">Disabilita Ottimizzazione Batteria</string>

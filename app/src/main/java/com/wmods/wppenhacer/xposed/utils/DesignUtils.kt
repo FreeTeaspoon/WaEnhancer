@@ -326,6 +326,16 @@ object DesignUtils {
         return BitmapDrawable(Utils.application.resources, bitmap)
     }
 
+    /** Toolbar buttons keep their compact bounds; overflow rows share a 32dp slot. */
+    @JvmStatic
+    fun createHomeMenuIcon(icon: Drawable, showAsAction: Boolean): Drawable {
+        return if (showAsAction) {
+            icon.mutate().apply { setTint(getPrimaryTextColor()) }
+        } else {
+            createWhatsAppMenuIcon(icon)
+        }
+    }
+
     /**
      * Renders an icon with the same fixed slot used by WhatsApp's home menu.
      * Keeping the slot separate from the glyph prevents custom icons from
@@ -340,7 +350,7 @@ object DesignUtils {
         bitmap.density = resources.displayMetrics.densityDpi
 
         val drawable = icon.mutate()
-        drawable.setTint(Color.rgb(102, 119, 129))
+        drawable.setTint(if (isNightMode()) Color.rgb(174, 186, 193) else Color.rgb(110, 118, 121))
 
         val sourceWidth = drawable.intrinsicWidth.coerceAtLeast(1)
         val sourceHeight = drawable.intrinsicHeight.coerceAtLeast(1)

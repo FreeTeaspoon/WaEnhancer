@@ -82,8 +82,7 @@ class CallsButton(
 
         val item = menu.add(0, 0, 0, title)
         loadIcon(activity, iconNames)?.let { drawable ->
-            drawable.setTint(if (newSettings) DesignUtils.getPrimaryTextColor() else -0x796960)
-            item.icon = drawable
+            item.icon = DesignUtils.createHomeMenuIcon(drawable, newSettings)
         }
         if (newSettings) {
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)

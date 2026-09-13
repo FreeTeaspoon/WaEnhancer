@@ -53,7 +53,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build all release variants
-        run: ./gradlew assembleWhatsappRelease assembleBusinessRelease
+        run: ./gradlew testWhatsappDebugUnitTest testBusinessDebugUnitTest assembleWhatsappRelease assembleBusinessRelease
 
       - name: Upload to GitHub release
         uses: softprops/action-gh-release@v3

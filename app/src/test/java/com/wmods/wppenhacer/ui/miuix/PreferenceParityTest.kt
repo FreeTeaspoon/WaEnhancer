@@ -28,7 +28,7 @@ class PreferenceParityTest {
             "FileReaderPreference", "ContactPickerPreference", "ThemePreference", "Preference",
         )
         val keyed = preferenceElements()
-        assertEquals("Update the Miuix registry when upstream adds or removes settings", 141, keyed.size)
+        assertEquals("Update the Miuix registry when upstream adds or removes settings", 145, keyed.size)
         keyed.forEach { element ->
             val shortTag = element.tagName.substringAfterLast('.')
             assertTrue("${element.xmlKey()} uses unsupported upstream control $shortTag", shortTag in supported)

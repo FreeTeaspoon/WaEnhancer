@@ -66,7 +66,7 @@ import com.wmods.wppenhacer.xposed.features.general.ShowEditMessage
 import com.wmods.wppenhacer.xposed.features.general.Tasker
 import com.wmods.wppenhacer.xposed.features.listeners.ContactItemListener
 import com.wmods.wppenhacer.xposed.features.listeners.ConversationItemListener
-import com.wmods.wppenhacer.xposed.features.listeners.MenuStatusListener
+import com.wmods.wppenhacer.xposed.features.providers.MenuStatusProvider
 import com.wmods.wppenhacer.xposed.features.media.CallRecording
 import com.wmods.wppenhacer.xposed.features.media.DownloadProfile
 import com.wmods.wppenhacer.xposed.features.media.DownloadViewOnce
@@ -99,6 +99,7 @@ import com.wmods.wppenhacer.xposed.features.privacy.LockedChatsEnhancer
 import com.wmods.wppenhacer.xposed.features.privacy.TagMessage
 import com.wmods.wppenhacer.xposed.features.privacy.TypingPrivacy
 import com.wmods.wppenhacer.xposed.features.privacy.ViewOnce
+import com.wmods.wppenhacer.xposed.features.providers.ContextMenuActionProvider
 import com.wmods.wppenhacer.xposed.spoofer.HookBL
 import com.wmods.wppenhacer.xposed.utils.DesignUtils
 import com.wmods.wppenhacer.xposed.utils.ReflectionUtils
@@ -112,6 +113,7 @@ import java.util.Date
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import kotlin.jvm.java
 
 class FeatureLoader {
 
@@ -526,7 +528,7 @@ class FeatureLoader {
                 DebugFeature::class.java,
                 ContactItemListener::class.java,
                 ConversationItemListener::class.java,
-                MenuStatusListener::class.java,
+                MenuStatusProvider::class.java,
                 ShowEditMessage::class.java,
                 AntiRevoke::class.java,
                 CustomToolbar::class.java,
@@ -587,7 +589,8 @@ class FeatureLoader {
                 JumpFirstMessage::class.java,
                 AboutContactPicker::class.java,
                 DefaultEmoji::class.java,
-                CaptureDevice::class.java
+                CaptureDevice::class.java,
+                ContextMenuActionProvider::class.java
             )
 
             XposedBridge.log("Loading Plugins")

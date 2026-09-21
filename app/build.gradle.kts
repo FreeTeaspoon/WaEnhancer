@@ -62,7 +62,7 @@ android {
             abiFilters.add("arm64-v8a")
         }
 
-        buildConfigField("Boolean", "RESET_ON_INSTALL", "false")
+        buildConfigField("Boolean", "RESET_ON_INSTALL", "true")
         buildConfigField("String", "GITHUB_REPOSITORY", "\"FreeTeaspoon/WaEnhancer\"")
         buildConfigField("String", "GITHUB_REPOSITORY_URL", "\"https://github.com/FreeTeaspoon/WaEnhancer\"")
         buildConfigField("String", "LATEST_RELEASE_API", "\"https://api.github.com/repos/FreeTeaspoon/WaEnhancer/releases/latest\"")
@@ -224,26 +224,27 @@ afterEvaluate {
     listOf("installWhatsappDebug", "installBusinessDebug").forEach { taskName ->
         tasks.findByName(taskName)?.doLast {
             runCatching {
-                val injected  = project.objects.newInstance<InjectedExecOps>()
+                val injected = project.objects.newInstance<InjectedExecOps>()
                 runBlocking {
-                    delay(500.milliseconds)
+                    delay(1000.milliseconds)
                     injected.execOps.exec {
                         commandLine(
                             "adb",
                             "shell",
                             "am",
                             "force-stop",
-                            project.findProperty("debug_package_name")?.toString()
+                            project.properties["debug_package_name"]?.toString()
                         )
                     }
+                    delay(3000.milliseconds)
                     injected.execOps.exec {
                         commandLine(
                             "adb",
                             "shell",
-                            "monkey",
-                            "-p",
-                            project.findProperty("debug_package_name")?.toString(),
-                            "1"
+                            "am",
+                            "start",
+                            "-n",
+                            "$(cmd package resolve-activity --brief ${project.properties["debug_package_name"]} | tail -n 1)"
                         )
                     }
                 }

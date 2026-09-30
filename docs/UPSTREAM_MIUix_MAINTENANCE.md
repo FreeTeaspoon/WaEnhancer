@@ -1,7 +1,7 @@
 # Maintaining the Miuix manager across upstream merges
 
 WaEnhancer remains one `app` module and one APK per existing product flavor. The launcher points to
-`com.wmods.wppenhacer.ui.miuix.MiuixMainActivity`; the retained Fragment, Activity, adapter, and XML
+`com.freeteaspoon.wppenhacer.ui.miuix.MiuixMainActivity`; the retained Fragment, Activity, adapter, and XML
 manager sources are a compatibility reference and are not normal production routes. Xposed-injected
 WhatsApp UI is deliberately outside this migration.
 

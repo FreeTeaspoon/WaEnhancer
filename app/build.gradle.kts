@@ -16,7 +16,7 @@ val gitHash: String = providers.exec {
 }.standardOutput.asText.map { it.trim().uppercase(Locale.getDefault()).substring(0,8) }.getOrElse("UNKNOWN")
 
 android {
-    namespace = "com.wmods.wppenhacer"
+    namespace = "com.freeteaspoon.wppenhacer"
     //noinspection GradleDependency
     compileSdk = 37
     ndkVersion = "28.2.13676358"
@@ -37,7 +37,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.wmods.wppenhacer"
+        applicationId = "com.freeteaspoon.wppenhacer"
         minSdk = 28
         //noinspection OldTargetApi
         targetSdk = 34

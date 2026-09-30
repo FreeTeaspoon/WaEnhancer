@@ -24,17 +24,17 @@
 -dontoptimize
 
 # (R fields are accessed and rewritten via reflection)
--keep class com.wmods.wppenhacer.R { *; }
--keep class com.wmods.wppenhacer.R$* { *; }
--keepclassmembers class com.wmods.wppenhacer.R$* {
+-keep class com.freeteaspoon.wppenhacer.R { *; }
+-keep class com.freeteaspoon.wppenhacer.R$* { *; }
+-keepclassmembers class com.freeteaspoon.wppenhacer.R$* {
      public static <fields>;
 }
 
--keepclasseswithmembers class com.wmods.** {
+-keepclasseswithmembers class com.freeteaspoon.** {
      *;
 }
 
--keepclasseswithmembernames class com.wmods.**
+-keepclasseswithmembernames class com.freeteaspoon.**
 
 -keepclasseswithmembers class cz.vutbr.** {
      *;

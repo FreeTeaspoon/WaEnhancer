@@ -109,7 +109,7 @@ private fun ManagerHomeScreen(
     ManagerDetailScaffold(title = stringResource(R.string.app_name), wide = wide, onBack = null) {
         item("wekit-dashboard", contentType = PageStart.Inset) {
             WeKitStyleHomeDashboard(
-                moduleActive = MainActivity.isXposedEnabled(),
+                moduleActive = MainActivity.isXposedEnabled() || runningVersions.isNotEmpty(),
                 enabledCount = enabledFeatures,
                 totalCount = featureSwitches.size,
                 whatsappVersion = runningVersions["com.whatsapp"],

@@ -20,7 +20,6 @@ import com.freeteaspoon.wppenhacer.activities.CrashReportActivity
 import com.freeteaspoon.wppenhacer.ui.miuix.MiuixCrashReportActivity
 import com.freeteaspoon.wppenhacer.utils.PreferenceSnapshot
 import com.freeteaspoon.wppenhacer.xposed.utils.Utils
-import de.robv.android.xposed.XposedHelpers
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import rikka.material.app.LocaleDelegate.Companion.defaultLocale
 import java.io.File
@@ -42,16 +41,6 @@ class App : Application() {
             changeLanguage(this)
         } catch (e: Exception) {
             Utils.showToast("[PREFS] Error accessing app data: ${e.message}")
-        }
-        if (sharedPreferences != null) {
-            try {
-                val file = XposedHelpers.getObjectField(sharedPreferences, "file") as File
-                file.setReadable(true)
-                file.setWritable(true)
-                file.setExecutable(true)
-            } catch (e: Throwable) {
-                e.printStackTrace()
-            }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             HiddenApiBypass.addHiddenApiExemptions(

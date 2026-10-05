@@ -2,7 +2,6 @@ package com.freeteaspoon.wppenhacer.xposed.utils
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import android.content.res.XResources
 import android.graphics.Bitmap
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
@@ -17,13 +16,10 @@ import android.graphics.drawable.InsetDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Build
-import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import kotlin.math.roundToInt
-import com.freeteaspoon.wppenhacer.WppXposed
 import com.freeteaspoon.wppenhacer.utils.IColors
 import com.freeteaspoon.wppenhacer.xposed.core.WppCore
-import de.robv.android.xposed.XposedBridge
 
 object DesignUtils {
 
@@ -78,30 +74,60 @@ object DesignUtils {
             "rc_dialog_bg" -> {
                 val border = Utils.dipToPixels(12.0f).toFloat()
                 val shapeDrawable = ShapeDrawable(
-                    RoundRectShape(floatArrayOf(border, border, border, border, 0f, 0f, 0f, 0f), null, null)
+                    RoundRectShape(
+                        floatArrayOf(border, border, border, border, 0f, 0f, 0f, 0f),
+                        null,
+                        null
+                    )
                 )
                 shapeDrawable.paint.color = color
                 shapeDrawable
             }
+
             "selector_bg" -> {
                 val border = Utils.dipToPixels(18.0f).toFloat()
                 val selectorBg = ShapeDrawable(
-                    RoundRectShape(floatArrayOf(border, border, border, border, border, border, border, border), null, null)
+                    RoundRectShape(
+                        floatArrayOf(
+                            border,
+                            border,
+                            border,
+                            border,
+                            border,
+                            border,
+                            border,
+                            border
+                        ), null, null
+                    )
                 )
                 selectorBg.paint.color = color
                 selectorBg
             }
+
             "rc_dotline_dialog" -> {
                 val border = Utils.dipToPixels(16.0f).toFloat()
                 val shapeDrawable = ShapeDrawable(
-                    RoundRectShape(floatArrayOf(border, border, border, border, border, border, border, border), null, null)
+                    RoundRectShape(
+                        floatArrayOf(
+                            border,
+                            border,
+                            border,
+                            border,
+                            border,
+                            border,
+                            border,
+                            border
+                        ), null, null
+                    )
                 )
                 shapeDrawable.paint.color = color
                 shapeDrawable
             }
+
             "stroke_border" -> {
                 val radius = Utils.dipToPixels(18.0f).toFloat()
-                val outerRadii = floatArrayOf(radius, radius, radius, radius, radius, radius, radius, radius)
+                val outerRadii =
+                    floatArrayOf(radius, radius, radius, radius, radius, radius, radius, radius)
                 val roundRectShape = RoundRectShape(outerRadii, null, null)
                 val shapeDrawable = ShapeDrawable(roundRectShape)
                 val paint = shapeDrawable.paint
@@ -112,6 +138,7 @@ object DesignUtils {
                 val inset = Utils.dipToPixels(2)
                 InsetDrawable(shapeDrawable, inset, inset, inset, inset)
             }
+
             else -> ColorDrawable(Color.BLACK)
         }
     }
@@ -120,7 +147,8 @@ object DesignUtils {
     fun getPrimaryTextColor(): Int {
         var textColor = mPrefs?.getInt("text_color", 0) ?: 0
         if (shouldUseMonetColors()) {
-            val monetTextColor = resolveMonetColor(if (isNightMode()) "system_neutral1_100" else "system_neutral1_900")
+            val monetTextColor =
+                resolveMonetColor(if (isNightMode()) "system_neutral1_100" else "system_neutral1_900")
             if (monetTextColor != 0) {
                 textColor = monetTextColor
             }
@@ -135,7 +163,8 @@ object DesignUtils {
     fun getUnSeenColor(): Int {
         var primaryColor = mPrefs?.getInt("primary_color", 0) ?: 0
         if (shouldUseMonetColors()) {
-            val monetPrimaryColor = resolveMonetColor(if (isNightMode()) "system_accent1_300" else "system_accent1_600")
+            val monetPrimaryColor =
+                resolveMonetColor(if (isNightMode()) "system_accent1_300" else "system_accent1_600")
             if (monetPrimaryColor != 0) {
                 primaryColor = monetPrimaryColor
             }
@@ -150,7 +179,8 @@ object DesignUtils {
     fun getPrimarySurfaceColor(): Int {
         var backgroundColor = mPrefs?.getInt("background_color", 0) ?: 0
         if (shouldUseMonetColors()) {
-            val monetBackgroundColor = resolveMonetColor(if (isNightMode()) "system_neutral1_900" else "system_neutral1_10")
+            val monetBackgroundColor =
+                resolveMonetColor(if (isNightMode()) "system_neutral1_900" else "system_neutral1_10")
             if (monetBackgroundColor != 0) {
                 backgroundColor = monetBackgroundColor
             }
@@ -166,7 +196,8 @@ object DesignUtils {
         if (drawable == null) return null
         var primaryColorInt = mPrefs?.getInt("primary_color", 0) ?: 0
         if (shouldUseMonetColors()) {
-            val monetPrimaryColor = resolveMonetColor(if (isNightMode()) "system_accent1_300" else "system_accent1_600")
+            val monetPrimaryColor =
+                resolveMonetColor(if (isNightMode()) "system_accent1_300" else "system_accent1_600")
             if (monetPrimaryColor != 0) {
                 primaryColorInt = monetPrimaryColor
             }
@@ -178,19 +209,6 @@ object DesignUtils {
             return BitmapDrawable(Utils.application.resources, newBitmap)
         }
         return null
-    }
-
-    @JvmStatic
-    fun setReplacementDrawable(name: String, replacement: Drawable?) {
-        if (WppXposed.ResParam == null) return
-        WppXposed.ResParam!!.res.setReplacement(
-            Utils.application.packageName, "drawable", name,
-            object : XResources.DrawableLoader() {
-                override fun newDrawable(res: XResources, id: Int): Drawable {
-                    return replacement!!
-                }
-            }
-        )
     }
 
     @JvmStatic
@@ -228,11 +246,16 @@ object DesignUtils {
                 val idColor = color.replace("color_", "")
                 val colorRes = android.R.color::class.java.getField(idColor).getInt(null)
                 if (colorRes != -1) {
-                    return "#" + Integer.toHexString(ContextCompat.getColor(Utils.application, colorRes))
+                    return "#" + Integer.toHexString(
+                        ContextCompat.getColor(
+                            Utils.application,
+                            colorRes
+                        )
+                    )
                 }
             }
         } catch (e: Exception) {
-            XposedBridge.log("Error: $e")
+            YukiLog.log("Error: $e")
         }
         return "0"
     }

@@ -12,3 +12,5 @@ key.jks
 key_base64.txt
 /app/.project
 .kotlin/
+/app/src/main/assets/xposed_init
+/app/src/main/resources/META-INF/yukihookapi_init

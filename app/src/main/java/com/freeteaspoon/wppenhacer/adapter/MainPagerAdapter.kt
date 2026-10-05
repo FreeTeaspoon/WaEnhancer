@@ -11,7 +11,8 @@ import com.freeteaspoon.wppenhacer.ui.fragments.MediaFragment
 import com.freeteaspoon.wppenhacer.ui.fragments.PrivacyFragment
 import com.freeteaspoon.wppenhacer.ui.fragments.RecordingsFragment
 
-class MainPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
+class MainPagerAdapter(fragmentActivity: FragmentActivity) :
+    FragmentStateAdapter(fragmentActivity) {
     private val isRecordingEnabled = PreferenceManager.getDefaultSharedPreferences(fragmentActivity)
         .getBoolean("call_recording_enable", false)
 

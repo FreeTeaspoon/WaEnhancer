@@ -41,8 +41,8 @@ android {
         minSdk = 28
         //noinspection OldTargetApi
         targetSdk = 34
-        versionCode = 161
-        versionName = "1.6.1 ($gitHash)"
+        versionCode = 162
+        versionName = "1.6.2 ($gitHash)"
         multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -134,6 +134,8 @@ android {
         baseline = file("lint-baseline.xml")
     }
 
+    androidResources.additionalParameters += listOf("--allow-reserved-package-id", "--package-id", "0x64")
+
 }
 
 androidComponents {
@@ -145,6 +147,19 @@ androidComponents {
         }
         variant.outputs.forEach { output ->
             output.outputFileName.set("$appName-${output.versionName.get()}.apk")
+        }
+
+        // Hotfix: YukiHookAPI's KSP generates xposed_init / yukihookapi_init, so the
+        // asset and resource merge tasks must run after it or the entrypoint is missing.
+        val cap = variant.name.replaceFirstChar { c ->
+            if (c.isLowerCase()) c.titlecase(Locale.getDefault()) else c.toString()
+        }
+        val kspTask = "ksp${cap}Kotlin"
+        tasks.matching { it.name == "merge${cap}Assets" }.configureEach {
+            dependsOn(kspTask)
+        }
+        tasks.matching { it.name == "merge${cap}JavaResource" }.configureEach {
+            dependsOn(kspTask)
         }
     }
 }
@@ -166,6 +181,10 @@ dependencies {
     implementation(files("libs/dexkit-android.aar"))
     implementation(libs.flatbuffers)
     compileOnly(libs.libxposed.legacy)
+    implementation(libs.yukihookapi.api)
+    implementation(libs.kavaref.core)
+    implementation(libs.kavaref.extension)
+    ksp(libs.yukihookapi.ksp.xposed)
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.core)
@@ -200,6 +219,7 @@ dependencies {
     implementation(libs.miuix.preference)
     implementation(libs.miuix.blur)
     implementation(libs.miuix.nav)
+    implementation(libs.androidx.datastore.preferences)
 }
 
 

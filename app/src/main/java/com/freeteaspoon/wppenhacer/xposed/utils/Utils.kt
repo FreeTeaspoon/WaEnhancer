@@ -26,7 +26,6 @@ import com.freeteaspoon.wppenhacer.xposed.core.FeatureLoader
 import com.freeteaspoon.wppenhacer.xposed.core.WppCore.getClientBridge
 import com.freeteaspoon.wppenhacer.xposed.core.WppCore.getContactName
 import com.freeteaspoon.wppenhacer.xposed.core.components.FMessageWpp.UserJid
-import de.robv.android.xposed.XposedBridge
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -123,7 +122,7 @@ object Utils {
 
             return id
         } catch (e: Exception) {
-            XposedBridge.log("Error getting resource ID: type=" + type + ", name=" + name + ", error: " + e.message)
+            YukiLog.log("Error getting resource ID: type=" + type + ", name=" + name + ", error: " + e.message)
             return -1
         }
     }
@@ -167,7 +166,7 @@ object Utils {
         try {
             return copyFile(FileInputStream(srcFile), destFolder, name)
         } catch (e: Exception) {
-            XposedBridge.log(e)
+            YukiLog.log(e)
             return e.message
         }
     }
@@ -194,7 +193,7 @@ object Utils {
                     }
             }
         } catch (e: Exception) {
-            XposedBridge.log(e)
+            YukiLog.log(e)
             return e.message
         }
     }
@@ -283,7 +282,12 @@ object Utils {
 
     fun getMyNumber(): String {
         val dataDir = getAccountDataDir()
-        return CDSharedPreferences(File(dataDir, "shared_prefs/${FeatureLoader.mApp!!.packageName}_preferences_light.xml"))
+        return CDSharedPreferences(
+            File(
+                dataDir,
+                "shared_prefs/${FeatureLoader.mApp!!.packageName}_preferences_light.xml"
+            )
+        )
             .getString("ph", "")!!
     }
 

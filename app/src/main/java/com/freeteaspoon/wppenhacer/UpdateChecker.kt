@@ -4,7 +4,7 @@ import android.app.Activity
 import com.freeteaspoon.wppenhacer.xposed.core.WppCore
 import com.freeteaspoon.wppenhacer.xposed.core.components.AlertDialogWpp
 import com.freeteaspoon.wppenhacer.xposed.utils.Utils
-import de.robv.android.xposed.XposedBridge
+import com.freeteaspoon.wppenhacer.xposed.utils.YukiLog
 import io.noties.markwon.Markwon
 import okhttp3.OkHttpClient
 import org.json.JSONObject
@@ -55,11 +55,12 @@ class UpdateChecker(private val mActivity: Activity) : Runnable {
             val packageInfo = try {
                 mActivity.packageManager.getPackageInfo(BuildConfig.APPLICATION_ID, 0)
             } catch (e: Exception) {
-                XposedBridge.log(e)
+                YukiLog.log(e)
                 return
             }
 
-            val isNewVersion = !packageInfo.versionName!!.lowercase().contains(hash.lowercase().trim())
+            val isNewVersion =
+                !packageInfo.versionName!!.lowercase().contains(hash.lowercase().trim())
             val isIgnored = WppCore.getPrivString("ignored_version", "") == hash
 
             if (isNewVersion && !isIgnored) {
@@ -68,7 +69,7 @@ class UpdateChecker(private val mActivity: Activity) : Runnable {
                 }
             }
         } catch (e: Exception) {
-            XposedBridge.log(e)
+            YukiLog.log(e)
         }
     }
 
@@ -114,7 +115,7 @@ class UpdateChecker(private val mActivity: Activity) : Runnable {
                 displayFormat.format(date)
             } else ""
         } catch (e: Exception) {
-            XposedBridge.log(e)
+            YukiLog.log(e)
             ""
         }
     }

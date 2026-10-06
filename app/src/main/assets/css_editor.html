@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         * {
             margin: 0;
@@ -9,28 +10,40 @@
         }
 
         html, body{
-            height: 100% !important;
+            height: 100vh;
             width: 100%;
             background: #2d2d2d;
+            overflow: hidden;
         }
-
-
+        label { display: none; }
+        div.prism-live { position: fixed; inset: 0; width: 100%; height: 100vh; }
+        textarea.prism-live, pre.prism-live { height: 100vh !important; margin: 0; }
+        pre.prism-live { flex: none; }
     </style>
     <link href="www/prism.css" rel="stylesheet"/>
     <link href="www/prism-live.css" rel="stylesheet">
+    <style>
+        textarea.prism-live:not(.prism-live-source) {
+            color: #f8f8f2;
+            caret-color: #f8f8f2;
+            font-family: monospace;
+        }
+    </style>
     <script src="www/prism.js"></script>
     <title>CSS Editor</title>
 </head>
 <body>
 <label for="code"></label>
 <textarea class="prism-live language-css fill" id="code"
-          style="--height: 50em">{{content}}</textarea>
+          style="--height: 100vh">{{content}}</textarea>
 <script type="text/javascript">
+    document.getElementById('code').addEventListener('input', function () {
+        if (window.ManagerEditor) window.ManagerEditor.changed(this.value);
+    });
     function getTextareaContent() {
            return document.getElementById('code').value;
        }
 </script>
 <script src="www/src/prism-live.mjs?load=css" type="module"></script>
-<script src="www/index.js"></script>
 </body>
 </html>

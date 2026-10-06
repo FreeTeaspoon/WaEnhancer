@@ -55,6 +55,21 @@ object RootDiagnostics {
         }
     }
 
+    // The manager publishes the result only after every check has finished.
+    fun collectDiagnostics(context: Context): List<LogEntry> {
+        val entries = mutableListOf<LogEntry>()
+        val callback = Callback(entries::add)
+        val shell = Shell.getShell()
+        if (!shell.isRoot) {
+            entries += LogEntry(context.getString(R.string.diag_root_denied), LogType.ERROR)
+        } else {
+            entries += LogEntry(context.getString(R.string.diag_root_granted), LogType.SUCCESS)
+            checkSepolicy(context, callback)
+            checkHideMyAppList(context, callback)
+        }
+        return entries.filter { it.message.isNotBlank() && !it.message.endsWith("...") }
+    }
+
     private fun checkSepolicy(context: Context, callback: Callback) {
         callback.onLog(LogEntry(""))
         callback.onLog(LogEntry(context.getString(R.string.diag_sepolicy_checking)))

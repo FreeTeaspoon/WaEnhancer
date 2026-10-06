@@ -320,7 +320,7 @@ internal fun IosLiquidGlassNavigationBar(
     val combinedBackdrop = backdrop?.let { rememberCombinedBackdrop(it, tabsBackdrop) }
 
     val navBarBottomPadding = WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues().calculateBottomPadding()
-    val bottomPaddingValue = 12.dp + navBarBottomPadding
+    val bottomPaddingValue = if (navBarBottomPadding > 0.dp) 8.dp + navBarBottomPadding else 36.dp
     val containerHeight = if (showLabels) 62.dp else 56.dp
     val indicatorHeight = if (showLabels) 54.dp else 48.dp
     val preferredHorizontalPadding = if (showLabels) 44.dp else 60.dp

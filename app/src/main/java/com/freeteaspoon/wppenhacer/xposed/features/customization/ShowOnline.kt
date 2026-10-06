@@ -52,6 +52,8 @@ class ShowOnline(loader: ClassLoader, preferences: SharedPreferences) :
         UnobfuscatorCache.getInstance().getString("online")
     }
 
+    // Synthetic IDs identify views injected into WhatsApp; they are not app resources.
+    @SuppressLint("ResourceType")
     override fun doHook() {
         val showOnlineText = xprefs.getBoolean("showonlinetext", false)
         val showOnlineIcon = xprefs.getBoolean("dotonline", false)

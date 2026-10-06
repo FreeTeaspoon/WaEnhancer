@@ -16,7 +16,7 @@ import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlin.math.abs
+import top.yukonga.miuix.kmp.utils.springAnimateToPage
 
 /** Keeps selection pinned to the requested destination during cancellable pager retargeting. */
 @Stable
@@ -43,20 +43,7 @@ internal class PrimaryPagerNavigationState(
         job = scope.launch {
             try {
                 if (animationsEnabled) {
-                    pagerState.scroll(MutatePriority.UserInput) {
-                        val distance = abs(page - pagerState.currentPage).coerceAtLeast(2)
-                        val pageSize = pagerState.layoutInfo.pageSize + pagerState.layoutInfo.pageSpacing
-                        val pixels = (page - pagerState.currentPage - pagerState.currentPageOffsetFraction) * pageSize
-                        var consumed = 0f
-                        animate(
-                            initialValue = 0f,
-                            targetValue = pixels,
-                            animationSpec = tween(durationMillis = 100 * distance + 100, easing = EaseInOut),
-                        ) { value, _ ->
-                            consumed += scrollBy(value - consumed)
-                        }
-                    }
-                    if (pagerState.currentPage != page) pagerState.scrollToPage(page)
+                    pagerState.springAnimateToPage(page)
                 } else pagerState.scrollToPage(page)
             } finally {
                 if (currentRequest == request) {

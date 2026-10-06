@@ -10,10 +10,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -62,15 +62,17 @@ class PreferenceSearchScrollTest {
         // Repeated selections include moving backwards and crossing group headings.
         listOf(0, 10, 30, 59, 20, 0).forEach { index ->
             composeRule.runOnIdle { target.value = "row-$index" }
-            composeRule.onNodeWithText("● Setting $index", useUnmergedTree = true).assertIsDisplayed()
+            composeRule.onNodeWithText("Setting $index", useUnmergedTree = true).assertIsDisplayed()
         }
     }
 
     @Test
     fun directAndRestoredScrollPositionsCollapseBarAndEnableBlur() {
+        lateinit var scope: kotlinx.coroutines.CoroutineScope
         lateinit var listState: LazyListState
         lateinit var behavior: ScrollBehavior
         composeRule.setContent {
+            scope = androidx.compose.runtime.rememberCoroutineScope()
             listState = rememberLazyListState(initialFirstVisibleItemIndex = 20)
             behavior = rememberManagerListScrollBehavior(listState)
             // Supply the measured collapse range without relying on screen density.
@@ -84,9 +86,35 @@ class PreferenceSearchScrollTest {
             assertTrue(behavior.state.contentOffset <= -100f)
         }
         assertScrolled()
-        runBlocking { listState.scrollToItem(0) }
+        composeRule.runOnIdle { scope.launch { listState.scrollToItem(0) } }
+        composeRule.waitForIdle()
         composeRule.runOnIdle { assertEquals(0f, behavior.state.contentOffset, 0f) }
-        runBlocking { listState.scrollToItem(35) }
+        composeRule.runOnIdle { scope.launch { listState.scrollToItem(35) } }
+        composeRule.waitForIdle()
         assertScrolled()
     }
+    @Test
+    fun shrinkingEndContentKeepsLargeTitleCollapsed() {
+        val tall = mutableStateOf(true)
+        lateinit var listState: LazyListState
+        lateinit var behavior: ScrollBehavior
+        lateinit var scope: kotlinx.coroutines.CoroutineScope
+        composeRule.setContent {
+            scope = androidx.compose.runtime.rememberCoroutineScope()
+            listState = rememberLazyListState()
+            behavior = rememberManagerListScrollBehavior(listState)
+            behavior.state.heightOffsetLimit = -100f
+            LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
+                items(30, key = { it }) { index ->
+                    Text("Row $index", modifier = Modifier.height(if (index == 28 && tall.value) 600.dp else 80.dp))
+                }
+            }
+        }
+        composeRule.runOnIdle { scope.launch { listState.scrollToItem(28) } }
+        composeRule.waitForIdle()
+        composeRule.runOnIdle { tall.value = false }
+        composeRule.waitForIdle()
+        composeRule.runOnIdle { assertEquals(1f, behavior.state.collapsedFraction, 0f) }
+    }
+
 }

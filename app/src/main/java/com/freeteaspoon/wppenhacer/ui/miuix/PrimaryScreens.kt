@@ -106,7 +106,7 @@ private fun ManagerHomeScreen(
         it.kind == PreferenceKind.SWITCH && !it.isManagerAppearancePreference()
     }
     val enabledFeatures = featureSwitches.count { state.preferences[it.key] == true }
-    ManagerDetailScaffold(title = stringResource(R.string.app_name), wide = wide, onBack = null) {
+    ManagerDetailScaffold(title = stringResource(R.string.app_name), wide = wide, onBack = null, bottomPadding = bottomPadding) {
         item("wekit-dashboard", contentType = PageStart.Inset) {
             WeKitStyleHomeDashboard(
                 moduleActive = MainActivity.isXposedEnabled() || runningVersions.isNotEmpty(),
@@ -117,7 +117,7 @@ private fun ManagerHomeScreen(
                 onOpenFeatures = onOpenFeatures,
             )
         }
-        item("home-bottom-${state.specs.size}") { androidx.compose.foundation.layout.Spacer(androidx.compose.ui.Modifier.height(bottomPadding)) }
+
     }
 }
 
@@ -129,97 +129,9 @@ private fun ManagerFeaturesScreen(
     onNavigate: (ManagerRoute) -> Unit,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
-    val rows = listOf(
-        DestinationRow(stringResource(R.string.general), stringResource(R.string.manager_general_summary), ManagerRoute.PreferencePage(PreferenceSource.GENERAL), MiuixIcons.Settings),
-        DestinationRow(stringResource(R.string.home_screen), stringResource(R.string.manager_home_screen_summary), ManagerRoute.PreferencePage(PreferenceSource.HOME_SCREEN), MiuixIcons.Home),
-        DestinationRow(stringResource(R.string.conversation), stringResource(R.string.manager_conversation_summary), ManagerRoute.PreferencePage(PreferenceSource.CONVERSATION), MiuixIcons.Messages),
-        DestinationRow(stringResource(R.string.status), stringResource(R.string.manager_status_summary), ManagerRoute.PreferencePage(PreferenceSource.STATUS), MiuixIcons.WorldClock),
-        DestinationRow(stringResource(R.string.privacy), stringResource(R.string.manager_privacy_summary), ManagerRoute.PreferencePage(PreferenceSource.PRIVACY), MiuixIcons.Contacts),
-        DestinationRow(stringResource(R.string.media), stringResource(R.string.manager_media_summary), ManagerRoute.PreferencePage(PreferenceSource.MEDIA), MiuixIcons.RecordingTape),
-        DestinationRow(stringResource(R.string.manager_customize), stringResource(R.string.manager_customization_summary), ManagerRoute.PreferencePage(PreferenceSource.CUSTOMIZE), MiuixIcons.Theme),
-    )
-    val filteredRows = rows.filter { query.isBlank() || it.title.contains(query, true) || it.summary.contains(query, true) }
-    val filteredPreferences = searchPreferenceSpecs(state.specs, query)
-    val resultsTitle = stringResource(R.string.manager_search_results)
-    val sourceLabels = mapOf(
-        PreferenceSource.GENERAL to stringResource(R.string.general),
-        PreferenceSource.HOME_SCREEN to stringResource(R.string.home_screen),
-        PreferenceSource.CONVERSATION to stringResource(R.string.conversation),
-        PreferenceSource.STATUS to stringResource(R.string.status),
-        PreferenceSource.PRIVACY to stringResource(R.string.privacy),
-        PreferenceSource.MEDIA to stringResource(R.string.media),
-        PreferenceSource.CUSTOMIZE to stringResource(R.string.manager_customize),
-    )
     BackHandler(enabled = query.isNotBlank()) { query = "" }
-    ManagerDetailScaffold(title = stringResource(R.string.manager_features), wide = wide, onBack = null) {
-        item("feature-search") {
-            TextField(
-                value = query,
-                onValueChange = { query = it },
-                modifier = Modifier
-                    .testTag("features-search")
-                    .padding(horizontal = 12.dp, vertical = 12.dp)
-                    .fillMaxWidth(),
-                label = stringResource(R.string.manager_search_features),
-                useLabelAsPlaceholder = true,
-                leadingIcon = {
-                    Icon(
-                        imageVector = MiuixIcons.Search,
-                        contentDescription = null,
-                        modifier = Modifier.padding(horizontal = 12.dp),
-                    )
-                },
-            )
-        }
-        if (query.isNotBlank()) {
-            managerSection(resultsTitle, "feature-results")
-            if (filteredPreferences.isEmpty()) {
-                item("feature-empty") {
-                    ManagerGroupCard {
-                        ArrowPreference(stringResource(R.string.manager_no_results), onClick = null)
-                    }
-                }
-            } else {
-                managerGroupedCardItems(
-                    keyPrefix = "feature-results",
-                    items = filteredPreferences.map { spec ->
-                        ManagerCardItem("${spec.source.name}:${spec.key}") {
-                            ArrowPreference(
-                                title = spec.title,
-                                summary = listOfNotNull(
-                                    sourceLabels[spec.source],
-                                    spec.summary?.takeIf(String::isNotBlank),
-                                ).joinToString(" · "),
-                                onClick = { onNavigate(ManagerRoute.PreferencePage(spec.source, spec.key)) },
-                            )
-                        }
-                    },
-                )
-            }
-        } else if (filteredRows.isEmpty()) {
-            item("feature-empty") {
-                ManagerGroupCard {
-                    ArrowPreference(stringResource(R.string.manager_no_results), onClick = null)
-                }
-            }
-        } else {
-            managerGroupedCardItems(
-                keyPrefix = "feature-groups",
-                items = filteredRows.map { row ->
-                    ManagerCardItem(row.route.encode()) {
-                        ArrowPreference(
-                            title = row.title,
-                            summary = row.summary,
-                            startAction = { Icon(row.icon, null, modifier = Modifier.padding(end = 6.dp)) },
-                            onClick = { onNavigate(row.route) },
-                        )
-                    }
-                },
-                outerTopPadding = 12.dp,
-            )
-        }
-        item("feature-bottom") { Spacer(Modifier.height(bottomPadding)) }
-    }
+    ManagerSearchContent(state, query, { query = it }, onNavigate,
+        stringResource(R.string.manager_features), wide, null, bottomPadding, showCategories = true)
 }
 
 @SuppressLint("BatteryLife")
@@ -227,7 +139,10 @@ private fun ManagerFeaturesScreen(
 private fun ManagerToolsScreen(wide: Boolean, bottomPadding: Dp, onNavigate: (ManagerRoute) -> Unit) {
     val context = LocalContext.current
     val powerManager = context.getSystemService(android.os.PowerManager::class.java)
-    val batteryIgnored = powerManager?.isIgnoringBatteryOptimizations(context.packageName) == true
+    var batteryIgnored by remember { mutableStateOf(powerManager?.isIgnoringBatteryOptimizations(context.packageName) == true) }
+    androidx.lifecycle.compose.LifecycleEventEffect(androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+        batteryIgnored = powerManager?.isIgnoringBatteryOptimizations(context.packageName) == true
+    }
     val rows = listOf(
         DestinationRow(stringResource(R.string.manager_recordings), stringResource(R.string.manager_recordings_summary), ManagerRoute.Recordings, MiuixIcons.RecordingTape),
         DestinationRow(stringResource(R.string.call_recording_title), stringResource(R.string.manager_call_recording_summary), ManagerRoute.CallRecording, MiuixIcons.CallRecording),
@@ -235,7 +150,7 @@ private fun ManagerToolsScreen(wide: Boolean, bottomPadding: Dp, onNavigate: (Ma
         DestinationRow(stringResource(R.string.manager_appearance), stringResource(R.string.manager_appearance_summary), ManagerRoute.Appearance, MiuixIcons.Theme),
         DestinationRow(stringResource(R.string.about), stringResource(R.string.manager_about_summary), ManagerRoute.About, MiuixIcons.Info),
     )
-    ManagerDetailScaffold(title = stringResource(R.string.manager_tools), wide = wide, onBack = null) {
+    ManagerDetailScaffold(title = stringResource(R.string.manager_tools), wide = wide, onBack = null, bottomPadding = bottomPadding) {
         managerGroupedCardItems(
             keyPrefix = "tools-destinations",
             items = rows.map { row ->
@@ -248,7 +163,7 @@ private fun ManagerToolsScreen(wide: Boolean, bottomPadding: Dp, onNavigate: (Ma
                     )
                 }
             },
-            outerTopPadding = 12.dp,
+
         )
         item("app-actions") {
             ManagerGroupCard {
@@ -280,19 +195,18 @@ private fun ManagerToolsScreen(wide: Boolean, bottomPadding: Dp, onNavigate: (Ma
                     title = stringResource(R.string.manager_check_updates),
                     onClick = { onNavigate(ManagerRoute.Updates) },
                 )
-                SwitchPreference(
-                    checked = batteryIgnored,
-                    onCheckedChange = {
-                        if (!it) return@SwitchPreference
-                        context.startActivity(Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-                            data = "package:${context.packageName}".toUri()
+                ArrowPreference(
+                    title = stringResource(R.string.manager_battery_optimization),
+                    summary = stringResource(if (batteryIgnored) R.string.manager_permission_granted else R.string.manager_permission_needed),
+                    onClick = {
+                        context.startActivity(Intent(if (batteryIgnored) Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
+                            else Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                            if (!batteryIgnored) data = "package:${context.packageName}".toUri()
                         })
                     },
-                    title = stringResource(R.string.manager_battery_optimization),
-                    summary = stringResource(R.string.manager_battery_optimization_summary),
                 )
             }
         }
-        item("bottom") { androidx.compose.foundation.layout.Spacer(androidx.compose.ui.Modifier.height(bottomPadding)) }
+
     }
 }

@@ -6,6 +6,18 @@ import org.junit.Test
 
 class ManagerModelsTest {
     @Test
+    fun transcriptionKeySummariesNeverExposeStoredCredentials() {
+        val secret = "audit-placeholder-key"
+        listOf("assemblyai_key", "groq_api_key").forEach { key ->
+            val spec = PreferenceSpec(key, PreferenceSource.MEDIA, "", "API key", "Enter your API key", PreferenceKind.TEXT)
+            val summary = preferenceSummary(spec, secret).orEmpty()
+            assertTrue(summary.isNotBlank())
+            assertTrue(!summary.contains(secret))
+            assertEquals(spec.summary, preferenceSummary(spec, ""))
+        }
+    }
+
+    @Test
     fun searchTargetsFollowRenderedGroupsIncludingRepeatedCategories() {
         fun spec(key: String, category: String) = PreferenceSpec(
             key = key,
@@ -25,9 +37,9 @@ class ManagerModelsTest {
         val groups = state.groups(PreferenceSource.GENERAL)
 
         assertEquals(1, groups.preferenceItemIndex("first"))
-        assertEquals(2, groups.preferenceItemIndex("same_group"))
-        assertEquals(4, groups.preferenceItemIndex("other_group"))
-        assertEquals(5, groups.preferenceItemIndex("last"))
+        assertEquals(1, groups.preferenceItemIndex("same_group"))
+        assertEquals(3, groups.preferenceItemIndex("other_group"))
+        assertEquals(3, groups.preferenceItemIndex("last"))
         assertEquals(-1, groups.preferenceItemIndex(ManagerAppearanceSettings.KEY_THEME_MODE))
         assertEquals(-1, groups.preferenceItemIndex("missing"))
         assertEquals(-1, groups.preferenceItemIndex(null))
@@ -37,6 +49,9 @@ class ManagerModelsTest {
     fun routesRoundTripIncludingSearchHighlight() {
         val routes = listOf<ManagerRoute>(
             ManagerRoute.PreferencePage(PreferenceSource.PRIVACY, "call_privacy"),
+            ManagerRoute.PreferenceFeature(PreferenceSource.CUSTOMIZE, "wallpaper", "wallpaper_file"),
+            ManagerRoute.RecordingContact("A: B"),
+            ManagerRoute.Credits,
             ManagerRoute.Search,
             ManagerRoute.Appearance,
             ManagerRoute.About,

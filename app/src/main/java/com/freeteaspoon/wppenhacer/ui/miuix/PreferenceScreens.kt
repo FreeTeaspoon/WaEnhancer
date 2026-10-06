@@ -21,9 +21,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.Dp
@@ -60,41 +64,60 @@ internal fun PreferencePageScreen(
     onBack: (() -> Unit)?,
     onNavigate: (ManagerRoute) -> Unit,
     highlightKey: String? = null,
+    featureKey: String? = null,
 ) {
-    val title = preferenceSourceTitle(source)
+    val feature = state.specs.firstOrNull { it.key == featureKey }
+    val title = feature?.title ?: preferenceSourceTitle(source)
     var editing by remember { mutableStateOf<PreferenceSpec?>(null) }
     var showEditor by remember { mutableStateOf(false) }
-    val groups = state.groups(source)
+    val masters = state.specs.mapNotNull { it.dependency }.toSet()
+    val groups = if (featureKey == null) state.groups(source).map { group ->
+        group.copy(preferences = group.preferences.filter { it.dependency == null })
+    }.filter { it.preferences.isNotEmpty() } else listOf(PreferenceGroup(title,
+        state.specs.filter { it.key == featureKey || it.dependency == featureKey }))
     val highlightedIndex = groups.preferenceItemIndex(highlightKey)
     val listState = rememberLazyListState()
+    val highlightRequester = remember { androidx.compose.foundation.relocation.BringIntoViewRequester() }
     var highlightPositionApplied by rememberSaveable(source, highlightKey) { mutableStateOf(false) }
     LaunchedEffect(source, highlightKey, highlightedIndex) {
         if (highlightedIndex >= 0 && !highlightPositionApplied) {
             listState.scrollToItem(highlightedIndex)
+            androidx.compose.runtime.withFrameNanos { }
+            highlightRequester.bringIntoView()
             highlightPositionApplied = true
         }
     }
     ManagerDetailScaffoldWithState(title, wide, onBack, listState) {
         groups.forEachIndexed { groupIndex, group ->
-            managerSection(group.title, "$source-$groupIndex")
+            if (groups.size > 1) managerSection(group.title, "$source-$groupIndex")
             managerGroupedCardItems(
-                keyPrefix = source.name,
+                keyPrefix = "${source.name}:$groupIndex",
                 items = group.preferences.map { spec ->
                     ManagerCardItem(spec.key) {
-                        PreferenceSpecRow(
+                        val enabled = controller.isEnabled(spec, state.preferences)
+                        if (featureKey == null && spec.key in masters) {
+                            ArrowPreference(spec.title, summary = stringResource(
+                                if (state.preferences[spec.key] == true) R.string.manager_on else R.string.manager_off),
+                                onClick = { onNavigate(ManagerRoute.PreferenceFeature(source, spec.key)) })
+                        } else androidx.compose.foundation.layout.Box(Modifier.testTag("preference-${spec.key}")
+                            .semantics(mergeDescendants = !enabled) {
+                                if (!enabled) disabled()
+                            }.then(
+                            if (spec.key == highlightKey) Modifier.bringIntoViewRequester(highlightRequester) else Modifier
+                        )) { PreferenceSpecRow(
                             spec = spec,
                             value = state.preferences[spec.key],
-                            enabled = controller.isEnabled(spec, state.preferences),
+                            enabled = enabled,
                             highlighted = spec.key == highlightKey,
                             onEdit = { editing = spec; showEditor = true },
                             onPut = { controller.put(spec, it) },
                             onNavigate = onNavigate,
-                        )
+                        ) }
                     }
                 },
             )
         }
-        item("bottom-$source") { Spacer(Modifier.height(bottomPadding + 18.dp)) }
+
     }
     editing?.let { spec ->
         PreferenceValueDialog(
@@ -120,12 +143,15 @@ private fun PreferenceSpecRow(
     onNavigate: (ManagerRoute) -> Unit,
 ) {
     val summary = preferenceSummary(spec, value)
-    val title = if (highlighted) "● ${spec.title}" else spec.title
+    val title = spec.title
+    val titleColor = top.yukonga.miuix.kmp.basic.BasicComponentDefaults.titleColor(
+        color = if (highlighted) MiuixTheme.colorScheme.primary else MiuixTheme.colorScheme.onSurfaceContainer)
     when (spec.kind) {
         PreferenceKind.SWITCH -> SwitchPreference(
             checked = value as? Boolean ?: spec.defaultValue.toBoolean(),
             onCheckedChange = onPut,
             title = title,
+            titleColor = titleColor,
             summary = summary,
             enabled = enabled,
         )
@@ -136,10 +162,11 @@ private fun PreferenceSpecRow(
                 ?: spec.entries.indexOf(selectedValue).takeIf { it >= 0 }
                 ?: 0)
             if (spec.entries.isEmpty()) {
-                ArrowPreference(title, summary = summary, enabled = enabled, onClick = null)
+                ArrowPreference(title, titleColor = titleColor, summary = summary, enabled = enabled, onClick = onEdit)
             } else {
                 OverlayDropdownPreference(
                     title = title,
+            titleColor = titleColor,
                     summary = summary,
                     items = spec.entries,
                     selectedIndex = selectedIndex,
@@ -163,10 +190,11 @@ private fun PreferenceSpecRow(
                 )
             }
             if (entries.isEmpty()) {
-                ArrowPreference(title, summary = summary, enabled = enabled, onClick = null)
+                ArrowPreference(title, titleColor = titleColor, summary = summary, enabled = enabled, onClick = onEdit)
             } else {
                 OverlayDropdownPreference(
                     title = title,
+            titleColor = titleColor,
                     summary = summary,
                     entry = DropdownEntry(entries),
                     enabled = enabled,
@@ -176,35 +204,19 @@ private fun PreferenceSpecRow(
         }
         PreferenceKind.INTEGER_SLIDER, PreferenceKind.FLOAT_SLIDER -> {
             val current = (value as? Number)?.toFloat() ?: spec.defaultValue?.toFloatOrNull() ?: spec.minimum
-            var pendingValue by remember(spec.key, current) { mutableFloatStateOf(current) }
-            ArrowPreference(
-                title = title,
-                summary = summary,
-                enabled = enabled,
-                onClick = onEdit,
-                bottomAction = {
-                    Slider(
-                        value = pendingValue.coerceIn(spec.minimum, spec.maximum),
-                        onValueChange = { pendingValue = it },
-                        onValueChangeFinished = {
-                            onPut(if (spec.kind == PreferenceKind.INTEGER_SLIDER) pendingValue.toInt() else pendingValue)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        valueRange = spec.minimum..spec.maximum,
-                        showKeyPoints = false,
-                        hapticEffect = SliderDefaults.SliderHapticEffect.Step,
-                    )
-                },
-            )
+            ArrowPreference(title = title,
+            titleColor = titleColor, summary = summary, enabled = enabled, onClick = onEdit)
         }
-        PreferenceKind.THEME -> ArrowPreference(title, summary = summary, enabled = enabled, onClick = { onNavigate(ManagerRoute.ThemeManager) })
+
+        PreferenceKind.THEME -> ArrowPreference(title, titleColor = titleColor, summary = summary, enabled = enabled, onClick = { onNavigate(ManagerRoute.ThemeManager) })
         PreferenceKind.ACTION -> ArrowPreference(
             title,
+            titleColor = titleColor,
             summary = summary,
             enabled = enabled,
             onClick = if (spec.key == "call_recording_settings") ({ onNavigate(ManagerRoute.CallRecording) }) else onEdit,
         )
-        else -> ArrowPreference(title, summary = summary, enabled = enabled, onClick = onEdit)
+        else -> ArrowPreference(title, titleColor = titleColor, summary = summary, enabled = enabled, onClick = onEdit)
     }
 }
 
@@ -217,104 +229,90 @@ private fun PreferenceValueDialog(
     onDismissFinished: () -> Unit,
     onSave: (Any) -> Unit,
 ) {
-    var input by remember(spec.key, value) { mutableStateOf(value?.toString().orEmpty()) }
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+    val fileModel: ManagerFileWorkflowViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val openFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        if (uri == null) return@rememberLauncherForActivityResult
-        scope.launch {
-            val stored = withContext(Dispatchers.IO) {
-                if (spec.key == "bootloader_spoofer_xml") {
-                    context.contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
-                } else {
-                    val type = context.contentResolver.getType(uri).orEmpty()
-                    val extension = type.substringAfter('/', "bin").substringBefore('+')
-                    val directory = File(App.waEnhancerFolder, "files").apply { mkdirs() }
-                    val target = File(directory, "${spec.key}.$extension")
-                    context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                        target.outputStream().use(inputStream::copyTo)
-                    }
-                    target.absolutePath
-                }
-            }
-            stored?.let(onSave)
-        }
+        if (uri != null) { onDismiss(); fileModel.importPreference(spec, uri) }
     }
     val selectContacts = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == android.app.Activity.RESULT_OK) {
             result.data?.getStringArrayListExtra("contacts")?.let { onSave(it.toString()) }
         }
     }
-    WindowDialog(
-        show = show,
-        title = spec.title,
-        summary = spec.summary,
-        onDismissRequest = onDismiss,
-        onDismissFinished = onDismissFinished,
-    ) {
-        when (spec.kind) {
-            PreferenceKind.FILE -> {
-                Text(spec.summary.orEmpty())
-                Spacer(Modifier.height(12.dp))
-                TextButton(
-                    text = stringResource(R.string.manager_choose_file),
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.textButtonColorsPrimary(),
-                    onClick = { openFile.launch(arrayOf("*/*")) },
-                )
-                if (spec.key == "download_local" || spec.key == "call_recording_path") {
-                    TextField(value = input, onValueChange = { input = it }, modifier = Modifier.fillMaxWidth(), singleLine = true)
-                    DialogButtons(onDismiss) { if (input.isNotBlank()) onSave(input) }
+    val resources = androidx.compose.ui.platform.LocalResources.current
+    val plainInput = spec.kind !in setOf(PreferenceKind.FILE, PreferenceKind.CONTACTS)
+    if (spec.kind == PreferenceKind.FILE && spec.key in setOf("download_local", "call_recording_path")) {
+        ManagerTextInputDialog(show, spec.title, value?.toString().orEmpty(), onDismiss, { onSave(it) },
+            summary = spec.summary, maxLength = 4096, onDismissFinished = onDismissFinished,
+            validate = { path -> if (path.startsWith("/") && !path.contains('\u0000')) null
+                else resources.getString(R.string.manager_invalid_value) })
+    } else if (plainInput) {
+        val numeric = spec.kind in setOf(PreferenceKind.INTEGER_SLIDER, PreferenceKind.FLOAT_SLIDER)
+        val initial = when (spec.kind) {
+            PreferenceKind.COLOR -> (value as? Number)?.toInt()?.let { "#%08X".format(it) } ?: ""
+            else -> value?.toString().orEmpty()
+        }
+        ManagerTextInputDialog(
+            show = show,
+            title = spec.title,
+            summary = spec.summary,
+            initialValue = initial,
+            onDismiss = onDismiss,
+            onDismissFinished = onDismissFinished,
+            keyboardType = when {
+                spec.isSecretPreference() -> KeyboardType.Password
+                numeric -> KeyboardType.Decimal
+                else -> KeyboardType.Text
+            },
+            visualTransformation = if (spec.isSecretPreference()) androidx.compose.ui.text.input.PasswordVisualTransformation()
+                else androidx.compose.ui.text.input.VisualTransformation.None,
+            allowBlank = !numeric && spec.kind != PreferenceKind.COLOR,
+            maxLength = if (spec.kind == PreferenceKind.TEXT) spec.maxLength else 256,
+            // CSS/XML/text documents are editors, not a single settings value.
+            singleLine = spec.key != "css_theme",
+            validate = { text ->
+                when {
+                    spec.kind == PreferenceKind.INTEGER_SLIDER -> if (text.toIntOrNull()?.let { it.toFloat() in spec.minimum..spec.maximum } == true) null
+                        else resources.getString(R.string.manager_value_range, spec.minimum.toString(), spec.maximum.toString())
+                    numeric -> if (text.toFloatOrNull()?.let { it.isFinite() && it in spec.minimum..spec.maximum } == true) null
+                        else resources.getString(R.string.manager_value_range, spec.minimum.toString(), spec.maximum.toString())
+                    spec.kind == PreferenceKind.COLOR -> if (text.removePrefix("#").let { it.length in setOf(6, 8) && it.toLongOrNull(16) != null }) null
+                        else resources.getString(R.string.manager_invalid_value)
+                    else -> null
                 }
-            }
-            PreferenceKind.CONTACTS -> {
-                TextButton(
-                    text = stringResource(R.string.manager_choose_contacts),
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.textButtonColorsPrimary(),
-                    onClick = {
-                        val packages = WhatsAppContactPickerLauncher.getInstalledWhatsAppPackages(context)
-                        packages.firstOrNull()?.let { packageName ->
-                            val contacts = value?.toString()?.removeSurrounding("[", "]")
-                                ?.split(',')?.map(String::trim)?.filter(String::isNotEmpty)?.let { ArrayList(it) } ?: arrayListOf()
-                            selectContacts.launch(WhatsAppContactPickerLauncher.createPickerIntent(context, packageName, spec.key, contacts))
-                        }
-                    },
-                )
-            }
-            else -> {
-                TextField(
-                    value = input,
-                    onValueChange = { input = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = if (spec.kind in setOf(PreferenceKind.INTEGER_SLIDER, PreferenceKind.FLOAT_SLIDER, PreferenceKind.COLOR)) KeyboardType.Number else KeyboardType.Text,
-                    ),
-                    singleLine = spec.kind != PreferenceKind.TEXT,
-                )
-                Spacer(Modifier.height(12.dp))
-                DialogButtons(onDismiss) {
-                    val parsed: Any? = when (spec.kind) {
-                        PreferenceKind.INTEGER_SLIDER -> input.toIntOrNull()
-                        PreferenceKind.FLOAT_SLIDER -> input.toFloatOrNull()
-                        PreferenceKind.COLOR -> input.removePrefix("#").toLongOrNull(16)?.toInt()
-                        else -> input
-                    }
-                    parsed?.let(onSave)
+            },
+            onConfirm = { text ->
+                val parsed: Any = when (spec.kind) {
+                    PreferenceKind.INTEGER_SLIDER -> text.toInt()
+                    PreferenceKind.FLOAT_SLIDER -> text.toFloat()
+                    PreferenceKind.COLOR -> text.removePrefix("#").let { if (it.length == 6) "FF$it" else it }.toLong(16).toInt()
+                    else -> text
                 }
-            }
+                onSave(parsed)
+            },
+        )
+    } else WindowDialog(show = show, title = spec.title, summary = spec.summary,
+        onDismissRequest = onDismiss, onDismissFinished = onDismissFinished) {
+        if (spec.kind == PreferenceKind.FILE) {
+            val storageAccess = rememberManagerStorageAccess()
+            val canImport = spec.key == "bootloader_spoofer_xml" || storageAccess
+            if (!canImport) ManagerStoragePermissionPreference()
+            ArrowPreference(stringResource(R.string.manager_choose_file), enabled = canImport,
+                modifier = Modifier.semantics(mergeDescendants = true) { if (!canImport) disabled() },
+                onClick = { openFile.launch(arrayOf("*/*")) })
+        } else {
+            ArrowPreference(stringResource(R.string.manager_choose_contacts), onClick = {
+                val installed = WhatsAppContactPickerLauncher.getInstalledWhatsAppPackages(context).firstOrNull()
+                if (installed == null) ManagerSnackbarEvents.tryShow(resources.getString(R.string.manager_not_installed))
+                installed?.let { packageName ->
+                    val contacts = value?.toString()?.removeSurrounding("[", "]")?.split(',')?.map(String::trim)
+                        ?.filter(String::isNotEmpty)?.let { ArrayList(it) } ?: arrayListOf()
+                    selectContacts.launch(WhatsAppContactPickerLauncher.createPickerIntent(context, packageName, spec.key, contacts))
+                }
+            })
         }
     }
 }
-
-@Composable
-private fun DialogButtons(onDismiss: () -> Unit, onConfirm: () -> Unit) {
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        TextButton(stringResource(android.R.string.cancel), onClick = onDismiss, modifier = Modifier.weight(1f))
-        TextButton(stringResource(android.R.string.ok), onClick = onConfirm, modifier = Modifier.weight(1f), colors = ButtonDefaults.textButtonColorsPrimary())
-    }
-}
-
 @Composable
 private fun preferenceSourceTitle(source: PreferenceSource): String = when (source) {
     PreferenceSource.GENERAL -> stringResource(R.string.general)
@@ -326,7 +324,10 @@ private fun preferenceSourceTitle(source: PreferenceSource): String = when (sour
     PreferenceSource.CUSTOMIZE -> stringResource(R.string.manager_customize)
 }
 
-private fun preferenceSummary(spec: PreferenceSpec, value: Any?): String? {
+internal fun preferenceSummary(spec: PreferenceSpec, value: Any?): String? {
+    if (spec.isSecretPreference()) {
+        return if ((value as? String)?.isNotBlank() == true) "\u2022".repeat(8) else spec.summary
+    }
     val display = when (spec.kind) {
         PreferenceKind.LIST, PreferenceKind.MULTI_LIST -> null
         PreferenceKind.COLOR -> (value as? Number)?.toInt()?.let { "#%08X".format(it) }

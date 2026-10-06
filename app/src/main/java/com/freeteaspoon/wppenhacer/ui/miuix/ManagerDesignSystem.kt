@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.captionBar
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -95,7 +97,7 @@ internal fun rememberManagerBackdrop(): LayerBackdrop? {
 @Composable
 internal fun ManagerBlurredBar(
     backdrop: LayerBackdrop?,
-    alpha: Float = 0.8f,
+    alpha: Float = 0.82f,
     progressive: Boolean = false,
     scrollBehavior: ScrollBehavior? = null,
     content: @Composable () -> Unit,
@@ -148,6 +150,7 @@ internal fun ManagerGroupCard(
         modifier = modifier.managerPageItem().fillMaxWidth(),
         cornerRadius = ManagerTokens.CardCorner,
         insideMargin = PaddingValues(0.dp),
+        pressFeedbackType = top.yukonga.miuix.kmp.utils.PressFeedbackType.None,
         content = { content() },
     )
 }
@@ -163,54 +166,16 @@ internal class ManagerCardItem(
     val content: @Composable ColumnScope.() -> Unit,
 )
 
-@Composable
-private fun ManagerCardSegment(
-    isFirst: Boolean,
-    isLast: Boolean,
-    modifier: Modifier = Modifier,
-    outerTopPadding: Dp = 0.dp,
-    outerBottomPadding: Dp = 0.dp,
-    content: @Composable ColumnScope.() -> Unit,
-) {
-    val top = if (isFirst) 16.dp else 0.dp
-    val bottom = if (isLast) 16.dp else 0.dp
-    val color = MiuixTheme.colorScheme.surfaceContainer
-    val surface = if (top == 0.dp && bottom == 0.dp) {
-        Modifier.background(color)
-    } else {
-        Modifier.squircleSurface(color, top, top, bottom, bottom)
-    }
-    CompositionLocalProvider(LocalContentColor provides MiuixTheme.colorScheme.onSurfaceContainer) {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 12.dp,
-                    top = outerTopPadding,
-                    end = 12.dp,
-                    bottom = outerBottomPadding,
-                )
-                .then(surface),
-            content = content,
-        )
-    }
-}
-
 internal fun LazyListScope.managerGroupedCardItems(
     keyPrefix: String,
     items: List<ManagerCardItem>,
     outerTopPadding: Dp = 0.dp,
     outerBottomPadding: Dp = 6.dp,
 ) {
-    items.forEachIndexed { index, item ->
-        item(key = "$keyPrefix:${item.key}") {
-            ManagerCardSegment(
-                isFirst = index == 0,
-                isLast = index == items.lastIndex,
-                outerTopPadding = if (index == 0) outerTopPadding else 0.dp,
-                outerBottomPadding = if (index == items.lastIndex) outerBottomPadding else 0.dp,
-                content = item.content,
-            )
+    if (items.isEmpty()) return
+    item(key = keyPrefix) {
+        ManagerGroupCard(Modifier.padding(top = outerTopPadding).animateItem()) {
+            Column { items.forEach { row -> androidx.compose.runtime.key(row.key) { row.content(this) } } }
         }
     }
 }
@@ -220,20 +185,33 @@ internal fun rememberManagerListScrollBehavior(listState: LazyListState): Scroll
     val behavior = MiuixScrollBehavior()
     val blurFadeDistance = with(LocalDensity.current) { 48.dp.toPx() }
     LaunchedEffect(listState, behavior, blurFadeDistance) {
-        // Direct jumps and restored list positions do not dispatch nested scroll events.
-        // Use the measured list position to recover the bar and its blur in those cases.
-        snapshotFlow { listState.layoutInfo }
-            .collect { layout ->
+        var previous = emptyMap<Any, Int>()
+        var initialized = false
+        snapshotFlow { listState.layoutInfo to listState.isScrollInProgress }
+            .collect { (layout, scrolling) ->
                 if (layout.visibleItemsInfo.isEmpty()) return@collect
+                val positions = layout.visibleItemsInfo.associate { it.key to it.offset }
+                val common = positions.keys.firstOrNull { it in previous }
+                val displacement = common?.let { positions.getValue(it) - previous.getValue(it) } ?: 0
+                // Content-size changes do not send nested scroll. Preserve the collapsed bar.
+                if (initialized && !scrolling && displacement != 0) {
+                    behavior.state.contentOffset += displacement
+                }
                 val offset = if (listState.firstVisibleItemIndex == 0) {
                     listState.firstVisibleItemScrollOffset.toFloat()
-                } else {
-                    maxOf(blurFadeDistance, -behavior.state.heightOffsetLimit)
+                } else maxOf(blurFadeDistance, -behavior.state.heightOffsetLimit)
+                // Restore/direct jumps also bypass nested scroll, including a jump to the top.
+                if (!initialized || common == null || !scrolling) {
+                    if (listState.canScrollBackward) {
+                        behavior.state.contentOffset = minOf(behavior.state.contentOffset, -offset)
+                        behavior.state.heightOffset = behavior.state.heightOffsetLimit
+                    } else if (displacement == 0 || !initialized) {
+                        behavior.state.contentOffset = 0f
+                        behavior.state.heightOffset = 0f
+                    }
                 }
-                behavior.state.contentOffset = -offset
-                if (listState.canScrollBackward) {
-                    behavior.state.heightOffset = behavior.state.heightOffsetLimit
-                }
+                initialized = true
+                previous = positions
             }
     }
     return behavior
@@ -248,62 +226,111 @@ internal fun ManagerDetailScaffold(
     contentMaxWidth: Dp? = ManagerTokens.MaxContentWidth,
     fullWidthSafeInsets: Boolean = false,
     listState: LazyListState = rememberLazyListState(),
+    bottomPadding: Dp = 0.dp,
+    isRefreshing: Boolean = false,
+    onRefresh: (() -> Unit)? = null,
+    pageState: ManagerPageStateKind = ManagerPageStateKind.CONTENT,
+    stateTitle: String = stringResource(if (pageState == ManagerPageStateKind.ERROR) R.string.manager_load_failed else R.string.manager_loading),
+    stateMessage: String = "",
+    onRetry: (() -> Unit)? = null,
+    actions: @Composable androidx.compose.foundation.layout.RowScope.() -> Unit = {},
+    fixedContent: (@Composable () -> Unit)? = null,
     content: LazyListScope.() -> Unit,
 ) {
+    val layoutDirection = androidx.compose.ui.platform.LocalLayoutDirection.current
     val pageContent = MishkaPageContent(content)
     val behavior = rememberManagerListScrollBehavior(listState)
     val backdrop = rememberManagerBackdrop()
-    Scaffold(
-        modifier = modifier,
-        containerColor = MiuixTheme.colorScheme.surface,
-        topBar = {
-            ManagerBlurredBar(backdrop, progressive = true, scrollBehavior = behavior) {
-                val navigation: (@Composable () -> Unit)? = onBack?.let { callback ->
-                    {
-                        IconButton(onClick = callback) {
-                            Icon(imageVector = MiuixIcons.Back, contentDescription = stringResource(R.string.manager_back))
+    androidx.compose.foundation.layout.BoxWithConstraints(modifier.fillMaxSize()) {
+        val useSmallBar = wide || maxWidth >= 600.dp
+        val sideGutter = contentMaxWidth?.let { ((maxWidth - it) / 2).coerceAtLeast(0.dp) } ?: 0.dp
+        val horizontalInsets = WindowInsets.displayCutout.union(WindowInsets.navigationBars).only(WindowInsetsSides.Horizontal)
+        Scaffold(
+            containerColor = MiuixTheme.colorScheme.surface,
+            topBar = {
+                ManagerBlurredBar(backdrop, progressive = true, scrollBehavior = behavior) {
+                    val navigation: @Composable () -> Unit = {
+                        onBack?.let { callback ->
+                            IconButton(onClick = callback) {
+                                Icon(MiuixIcons.Back, stringResource(R.string.manager_back),
+                                    Modifier.graphicsLayer { scaleX = if (layoutDirection == androidx.compose.ui.unit.LayoutDirection.Rtl) -1f else 1f })
+                            }
                         }
                     }
+                    if (useSmallBar) {
+                        SmallTopAppBar(
+                            title = title,
+                            color = managerBarColor(backdrop),
+                            navigationIcon = navigation,
+                            scrollBehavior = behavior,
+                            actions = actions,
+                        )
+                    } else {
+                        TopAppBar(
+                            title = title,
+                            color = managerBarColor(backdrop),
+                            navigationIcon = navigation,
+                            scrollBehavior = behavior,
+                            actions = actions,
+                        )
+                    }
                 }
-                if (wide) {
-                    SmallTopAppBar(
-                        title = title,
-                        color = managerBarColor(backdrop),
-                        navigationIcon = { navigation?.invoke() },
-                        scrollBehavior = behavior,
-                    )
-                } else {
-                    TopAppBar(
-                        title = title,
-                        color = managerBarColor(backdrop),
-                        navigationIcon = { navigation?.invoke() },
-                        scrollBehavior = behavior,
-                    )
+            },
+        ) { padding ->
+            Column(
+                Modifier.fillMaxSize()
+                    .windowInsetsPadding(horizontalInsets)
+                    .then(if (backdrop != null) Modifier.layerBackdrop(backdrop) else Modifier),
+            ) {
+                if (fixedContent != null) {
+                    Box(Modifier.padding(top = padding.calculateTopPadding(), start = sideGutter, end = sideGutter)) {
+                        fixedContent()
+                    }
+                }
+                val listTopPadding = if (fixedContent == null) padding.calculateTopPadding() else 0.dp
+                val safeBottom = maxOf(padding.calculateBottomPadding(), bottomPadding)
+                val density = LocalDensity.current
+                val stateBottom = maxOf(safeBottom, with(density) {
+                    maxOf(WindowInsets.ime.getBottom(this), WindowInsets.captionBar.getBottom(this)).toDp()
+                })
+                val list: @Composable () -> Unit = {
+                    ManagerPageStateHost(
+                        state = pageState,
+                        title = stateTitle,
+                        message = stateMessage,
+                        onRetry = onRetry,
+                        modifier = Modifier.fillMaxSize(),
+                        stateModifier = Modifier.padding(top = listTopPadding, bottom = stateBottom),
+                    ) {
+                        LazyColumn(
+                            state = listState,
+                            modifier = Modifier.fillMaxSize()
+                                .scrollEndHaptic()
+                                .overScrollVertical()
+                                .nestedScroll(behavior.nestedScrollConnection),
+                            overscrollEffect = null,
+                            contentPadding = PaddingValues(
+                                start = sideGutter,
+                                end = sideGutter,
+                                top = listTopPadding + pageContent.topPadding,
+                                bottom = safeBottom + 24.dp,
+                            ),
+                            content = pageContent.content,
+                        )
+                    }
+                }
+                Box(Modifier.weight(1f).fillMaxWidth()) {
+                    if (onRefresh != null) {
+                        top.yukonga.miuix.kmp.basic.PullToRefresh(
+                            isRefreshing = isRefreshing,
+                            onRefresh = onRefresh,
+                            topAppBarScrollBehavior = behavior,
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(top = listTopPadding + 12.dp),
+                        ) { list() }
+                    } else list()
                 }
             }
-        },
-    ) { padding ->
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .then(if (contentMaxWidth != null) Modifier.widthIn(max = contentMaxWidth) else Modifier)
-                    .then(
-                        if (fullWidthSafeInsets) Modifier.windowInsetsPadding(
-                            WindowInsets.displayCutout.union(WindowInsets.navigationBars).only(WindowInsetsSides.Horizontal),
-                        ) else Modifier,
-                    )
-                    .then(if (backdrop != null) Modifier.layerBackdrop(backdrop) else Modifier)
-                    .nestedScroll(behavior.nestedScrollConnection)
-                    .scrollEndHaptic()
-                    .overScrollVertical(),
-                contentPadding = PaddingValues(
-                    top = padding.calculateTopPadding() + pageContent.topPadding,
-                    bottom = padding.calculateBottomPadding() + 24.dp,
-                ),
-                content = pageContent.content,
-            )
         }
     }
 }

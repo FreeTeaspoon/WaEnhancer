@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.preference.PreferenceManager
 import com.freeteaspoon.wppenhacer.App
 import com.freeteaspoon.wppenhacer.R
@@ -15,25 +17,38 @@ import top.yukonga.miuix.kmp.basic.SnackbarHostState
 class MiuixMainActivity : ComponentActivity() {
     private val viewModel: ManagerViewModel by viewModels()
     private val snackbarHostState = SnackbarHostState()
+    private var appliedPredictiveBack = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         App.changeLanguage(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            appliedPredictiveBack = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean(ManagerAppearanceSettings.KEY_PREDICTIVE_BACK, false)
+            App.setEnableOnBackInvokedCallback(applicationInfo, appliedPredictiveBack)
+        }
         super.onCreate(savedInstanceState)
         initializeLegacyDefaults()
         File(getExternalFilesDir(null), ".nomedia").delete()
-        enableEdgeToEdge()
         setContent {
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            LaunchedEffect(state.appearance.predictiveBack) {
+                applyPredictiveBack(state.appearance.predictiveBack)
+            }
             WaEnhancerManagerApp(
                 viewModel = viewModel,
                 snackbarHostState = snackbarHostState,
                 onPredictiveBackChange = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                    { enabled ->
-                        App.setEnableOnBackInvokedCallback(applicationInfo, enabled)
-                        recreateWithoutTransition()
-                    }
+                    ::applyPredictiveBack
                 } else null,
             )
         }
+    }
+
+    private fun applyPredictiveBack(enabled: Boolean) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE || appliedPredictiveBack == enabled) return
+        appliedPredictiveBack = enabled
+        App.setEnableOnBackInvokedCallback(applicationInfo, enabled)
+        recreateWithoutTransition()
     }
 
     private fun initializeLegacyDefaults() {

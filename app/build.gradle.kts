@@ -38,7 +38,7 @@ android {
 
     defaultConfig {
         applicationId = "com.freeteaspoon.wppenhacer"
-        minSdk = 28
+        minSdk = 33
         //noinspection OldTargetApi
         targetSdk = 34
         versionCode = 162
@@ -176,6 +176,8 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.ext.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    // AGP locks the tested app classpath into instrumentation; keep Test 1.3 aligned.
+    debugImplementation("androidx.concurrent:concurrent-futures:1.2.0")
 
     implementation(libs.colorpicker)
     implementation(files("libs/dexkit-android.aar"))
@@ -199,6 +201,7 @@ dependencies {
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
     implementation(libs.androidx.preference)
+    implementation(libs.androidx.webkit)
     implementation(libs.androidx.room.runtime)
     implementation(libs.rikkax.appcompat)
     implementation(libs.rikkax.core)
@@ -219,6 +222,7 @@ dependencies {
     implementation(libs.miuix.preference)
     implementation(libs.miuix.blur)
     implementation(libs.miuix.nav)
+    implementation("androidx.navigationevent:navigationevent-compose:1.1.2")
     implementation(libs.androidx.datastore.preferences)
 }
 

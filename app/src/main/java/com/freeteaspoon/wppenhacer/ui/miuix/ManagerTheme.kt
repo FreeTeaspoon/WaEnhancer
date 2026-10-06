@@ -1,18 +1,18 @@
 package com.freeteaspoon.wppenhacer.ui.miuix
 
-import android.app.Activity
+import androidx.activity.compose.LocalActivity
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.SystemBarStyle
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Density
-import androidx.core.view.WindowCompat
 import top.yukonga.miuix.kmp.theme.ColorSchemeMode
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.theme.ThemeColorSpec
@@ -71,7 +71,7 @@ internal fun ManagerTheme(
     val controller = remember(mode, keyColor, palette, dark) {
         ThemeController(
             colorSchemeMode = mode,
-            keyColor = keyColor.takeIf { appearance.useMonet || appearance.accent != ManagerAccent.SYSTEM },
+            keyColor = keyColor.takeIf { appearance.useMonet },
             colorSpec = ThemeColorSpec.Spec2025,
             paletteStyle = palette,
             isDark = dark,
@@ -84,18 +84,16 @@ internal fun ManagerTheme(
         } else rawColors
     }
 
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as? Activity)?.window ?: return@SideEffect
-            WindowCompat.getInsetsController(window, view).apply {
-                isAppearanceLightStatusBars = !dark
-                isAppearanceLightNavigationBars = !dark
-            }
+    val activity = LocalActivity.current
+    DisposableEffect(activity, dark) {
+        (activity as? androidx.activity.ComponentActivity)?.let {
+            val bars = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT) { dark }
+            it.enableEdgeToEdge(statusBarStyle = bars, navigationBarStyle = bars)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                window.isNavigationBarContrastEnforced = false
+                it.window.isNavigationBarContrastEnforced = false
             }
         }
+        onDispose { }
     }
 
     MiuixTheme(colors = colors) {

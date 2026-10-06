@@ -1,0 +1,21 @@
+WaEnhancer manager adaptations
+
+About composition and HyperOS shader/background sources adapted from Language Selector,
+revision 1220669f6de59490f6a1caae105f8857c3a80348.
+https://github.com/VegaBobo/Language-Selector
+Apache-2.0. Original copyright/SPDX headers are retained in the source files.
+The Apache-2.0 license is included beside this notice.
+
+Shared manager UI and dialog patterns adapted from HyperLPA,
+revision e613bb84a9307c758afda057d28e570aaccb2d43, GPL-3.0.
+About motion and page spacing inspected in Mishka,
+revisions e855709c476c8f82635b3bb6f751975e1319f391 and
+94573b0a0b11b624d75592558d34bc3f2e6ef451, GPL-3.0.
+Existing WeKit and AndroidLiquidGlass attribution remains in the adapted sources.
+
+The CSS editor bundles Bliss module sources from revision
+4f38d6effbbf7084f83ed3b686e3f8222a23527a.
+https://github.com/LeaVerou/bliss
+MIT. The complete Bliss license is included beside this notice.
+
+The app is distributed under its existing GPL-3.0 license.

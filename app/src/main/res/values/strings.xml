@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="force_restore_backup">Force Restore Backup</string>
     <string name="force_restore_backup_summary">Launch the restore backup screen manually. Use this if you skipped restoration during setup.</string>
     <string name="app_name" translatable="false">Wa Enhancer</string>
@@ -137,13 +137,13 @@
     <string name="show_button_to_send_blue_tick_sum">Show Button to send blue tick (mark as read/viewed)</string>
     <string name="send_blue_tick">Mark as Read/Viewed</string>
     <string name="business_in_background">Business in background</string>
-    <string name="whatsapp_packages_title">WhatsApp package status</string>
-    <string name="whatsapp_app_label">WhatsApp</string>
-    <string name="whatsapp_business_package">WhatsApp Business</string>
-    <string name="app_not_installed">Not installed</string>
-    <string name="app_version_s_supported">Version %1$s · supported</string>
-    <string name="app_version_s_unsupported">Version %1$s · unsupported</string>
-    <string name="app_installed_version_unknown">Installed · version unavailable</string>
+    <string tools:ignore="MissingTranslation" name="whatsapp_packages_title">WhatsApp package status</string>
+    <string tools:ignore="MissingTranslation" name="whatsapp_app_label">WhatsApp</string>
+    <string tools:ignore="MissingTranslation" name="whatsapp_business_package">WhatsApp Business</string>
+    <string tools:ignore="MissingTranslation" name="app_not_installed">Not installed</string>
+    <string tools:ignore="MissingTranslation" name="app_version_s_supported">Version %1$s, supported</string>
+    <string tools:ignore="MissingTranslation" name="app_version_s_unsupported">Version %1$s, unsupported</string>
+    <string tools:ignore="MissingTranslation" name="app_installed_version_unknown">Installed, version unavailable</string>
     <string name="sending_read_blue_tick">Sending blue tick (mark as read/viewed)</string>
     <string name="enable_facebook_style_for_status">Enable Facebook Style for Status</string>
     <string name="enable_facebook_style_for_status_sum">Change original Status Style to Facebook Style</string>
@@ -178,8 +178,8 @@
     <string name="floating_bottom_bar_sum">Enable iOS-style floating bottom navigation bar</string>
     <string name="floating_bottom_bar_radius">Bottom Bar Corner Radius</string>
     <string name="floating_bottom_bar_radius_sum">Adjust the border radius of the floating bottom bar</string>
-    <string name="disable_swipe_up_in_group">Disable swipe up gesture in groups</string>
-    <string name="disable_swipe_up_in_group_sum">Disables the swipe up gesture in group chats</string>
+    <string tools:ignore="MissingTranslation" name="disable_swipe_up_in_group">Disable swipe up gesture in groups</string>
+    <string tools:ignore="MissingTranslation" name="disable_swipe_up_in_group_sum">Disables the swipe up gesture in group chats</string>
     <string name="selection_of_call_type">Enable selection of call type</string>
     <string name="selection_of_call_type_sum">Show an option to select whether you want a call via phone or WhatsApp</string>
     <string name="yes">Yes</string>
@@ -474,12 +474,12 @@
     <string name="disable_status_in_the_profile_photo">Disable Status in the profile photo</string>
     <string name="disable_status_in_the_profile_photo_sum">Disables the circle that appears in the profile photo of each contact when there is new status</string>
     <string name="download_not_available">Download not available or media has not been fully downloaded</string>
-    <string name="possible_block_detected">Possible block detected</string>
-    <string name="block_not_detected">Block not detected</string>
-    <string name="checking_if_the_contact_is_blocked">Checking if the contact is blocked...</string>
-    <string name="show_contact_blocked">Show Contact Blocked in Conversation</string>
-    <string name="show_contact_blocked_sum">This option verifies whether the contact may have blocked you (note: false positives may occur).</string>
-    <string name="block_unverified">Block Unverified</string>
+    <string tools:ignore="MissingTranslation" name="possible_block_detected">Possible block detected</string>
+    <string tools:ignore="MissingTranslation" name="block_not_detected">Block not detected</string>
+    <string tools:ignore="MissingTranslation" name="checking_if_the_contact_is_blocked">Checking if the contact is blocked...</string>
+    <string tools:ignore="MissingTranslation" name="show_contact_blocked">Show Contact Blocked in Conversation</string>
+    <string tools:ignore="MissingTranslation" name="show_contact_blocked_sum">This option verifies whether the contact may have blocked you (note: false positives may occur).</string>
+    <string tools:ignore="MissingTranslation" name="block_unverified">Block Unverified</string>
     <string name="checking_if_contact_added">Checking if the contact added you...</string>
     <string name="show_contact_added_status">Show Contact Added Status in Conversation</string>
     <string name="show_contact_added_status_sum">This option verifies whether the contact added you or has a public profile photo.</string>
@@ -700,4 +700,43 @@
     <string translatable="false" name="manager_select_all">Select all</string>
     <string translatable="false" name="manager_selected_count">%1$d selected</string>
     <string translatable="false" name="manager_delete_recordings_confirm">Delete %1$d selected recording(s)?</string>
+    <string translatable="false" name="manager_save">Save</string>
+    <string translatable="false" name="manager_confirm">Confirm</string>
+    <string translatable="false" name="manager_try_again">Try again</string>
+    <string translatable="false" name="manager_value_range">Enter a value from %1$s to %2$s</string>
+    <string translatable="false" name="manager_scale_range">Enter a percentage from 80 to 110</string>
+    <string translatable="false" name="manager_theme_name_invalid">Use a unique name without path characters</string>
+    <string translatable="false" name="manager_copied">Copied</string>
+    <string translatable="false" name="manager_configuration_tip">Export a copy of your settings or import a saved copy. Importing replaces the current settings.</string>
+    <string translatable="false" name="manager_import_confirm">Replace the current settings with the selected file?</string>
+    <string translatable="false" name="manager_clear_editor_confirm">Clear the current editor text? Save to apply the change to this theme.</string>
+    <string translatable="false" name="manager_diagnostics_ok">Checks complete</string>
+    <string translatable="false" name="manager_diagnostics_issues">Review the results</string>
+    <string translatable="false" name="manager_theme_tip">Choose a theme to edit it. Apply a saved theme from its editor.</string>
+    <string translatable="false" name="manager_apply">Apply</string>
+    <string translatable="false" name="manager_reset">Reset</string>
+    <string translatable="false" name="manager_open_source">Open source</string>
+    <string translatable="false" name="manager_credits">Credits</string>
+    <string translatable="false" name="manager_permissions">Permissions</string>
+    <string translatable="false" name="manager_permission_granted">Granted</string>
+    <string translatable="false" name="manager_permission_needed">Tap to allow access</string>
+    <string translatable="false" name="manager_delete_failed">Some recordings could not be deleted. Check file access.</string>
+    <string translatable="false" name="manager_no_results_hint">Try a different search</string>
+    <string translatable="false" name="manager_recording_summary">%1$s, %2$s
+%3$s</string>
+    <string translatable="false" name="manager_unknown_contact">Unknown contact</string>
+    <string translatable="false" name="manager_about_credits">WaEnhancer is licensed under GPL-3.0. Created by Dev4Mod and the WaEnhancer contributors. Support: t.me/waenhancer.</string>
+    <string translatable="false" name="manager_sort_date">Date</string>
+    <string translatable="false" name="manager_sort_name">Name</string>
+    <string translatable="false" name="manager_sort_duration">Duration</string>
+    <string translatable="false" name="manager_sort_contact">Contact</string>
+    <string translatable="false" name="manager_theme_import_confirm">Import this archive? Files with matching names will be replaced.</string>
+    <string translatable="false" name="manager_import">Import</string>
+    <string translatable="false" name="manager_more">More</string>
+    <string translatable="false" name="manager_on">On</string>
+    <string translatable="false" name="manager_off">Off</string>
+    <string translatable="false" name="manager_root_unavailable">Root access was not granted</string>
+    <string translatable="false" name="manager_reset_complete">Settings reset</string>
+    <string translatable="false" name="manager_export">Export</string>
+    <string translatable="false" name="manager_load_failed">Could not load this page</string>
 </resources>

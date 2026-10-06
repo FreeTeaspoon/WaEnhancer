@@ -11,9 +11,12 @@ internal enum class PrimaryDestination {
 
 internal sealed interface ManagerRoute {
     data class PreferencePage(val source: PreferenceSource, val highlightKey: String? = null) : ManagerRoute
+    data class PreferenceFeature(val source: PreferenceSource, val key: String, val highlightKey: String? = null) : ManagerRoute
+    data object Credits : ManagerRoute
     data object Search : ManagerRoute
     data object Appearance : ManagerRoute
     data object About : ManagerRoute
+    data class RecordingContact(val contact: String) : ManagerRoute
     data object Recordings : ManagerRoute
     data object Diagnostics : ManagerRoute
     data object CallRecording : ManagerRoute
@@ -24,6 +27,8 @@ internal sealed interface ManagerRoute {
 
     fun encode(): String = when (this) {
         is PreferencePage -> "preferences:${source.name}:${highlightKey.orEmpty()}"
+        is PreferenceFeature -> "feature:${source.name}:$key:${highlightKey.orEmpty()}"
+        Credits -> "credits"
         Search -> "search"
         Appearance -> "appearance"
         About -> "about"
@@ -31,6 +36,7 @@ internal sealed interface ManagerRoute {
         Diagnostics -> "diagnostics"
         CallRecording -> "call-recording"
         ThemeManager -> "theme-manager"
+        is RecordingContact -> "recording-contact:$contact"
         is ThemeEditor -> "theme-editor:$folder"
         Configuration -> "configuration"
         Updates -> "updates"
@@ -43,6 +49,12 @@ internal sealed interface ManagerRoute {
                     PreferencePage(source, parts.getOrNull(2)?.takeIf(String::isNotBlank))
                 }
             }
+            value.startsWith("feature:") -> value.split(':').let { parts ->
+                PreferenceSource.entries.firstOrNull { it.name == parts.getOrNull(1) }?.let { source ->
+                    parts.getOrNull(2)?.let { PreferenceFeature(source, it, parts.getOrNull(3)?.takeIf(String::isNotBlank)) }
+                }
+            }
+            value == "credits" -> Credits
             value == "search" -> Search
             value == "appearance" -> Appearance
             value == "about" -> About
@@ -50,6 +62,7 @@ internal sealed interface ManagerRoute {
             value == "diagnostics" -> Diagnostics
             value == "call-recording" -> CallRecording
             value == "theme-manager" -> ThemeManager
+            value.startsWith("recording-contact:") -> RecordingContact(value.substringAfter(':'))
             value.startsWith("theme-editor:") -> ThemeEditor(value.substringAfter(':'))
             value == "configuration" -> Configuration
             value == "updates" -> Updates
@@ -97,6 +110,7 @@ internal data class PreferenceSpec(
     val minimum: Float = 0f,
     val maximum: Float = 100f,
     val step: Float = 1f,
+    val maxLength: Int = 256,
 )
 
 internal fun PreferenceSpec.isManagerAppearancePreference(): Boolean = key in setOf(
@@ -106,19 +120,22 @@ internal fun PreferenceSpec.isManagerAppearancePreference(): Boolean = key in se
     ManagerAppearanceSettings.KEY_FORCE_ENGLISH,
 )
 
+internal fun PreferenceSpec.isSecretPreference(): Boolean = key in setOf("assemblyai_key", "groq_api_key")
+
 internal data class PreferenceGroup(
     val title: String,
     val preferences: List<PreferenceSpec>,
 )
 
-// Each group renders one heading followed by one lazy item per preference.
+// Each group renders an optional heading and one native card containing its rows.
 internal fun List<PreferenceGroup>.preferenceItemIndex(key: String?): Int {
     if (key == null) return -1
     var index = 0
+    val headings = size > 1
     for (group in this) {
         val row = group.preferences.indexOfFirst { it.key == key }
-        if (row >= 0) return index + 1 + row
-        index += 1 + group.preferences.size
+        if (row >= 0) return index + (if (headings) 1 else 0)
+        index += 1 + if (headings) 1 else 0
     }
     return -1
 }
@@ -240,4 +257,10 @@ internal data class ManagerUiState(
         .filter { it.source == source && !it.isManagerAppearancePreference() }
         .groupBy { it.category }
         .map { (title, items) -> PreferenceGroup(title, items) }
+}
+
+internal fun preferenceRoute(specs: List<PreferenceSpec>, spec: PreferenceSpec): ManagerRoute {
+    val master = spec.dependency ?: spec.key.takeIf { key -> specs.any { it.dependency == key } }
+    return if (master != null) ManagerRoute.PreferenceFeature(spec.source, master, spec.key)
+        else ManagerRoute.PreferencePage(spec.source, spec.key)
 }

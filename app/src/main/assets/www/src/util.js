@@ -1,8 +1,8 @@
-import $ from "https://v2.blissfuljs.com/src/$.js";
-import $$ from "https://v2.blissfuljs.com/src/$$.js";
-import create from "https://v2.blissfuljs.com/src/dom/create.js";
-import bind from "https://v2.blissfuljs.com/src/events/bind.js";
-import load from "https://v2.blissfuljs.com/src/async/load.js";
+import $ from "../bliss/$.js";
+import $$ from "../bliss/$$.js";
+import create from "../bliss/dom/create.js";
+import bind from "../bliss/events/bind.js";
+import load from "../bliss/async/load.js";
 
 Object.assign($, {create, bind, load});
 export { $, $$, create, bind, load};

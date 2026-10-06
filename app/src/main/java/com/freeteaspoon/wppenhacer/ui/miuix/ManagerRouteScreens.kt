@@ -33,6 +33,11 @@ internal fun ManagerRouteScreen(
             onNavigate = onNavigate,
             highlightKey = route.highlightKey,
         )
+        is ManagerRoute.PreferenceFeature -> PreferencePageScreen(
+            route.source, state, controller, false, 0.dp, onBack, onNavigate,
+            highlightKey = route.highlightKey, featureKey = route.key,
+        )
+        ManagerRoute.Credits -> ManagerCreditsScreen(onBack)
         ManagerRoute.Search -> ManagerSearchScreen(state, onBack, onNavigate)
         ManagerRoute.Appearance -> ManagerAppearanceScreen(
             appearance = state.appearance,
@@ -40,13 +45,14 @@ internal fun ManagerRouteScreen(
             onPredictiveBackChange = onPredictiveBackChange,
             onBack = onBack,
         )
-        ManagerRoute.About -> ManagerAboutScreen(onBack)
+        ManagerRoute.About -> ManagerAboutScreen(onBack) { onNavigate(ManagerRoute.Credits) }
         ManagerRoute.Configuration -> ManagerConfigurationScreen(controller, onBack)
         ManagerRoute.Updates -> ManagerUpdatesScreen(onBack)
         ManagerRoute.Diagnostics -> ManagerDiagnosticsScreen(onBack)
-        ManagerRoute.Recordings -> ManagerRecordingsScreen(onBack)
+        ManagerRoute.Recordings -> ManagerRecordingsScreen(onBack, onNavigate)
+        is ManagerRoute.RecordingContact -> ManagerRecordingsScreen(onBack, onNavigate, route.contact)
         ManagerRoute.CallRecording -> ManagerCallRecordingScreen(state, controller, onBack)
-        ManagerRoute.ThemeManager -> ManagerThemeManagerScreen(onBack, onNavigate)
+        ManagerRoute.ThemeManager -> ManagerThemeManagerScreen(state, onBack, onNavigate)
         is ManagerRoute.ThemeEditor -> ManagerThemeEditorScreen(route.folder, onBack)
     }
 }
@@ -58,38 +64,8 @@ private fun ManagerSearchScreen(
     onNavigate: (ManagerRoute) -> Unit,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
-    val results = searchPreferenceSpecs(state.specs, query)
-    val resultsTitle = stringResource(R.string.manager_search_results)
-    ManagerDetailScaffold(stringResource(R.string.manager_search), wide = false, onBack = onBack) {
-        item("query") {
-            ManagerGroupCard {
-                TextField(
-                    value = query,
-                    onValueChange = { query = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = stringResource(R.string.manager_search),
-                    useLabelAsPlaceholder = true,
-                    singleLine = true,
-                )
-            }
-        }
-        if (query.isNotBlank()) {
-            managerSection(resultsTitle, "results")
-            if (results.isEmpty()) item("empty") {
-                ManagerGroupCard { ArrowPreference(stringResource(R.string.manager_no_results), onClick = null) }
-            } else item("results") {
-                ManagerGroupCard {
-                    results.forEach { spec ->
-                        ArrowPreference(
-                            title = spec.title,
-                            summary = "${preferenceSourceLabel(spec.source)} · ${spec.summary.orEmpty()}",
-                            onClick = { onNavigate(ManagerRoute.PreferencePage(spec.source, spec.key)) },
-                        )
-                    }
-                }
-            }
-        }
-    }
+    ManagerSearchContent(state, query, { query = it }, onNavigate,
+        stringResource(R.string.manager_search), false, onBack)
 }
 
 @Composable

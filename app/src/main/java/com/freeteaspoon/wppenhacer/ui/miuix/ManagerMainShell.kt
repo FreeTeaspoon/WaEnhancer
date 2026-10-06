@@ -11,6 +11,17 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.pager.PagerDefaults
+import top.yukonga.miuix.kmp.utils.PagerNavigationSpringSpec
+import top.yukonga.miuix.kmp.utils.PagerGestureNestedScrollConnection
+import top.yukonga.miuix.kmp.utils.pagerGestureOverride
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.selection.selectable
@@ -85,9 +96,14 @@ internal fun ManagerMainShell(
         val wide = maxWidth >= 600.dp
         val expanded = maxWidth >= 1200.dp
         val content: @Composable (Modifier, androidx.compose.ui.unit.Dp) -> Unit = { modifier, bottomPadding ->
+            val flingBehavior = PagerDefaults.flingBehavior(pager, snapAnimationSpec = PagerNavigationSpringSpec)
             HorizontalPager(
                 state = pager,
-                modifier = modifier,
+                modifier = modifier.pagerGestureOverride(pager, flingBehavior),
+                userScrollEnabled = false,
+                flingBehavior = flingBehavior,
+                pageNestedScrollConnection = PagerGestureNestedScrollConnection,
+                overscrollEffect = null,
                 verticalAlignment = Alignment.Top,
                 key = { PrimaryDestination.entries[it].name },
             ) { page ->
@@ -122,7 +138,9 @@ internal fun ManagerMainShell(
                             )
                         }
                     }
-                    content(Modifier.weight(1f), 0.dp)
+                    content(Modifier.weight(1f).consumeWindowInsets(
+                        WindowInsets.displayCutout.union(WindowInsets.navigationBars).only(WindowInsetsSides.Start),
+                    ), 0.dp)
                 }
             }
         } else {

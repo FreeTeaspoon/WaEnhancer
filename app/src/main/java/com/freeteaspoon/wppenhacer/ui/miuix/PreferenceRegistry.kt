@@ -63,6 +63,8 @@ internal object PreferenceRegistry {
                                 maximum = parser.rawAttribute("maxValue")?.toFloatOrNull()
                                     ?: parser.rawAttribute("max")?.toFloatOrNull() ?: 100f,
                                 step = parser.rawAttribute("valueSpacing")?.toFloatOrNull() ?: 1f,
+                                maxLength = parser.rawAttribute("maxLength")?.toIntOrNull()
+                                    ?: if (tag == "LimitedEditTextPreference") 10 else 65536,
                             )
                         }
                     }

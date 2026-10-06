@@ -4,7 +4,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.click
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.isDialog
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
@@ -70,7 +70,7 @@ class ManagerShellTest {
         composeRule.onNodeWithText(title, useUnmergedTree = true).performClick()
         composeRule.waitForIdle()
         // Search highlights the matching preference in its destination page.
-        composeRule.onNodeWithText("● $title", useUnmergedTree = true).performClick()
+        composeRule.onNodeWithTag("preference-text_in_hour", useUnmergedTree = true).performClick()
         composeRule.waitForIdle()
         composeRule.onNode(isDialog()).assertExists()
 
@@ -87,7 +87,7 @@ class ManagerShellTest {
             composeRule.mainClock.autoAdvance = true
         }
 
-        composeRule.onNodeWithText("● $title", useUnmergedTree = true).performClick()
+        composeRule.onNodeWithTag("preference-text_in_hour", useUnmergedTree = true).performClick()
         composeRule.onNode(isDialog()).assertExists()
     }
 }

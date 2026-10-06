@@ -36,6 +36,9 @@ jobs:
           echo "$KEY_STORE" | base64 --decode > key.jks
           fi
 
+      - name: Apply pinned Miuix fixes
+        run: ./scripts/apply-miuix-patches.sh
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 

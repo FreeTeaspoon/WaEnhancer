@@ -51,23 +51,24 @@ internal fun WeKitStyleHomeDashboard(
 ) {
     Column(
         modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val activeColor = when {
                 MiuixTheme.isDynamicColor -> MiuixTheme.colorScheme.secondaryContainer
-                isSystemInDarkTheme() -> Color(0xFF1A3825)
+                LocalManagerDarkMode.current -> Color(0xFF1A3825)
                 else -> Color(0xFFDFFAE4)
             }
             Card(
                 modifier = Modifier.weight(1f).fillMaxHeight(),
                 colors = CardDefaults.defaultColors(color = activeColor),
+                cornerRadius = 16.dp,
                 showIndication = true,
-                pressFeedbackType = PressFeedbackType.Tilt,
+                pressFeedbackType = PressFeedbackType.Sink,
                 onClick = onOpenFeatures,
             ) {
                 Box(Modifier.fillMaxSize()) {
@@ -105,7 +106,7 @@ internal fun WeKitStyleHomeDashboard(
                     value = enabledCount.toString(),
                     onClick = onOpenFeatures,
                 )
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(6.dp))
                 CountCard(
                     modifier = Modifier.fillMaxWidth().weight(1f),
                     label = stringResource(R.string.manager_all_features),
@@ -115,7 +116,7 @@ internal fun WeKitStyleHomeDashboard(
             }
         }
 
-        Card(modifier = Modifier.fillMaxWidth()) {
+        Card(modifier = Modifier.fillMaxWidth(), cornerRadius = 16.dp, insideMargin = PaddingValues(0.dp), pressFeedbackType = PressFeedbackType.None) {
             Column(Modifier.fillMaxWidth().padding(16.dp)) {
                 HomeInfoText(stringResource(R.string.manager_module_version), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
                 HomeInfoText(stringResource(R.string.manager_device_model), "${Build.MANUFACTURER} ${Build.MODEL}")
@@ -138,9 +139,10 @@ internal fun WeKitStyleHomeDashboard(
 private fun CountCard(modifier: Modifier, label: String, value: String, onClick: () -> Unit) {
     Card(
         modifier = modifier,
+        cornerRadius = 16.dp,
         insideMargin = PaddingValues(16.dp),
         showIndication = true,
-        pressFeedbackType = PressFeedbackType.Tilt,
+        pressFeedbackType = PressFeedbackType.Sink,
         onClick = onClick,
     ) {
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {

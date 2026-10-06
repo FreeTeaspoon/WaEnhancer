@@ -72,9 +72,10 @@
             </intent-filter>
         </activity>
 
+        <!-- The hooked WhatsApp process opens reports in the module's process. -->
         <activity
             android:name=".ui.miuix.MiuixCrashReportActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/NoActionBarTheme" />
 
         <activity
@@ -157,10 +158,7 @@
             android:value="@string/app_desc" />
         <meta-data
             android:name="xposedminversion"
-            android:value="93" />
-        <meta-data
-            android:name="xposedsharedprefs"
-            android:value="true" />
+            android:value="82" />
         <meta-data
             android:name="xposedscope"
             android:resource="@array/scope" />

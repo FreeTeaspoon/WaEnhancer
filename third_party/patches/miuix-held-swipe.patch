@@ -39,18 +39,18 @@ index 766097ae..6cd740dc 100644
                  val fingerProgress = dismissTravelPx / extent
                  val touchY = change.position.y
 diff --git a/miuix-nav/src/desktopTest/kotlin/top/yukonga/miuix/kmp/nav/gesture/NavSwipeScrollConflictTest.kt b/miuix-nav/src/desktopTest/kotlin/top/yukonga/miuix/kmp/nav/gesture/NavSwipeScrollConflictTest.kt
-index e52830c2..32836fe7 100644
+index e52830c2..45b722ff 100644
 --- a/miuix-nav/src/desktopTest/kotlin/top/yukonga/miuix/kmp/nav/gesture/NavSwipeScrollConflictTest.kt
 +++ b/miuix-nav/src/desktopTest/kotlin/top/yukonga/miuix/kmp/nav/gesture/NavSwipeScrollConflictTest.kt
-@@ -41,6 +41,7 @@ import androidx.compose.ui.test.onNodeWithText
+@@ -37,6 +37,7 @@ import androidx.compose.ui.input.pointer.PointerEventPass
+ import androidx.compose.ui.input.pointer.pointerInput
+ import androidx.compose.ui.input.pointer.positionChangeIgnoreConsumed
+ import androidx.compose.ui.test.ExperimentalTestApi
++import androidx.compose.ui.test.click
+ import androidx.compose.ui.test.onNodeWithText
  import androidx.compose.ui.test.onRoot
  import androidx.compose.ui.test.performTouchInput
- import androidx.compose.ui.test.swipeRight
-+import androidx.compose.ui.test.click
- import androidx.compose.ui.test.v2.runComposeUiTest
- import androidx.compose.ui.unit.dp
- import top.yukonga.miuix.kmp.nav.core.NavDisplay
-@@ -254,6 +255,42 @@ class NavSwipeScrollConflictTest {
+@@ -254,6 +255,44 @@ class NavSwipeScrollConflictTest {
          assertEquals(0, commits, "navigation must not claim a sequence that became multi-touch")
      }
  
@@ -58,16 +58,18 @@ index e52830c2..32836fe7 100644
 +    fun heldSwipeConsumesSecondaryTapButReleaseSettleAcceptsTap() = runComposeUiTest {
 +        var clicks = 0
 +        setContent {
-+            Box(Modifier.fillMaxSize().navSwipeDismissImpl(
-+                enabled = true,
-+                direction = NavSwipeDirection.LeftToRight,
-+                animatedTop = remember { Animatable(1f) },
-+                topIndex = 1,
-+                motion = NavMotion.Default,
-+                settleSink = null,
-+                externalGestureOwnership = { 0L },
-+                onCommit = {}, onCancel = {}, onGesture = {},
-+            )) {
++            Box(
++                Modifier.fillMaxSize().navSwipeDismissImpl(
++                    enabled = true,
++                    direction = NavSwipeDirection.LeftToRight,
++                    animatedTop = remember { Animatable(1f) },
++                    topIndex = 1,
++                    motion = NavMotion.Default,
++                    settleSink = null,
++                    externalGestureOwnership = { 0L },
++                    onCommit = {}, onCancel = {}, onGesture = {},
++                ),
++            ) {
 +                Box(Modifier.fillMaxSize().clickable { clicks++ })
 +            }
 +        }

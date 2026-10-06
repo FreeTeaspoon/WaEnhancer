@@ -1,11 +1,19 @@
-[NEW]
-* Added support for WhatsApp version 2.26.38
+WaEnhancer 1.6.3
+
+[COMPATIBILITY]
+* Requires Android 13 or later. The updated Miuix libraries require API 33.
+* Existing application IDs, preferences and Xposed hooks remain compatible.
+
+[UPDATED]
+* Merged upstream through 749c3cae.
+* Updated the HyperOS manager to Miuix 0.9.4 with native settings, file workflows, Appearance, About and Credits screens.
+* Improved tab gestures, child-page Back navigation, refresh states and adaptive layouts.
+* Bundled CSS editor scripts for offline syntax highlighting and preserved unsaved drafts across Activity recreation.
 
 [FIXED]
-* Fixed "Show Online" not showing who is online or their last seen status
-* Fixed media preview failing to open some photos and videos
-* Fixed media preview sometimes closing or glitching when opening several previews
-* Fixed locked chats not being filtered correctly
-* Fixed the seen tick not working on some versions
-* Fixed importing settings failing or partially applying with some backup files
-* Improved overall stability and speed
+* Fixed upstream tab animation crashes and Downloads document selection.
+* Updated module loading to use RemotePreferences, with separate crash handling, feature registration and broadcast receivers.
+* Updated document picker initialization with a fallback when provider information is unavailable.
+* Call recordings can be selected to share or delete several at once.
+* Call recordings fall back to public storage when the default location is unavailable, and notifications show the saved folder.
+* Fixed storage permission recovery and file import safety in the manager.

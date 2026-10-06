@@ -3,7 +3,6 @@ package com.freeteaspoon.wppenhacer
 import android.annotation.SuppressLint
 import android.app.Application
 import android.app.Instrumentation
-import android.content.ContextWrapper
 import android.view.Window
 import android.view.WindowManager
 import com.highcapable.kavaref.KavaRef.Companion.resolve
@@ -19,7 +18,6 @@ import com.freeteaspoon.wppenhacer.xposed.bridge.ScopeHook
 import com.freeteaspoon.wppenhacer.xposed.core.FeatureLoader
 import com.freeteaspoon.wppenhacer.xposed.core.patch.GlobalResourceHooker
 import com.freeteaspoon.wppenhacer.xposed.downgrade.Patch
-import com.freeteaspoon.wppenhacer.xposed.utils.YukiSharedPreference
 
 @InjectYukiHookWithXposed
 class WppXposed : IYukiHookXposedInit {
@@ -39,25 +37,6 @@ class WppXposed : IYukiHookXposedInit {
         loadSystem(ScopeHook)
         loadApp(hooker = AntiUpdater)
 
-        loadApp(BuildConfig.APPLICATION_ID) {
-            "android.app.ContextImpl".toClass().resolve().apply {
-                firstMethod {
-                    name = "getSharedPreferences"
-                    parameters(String::class, Int::class)
-                }.hook {
-                    before {
-                        if (args[1] == ContextWrapper.MODE_PRIVATE) {
-                            @Suppress("DEPRECATION")
-                            args[1] = ContextWrapper.MODE_WORLD_READABLE
-                        }
-                    }
-                }
-                firstMethod {
-                    name = "checkMode"
-                }.hook().intercept()
-            }
-        }
-
         loadApp(FeatureLoader.PACKAGE_WPP, FeatureLoader.PACKAGE_BUSINESS) {
             if (packageName == FeatureLoader.PACKAGE_WPP && !App.isWhatsAppFlavor) return@loadApp
 
@@ -71,16 +50,12 @@ class WppXposed : IYukiHookXposedInit {
                 }.hookAll {
                     before {
                         val application = args[0] as Application
-                        val pref =
-                            YukiSharedPreference(prefs("${BuildConfig.APPLICATION_ID}_preferences"))
                         application.injectModuleAppResources()
                         loadHooker(FeatureLoader)
                         FeatureLoader.start(
                             appClassLoader!!,
                             application,
-                            appInfo.sourceDir!!,
-                            pref
-                        )
+                            appInfo.sourceDir!!)
                     }
                 }
             }

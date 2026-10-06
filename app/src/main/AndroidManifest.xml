@@ -72,9 +72,10 @@
             </intent-filter>
         </activity>
 
+        <!-- The hooked WhatsApp process opens reports in the module's process. -->
         <activity
             android:name=".ui.miuix.MiuixCrashReportActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/NoActionBarTheme" />
 
         <activity

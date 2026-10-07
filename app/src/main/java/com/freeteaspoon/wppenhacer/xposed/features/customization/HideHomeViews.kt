@@ -22,8 +22,10 @@ private const val VISIBILITY_MASK = 0x0000000C
 // The primary FAB (new chat / new call / camera) and its extended (labelled) variant.
 private val FAB_RESOURCE_NAMES = arrayOf("fab", "fabText")
 
-// The LinearLayout wrapping the bottom bar and its divider; falls back to the bar itself.
-private val BOTTOM_NAV_RESOURCE_NAMES = arrayOf("bottom_nav_container", "bottom_nav")
+// Track each view independently: a container ID can exist in resources even when
+// the active home layout uses the bar without that container.
+private val BOTTOM_NAV_RESOURCE_NAMES =
+    arrayOf("bottom_nav_container", "bottom_nav", "bottom_nav_divider")
 
 /**
  * Hides the floating action button and/or the bottom navigation bar on the
@@ -39,8 +41,8 @@ class HideHomeViews(
     private val forcedGone: MutableSet<View> = Collections.newSetFromMap(WeakHashMap())
 
     override fun doHook() {
-        val hideFab = prefs.getBoolean(HIDE_FAB_KEY, false)
-        val hideBottomNav = prefs.getBoolean(HIDE_BOTTOM_NAV_KEY, false)
+        val hideFab = xprefs.getBoolean(HIDE_FAB_KEY, false)
+        val hideBottomNav = xprefs.getBoolean(HIDE_BOTTOM_NAV_KEY, false)
         if (!hideFab && !hideBottomNav) return
 
         val targetIds = HashSet<Int>()
@@ -50,9 +52,9 @@ class HideHomeViews(
             targetIds += fabIds
         }
         if (hideBottomNav) {
-            val bottomNavId = resolveIds(BOTTOM_NAV_RESOURCE_NAMES).firstOrNull()
-            if (bottomNavId == null) log("Bottom navigation resource was not found")
-            else targetIds += bottomNavId
+            val bottomNavIds = resolveIds(BOTTOM_NAV_RESOURCE_NAMES)
+            if (bottomNavIds.isEmpty()) log("Bottom navigation resource was not found")
+            targetIds += bottomNavIds
         }
         if (targetIds.isEmpty()) return
 

@@ -158,7 +158,7 @@ All modifications are made dynamically in the memory of the user's own device th
 1. Ensure that your device is rooted.
 2. Install the Xposed Framework (recommend [this](https://github.com/JingMatrix/LSPosed) LPosed) on
    your device.
-3. Download the WaEnhancer from the [Actions](https://github.com/FreeTeaspoon/WaEnhancer/actions) section.
+3. Download the WaEnhancer from [GitHub releases](https://github.com/FreeTeaspoon/WaEnhancer/releases/latest).
 4. Install the WaEnhancer APK.
 5. Enable the WaEnhancer module in the Xposed Installer app.
 

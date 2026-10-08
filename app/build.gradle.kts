@@ -15,6 +15,9 @@ val gitHash: String = providers.exec {
     isIgnoreExitValue = true
 }.standardOutput.asText.map { it.trim().uppercase(Locale.getDefault()).substring(0,8) }.getOrElse("UNKNOWN")
 
+val githubRepository = "FreeTeaspoon/WaEnhancer"
+val githubRepositoryUrl = "https://github.com/$githubRepository"
+
 android {
     namespace = "com.freeteaspoon.wppenhacer"
     //noinspection GradleDependency
@@ -41,8 +44,8 @@ android {
         minSdk = 33
         //noinspection OldTargetApi
         targetSdk = 34
-        versionCode = 163
-        versionName = "1.6.3 ($gitHash)"
+        versionCode = 164
+        versionName = "1.6.4 ($gitHash)"
         multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -63,9 +66,10 @@ android {
         }
 
         buildConfigField("Boolean", "RESET_ON_INSTALL", "true")
-        buildConfigField("String", "GITHUB_REPOSITORY", "\"FreeTeaspoon/WaEnhancer\"")
-        buildConfigField("String", "GITHUB_REPOSITORY_URL", "\"https://github.com/FreeTeaspoon/WaEnhancer\"")
-        buildConfigField("String", "LATEST_RELEASE_API", "\"https://api.github.com/repos/FreeTeaspoon/WaEnhancer/releases/latest\"")
+        buildConfigField("String", "GITHUB_REPOSITORY", "\"$githubRepository\"")
+        buildConfigField("String", "GITHUB_REPOSITORY_URL", "\"$githubRepositoryUrl\"")
+        buildConfigField("String", "LATEST_RELEASE_URL", "\"$githubRepositoryUrl/releases/latest\"")
+        buildConfigField("String", "LATEST_RELEASE_API", "\"https://api.github.com/repos/$githubRepository/releases/latest\"")
 
     }
 

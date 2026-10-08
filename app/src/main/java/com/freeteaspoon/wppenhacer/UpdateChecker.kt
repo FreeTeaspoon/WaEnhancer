@@ -15,8 +15,6 @@ import java.util.concurrent.TimeUnit
 class UpdateChecker(private val mActivity: Activity) : Runnable {
 
     companion object {
-        private const val TELEGRAM_UPDATE_URL = "https://t.me/waenhancher"
-
         private val httpClient: OkHttpClient by lazy {
             OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
@@ -95,7 +93,7 @@ class UpdateChecker(private val mActivity: Activity) : Runnable {
                 dialog.dismiss()
             }
             dialog.setPositiveButton("Update Now") { dialog, _ ->
-                Utils.openLink(mActivity, TELEGRAM_UPDATE_URL)
+                Utils.openLink(mActivity, BuildConfig.LATEST_RELEASE_URL)
                 dialog.dismiss()
             }
             dialog.show()

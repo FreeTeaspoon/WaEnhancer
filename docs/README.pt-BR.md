@@ -138,7 +138,7 @@
 ## Instalação
 1. Certifique-se de que seu dispositivo está com root.
 2. Instale o Xposed Framework (recomendamos [este](https://github.com/JingMatrix/LSPosed) LSPosed) no seu dispositivo.
-3. Baixe o WaEnhancer na aba [Actions](https://github.com/FreeTeaspoon/WaEnhancer/actions).
+3. Baixe o WaEnhancer em [GitHub Releases](https://github.com/FreeTeaspoon/WaEnhancer/releases/latest).
 4. Instale o APK do WaEnhancer.
 5. Ative o módulo WaEnhancer no aplicativo Xposed Installer(LSPosed).
 

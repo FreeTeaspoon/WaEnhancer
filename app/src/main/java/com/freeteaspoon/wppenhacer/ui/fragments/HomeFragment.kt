@@ -120,7 +120,7 @@ class HomeFragment : BaseFragment() {
 
         binding.updateCard.setOnClickListener { view ->
             animateClick(view)
-            Utils.openLink(requireActivity(), "https://t.me/waenhancher")
+            Utils.openLink(requireActivity(), BuildConfig.LATEST_RELEASE_URL)
         }
 
         binding.diagBtn.setOnClickListener { view ->

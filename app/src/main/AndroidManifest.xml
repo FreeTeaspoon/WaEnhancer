@@ -40,6 +40,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/launcher"
         android:label="@string/app_name"
+        android:description="@string/app_desc"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/launcher"
         android:supportsRtl="true"
@@ -144,24 +145,11 @@
             tools:ignore="ExportedContentProvider" />
 
         <provider
-            android:name=".provider.RemotePreferenceProvider"
+            android:name=".provider.PrefsProvider"
             android:authorities="${applicationId}.preferences"
             android:exported="true"
             tools:ignore="ExportedContentProvider" />
 
-
-        <meta-data
-            android:name="xposedmodule"
-            android:value="true" />
-        <meta-data
-            android:name="xposeddescription"
-            android:value="@string/app_desc" />
-        <meta-data
-            android:name="xposedminversion"
-            android:value="82" />
-        <meta-data
-            android:name="xposedscope"
-            android:resource="@array/scope" />
 
         <receiver
             android:name=".receivers.WAFReceiver"

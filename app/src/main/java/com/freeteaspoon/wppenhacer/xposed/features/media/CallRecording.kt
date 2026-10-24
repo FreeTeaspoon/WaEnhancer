@@ -15,6 +15,7 @@ import android.text.TextUtils
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.yukihookapi.extension.kavaref.hookAll
 import com.freeteaspoon.wppenhacer.xposed.bridge.WaeIIFace
 import com.freeteaspoon.wppenhacer.xposed.core.Feature
 import com.freeteaspoon.wppenhacer.xposed.core.FeatureLoader

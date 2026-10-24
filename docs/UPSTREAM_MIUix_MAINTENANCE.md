@@ -25,6 +25,46 @@ WhatsApp UI is deliberately outside this migration.
    `git diff --check`. Device-test both variants against existing preferences and LSPosed before calling
    runtime behavior verified.
 
+## Xposed runtime, 1.6.5
+
+The fork tracks upstream `f4a8da1e` and uses YukiHookAPI `1.5.0-beta.13` with
+the libxposed runtime. The generated module metadata requires framework API
+101. The compile-only libxposed artifact is `102.0.0`, as pinned upstream.
+Legacy Xposed 82 is no longer a supported runtime.
+
+Keep the `repo/` Maven artifacts and repository declaration. KSP generates
+`META-INF/xposed/java_init.list`, `scope.list` and `module.prop`. Do not exclude
+`META-INF/**` or restore the legacy source entry assets. Run
+`python3 scripts/verify-xposed-apk.py <apk>...` after packaging, including
+minified builds. All build and release workflows run this check.
+
+`App` extends `ModuleApplication`, restores `PreferenceSnapshot` before starting
+its retained `RemotePreferencesSync`, and mirrors the existing AndroidX settings
+to the framework store. Sync commits on a worker before broadcasting cache
+invalidation. Failed or unavailable remote writes tell the host to read through
+the SettingsProvider bridge or direct provider fallback. Keep the fork's
+application IDs and preference names for both flavors.
+
+`HideHomeCamera`, `HideHomeViews` and `CallsButton` are fork-only features.
+They use YukiHook/KavaRef and `ReflectionUtils`; do not restore imports from
+`de.robv.android.xposed`. Keep all three registered alongside upstream's new
+features, with `PropsHook` first. The Miuix dashboard observes framework service
+availability and retains the WhatsApp hook-response fallback for active status.
+
+The Miuix diagnostics page exposes the HMA fix and restart confirmations.
+The new document-scanner and deleted-message capture preferences keep their
+upstream XML keys and storage types. The deleted-message viewer runs inside
+WhatsApp; its version 14 to 15 Room migration preserves existing records.
+
+The migration checks include 26 unit tests per flavor and three headless Android
+tests per flavor for provider preferences and the version 14 to 15 database
+upgrade. Both flavors pass lint against the existing baseline.
+Both regular and minified debug APKs assemble for both flavors; the minified
+APKs retain the generated entry class and pass the module metadata verifier.
+Live WhatsApp hooks, framework remote storage and system scope still require
+verification on a device running an API 101 framework. The Android 15 test emulator has neither
+WhatsApp nor LSPosed, and its UI session was occupied during this verification.
+
 ## Reference pins
 
 - HyperLPA: `e613bb84a9307c758afda057d28e570aaccb2d43`

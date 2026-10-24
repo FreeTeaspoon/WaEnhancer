@@ -29,8 +29,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.freeteaspoon.wppenhacer.BuildConfig
 import com.freeteaspoon.wppenhacer.R
-import com.freeteaspoon.wppenhacer.activities.MainActivity
 import com.freeteaspoon.wppenhacer.App
+import com.highcapable.yukihookapi.YukiHook
 import top.yukonga.miuix.kmp.preference.ArrowPreference
 import top.yukonga.miuix.kmp.preference.SwitchPreference
 import top.yukonga.miuix.kmp.basic.TextField
@@ -85,7 +85,15 @@ private fun ManagerHomeScreen(
     onOpenFeatures: () -> Unit,
 ) {
     val context = LocalContext.current
+    val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
+    var frameworkActive by remember { mutableStateOf(YukiHook.Status.isModuleActive) }
     var runningVersions by remember { mutableStateOf<Map<String, String>>(emptyMap()) }
+    DisposableEffect(lifecycle) {
+        val observer = YukiHook.Status.observeFrameworkService(lifecycle) {
+            frameworkActive = YukiHook.Status.isModuleActive
+        }
+        onDispose { observer?.unregister() }
+    }
     DisposableEffect(context) {
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(receiverContext: Context, intent: Intent) {
@@ -109,7 +117,7 @@ private fun ManagerHomeScreen(
     ManagerDetailScaffold(title = stringResource(R.string.app_name), wide = wide, onBack = null, bottomPadding = bottomPadding) {
         item("wekit-dashboard", contentType = PageStart.Inset) {
             WeKitStyleHomeDashboard(
-                moduleActive = MainActivity.isXposedEnabled() || runningVersions.isNotEmpty(),
+                moduleActive = frameworkActive || runningVersions.isNotEmpty(),
                 enabledCount = enabledFeatures,
                 totalCount = featureSwitches.size,
                 whatsappVersion = runningVersions["com.whatsapp"],

@@ -6,6 +6,8 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.yukihookapi.extension.kavaref.hook
+import com.highcapable.yukihookapi.extension.kavaref.hookAll
 import com.highcapable.yukihookapi.hook.param.HookParam
 import com.freeteaspoon.wppenhacer.xposed.core.Feature
 import com.freeteaspoon.wppenhacer.xposed.core.devkit.Unobfuscator
@@ -23,8 +25,8 @@ class DefaultEmoji(
 
     private val minScale = 1.00f
     private val maxScale = 2.00f
-    private val widthPaddingRatio = 0.40f
-    private val heightPaddingRatio = 0.35f
+    private val widthPaddingRatio = 0.08f
+    private val heightPaddingRatio = 0.10f
 
     private val spanWidths = WeakHashMap<Any, Int>()
     private val drawableMethodCache = WeakHashMap<Class<*>, Method?>()
@@ -134,9 +136,14 @@ class DefaultEmoji(
             baselineY = y
         )
 
+        val spanWidth = synchronized(spanWidths) { spanWidths[param.instanceOrNull] }
+        val drawX = if (spanWidth != null) {
+            x + (spanWidth - emojiPaint.measureText(emojiText)) / 2f
+        } else x
+
         canvas.drawText(
             emojiText,
-            x,
+            drawX,
             drawY,
             emojiPaint
         )

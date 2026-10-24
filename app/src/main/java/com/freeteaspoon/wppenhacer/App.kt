@@ -3,7 +3,6 @@ package com.freeteaspoon.wppenhacer
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -16,6 +15,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.highcapable.yukihookapi.hook.xposed.application.ModuleApplication
 import com.freeteaspoon.wppenhacer.activities.CrashReportActivity
 import com.freeteaspoon.wppenhacer.ui.miuix.MiuixCrashReportActivity
 import com.freeteaspoon.wppenhacer.utils.PreferenceSnapshot
@@ -25,7 +25,9 @@ import rikka.material.app.LocaleDelegate.Companion.defaultLocale
 import java.io.File
 import java.util.Locale
 
-class App : Application() {
+class App : ModuleApplication() {
+    private lateinit var remotePreferencesSync: RemotePreferencesSync
+
     @SuppressLint("ApplySharedPref")
     override fun onCreate() {
         super.onCreate()
@@ -36,6 +38,7 @@ class App : Application() {
         try {
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
             PreferenceSnapshot.initialize(this, sharedPreferences)
+            remotePreferencesSync = RemotePreferencesSync(this).also { it.start() }
             val mode = sharedPreferences.getString("thememode", "0")!!.toInt()
             setThemeMode(mode)
             changeLanguage(this)

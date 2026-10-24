@@ -155,6 +155,11 @@ All modifications are made dynamically in the memory of the user's own device th
 </details>
 
 ## Installation
+
+This fork requires Android 13 or later and an Xposed framework supporting
+libxposed API 101. Version 1.6.5 uses YukiHookAPI 1.5.0-beta.13 and no longer
+supports legacy Xposed 82 frameworks. Check your framework's API support before
+upgrading from 1.6.4. Existing fork package IDs and settings are preserved.
 1. Ensure that your device is rooted.
 2. Install the Xposed Framework (recommend [this](https://github.com/JingMatrix/LSPosed) LPosed) on
    your device.

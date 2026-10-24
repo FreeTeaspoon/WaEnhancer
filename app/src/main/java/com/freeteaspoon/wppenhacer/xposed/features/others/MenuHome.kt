@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.view.Menu
 import android.view.MenuItem
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.yukihookapi.extension.kavaref.hook
 import com.freeteaspoon.wppenhacer.BuildConfig
 import com.freeteaspoon.wppenhacer.R
 import com.freeteaspoon.wppenhacer.xposed.core.Feature

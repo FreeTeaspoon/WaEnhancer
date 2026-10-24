@@ -13,6 +13,7 @@ import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.yukihookapi.extension.kavaref.hook
 import com.freeteaspoon.wppenhacer.xposed.core.Feature
 import com.freeteaspoon.wppenhacer.xposed.utils.Utils
 import java.util.WeakHashMap
@@ -33,6 +34,8 @@ class FloatingBottomBar(loader: ClassLoader, preferences: SharedPreferences) :
 
     private val processedBars = WeakHashMap<ViewGroup, Boolean>()
     private val setupAttempts = WeakHashMap<ViewGroup, Int>()
+    private val baseBottomPadding = WeakHashMap<ViewGroup, Int>()
+    private val paddingGuarded = WeakHashMap<ViewGroup, Boolean>()
 
     override fun doHook() {
         if (!xprefs.getBoolean("floating_bottom_bar", false)) return
@@ -233,15 +236,36 @@ class FloatingBottomBar(loader: ClassLoader, preferences: SharedPreferences) :
             bar.layoutParams = params
         }
 
-        val bottomInset = navigationBarInset(bar)
-        if (bottomInset > 0) {
-            val bottomPadding = (bar.paddingBottom - bottomInset).coerceAtLeast(0)
-            bar.setPaddingRelative(
-                bar.paddingStart,
-                bar.paddingTop,
-                bar.paddingEnd,
-                bottomPadding
-            )
+        stripBottomInset(bar)
+        installPaddingGuard(bar)
+    }
+
+    private fun stripBottomInset(bar: ViewGroup) {
+        val basePadding = baseBottomPadding.getOrPut(bar) {
+            (bar.paddingBottom - navigationBarInset(bar)).coerceAtLeast(0)
+        }
+        if (bar.paddingBottom != basePadding) {
+            bar.setPaddingRelative(bar.paddingStart, bar.paddingTop, bar.paddingEnd, basePadding)
+        }
+    }
+
+    // WDSBottomBar (Material BottomNavigationView) re-applies the navigation bar inset as
+    // bottom padding on every insets dispatch (e.g. when switching tabs), which made the
+    // floating bar grow taller. The bar already sits above the navigation bar via its margin,
+    // so the bottom inset is ignored and the base padding is enforced on every layout.
+    private fun installPaddingGuard(bar: ViewGroup) {
+        if (paddingGuarded.put(bar, true) != null) return
+        ViewCompat.setOnApplyWindowInsetsListener(bar) { view, insets ->
+            stripBottomInset(view as ViewGroup)
+            insets
+        }
+        bar.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            stripBottomInset(bar)
+            val params = bar.layoutParams
+            if (params != null && params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                bar.layoutParams = params
+            }
         }
     }
 

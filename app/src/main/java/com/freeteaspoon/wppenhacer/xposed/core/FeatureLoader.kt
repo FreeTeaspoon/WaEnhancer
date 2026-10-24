@@ -10,8 +10,8 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
-import com.crossbowffs.remotepreferences.RemotePreferences
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.yukihookapi.extension.kavaref.hook
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.freeteaspoon.wppenhacer.App
 import com.freeteaspoon.wppenhacer.BuildConfig
@@ -117,11 +117,8 @@ object FeatureLoader : YukiBaseHooker() {
     }
 
     private fun createPreferences(application: Application): SharedPreferences =
-        RemotePreferences(
-            application,
-            BuildConfig.APPLICATION_ID + ".preferences",
-            BuildConfig.APPLICATION_ID + "_preferences"
-        )
+        RemotePrefs(application, preferences("${BuildConfig.APPLICATION_ID}_preferences"))
+            .also { RemotePrefs.instance = it }
 
     private fun supportedVersionsRes(application: Application) =
         if (application.packageName == PACKAGE_WPP) {

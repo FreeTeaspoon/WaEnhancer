@@ -19,6 +19,8 @@ import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.yukihookapi.extension.kavaref.hook
+import com.highcapable.yukihookapi.extension.kavaref.hookAll
 import com.freeteaspoon.wppenhacer.utils.ColorReplacement.replaceColors
 import com.freeteaspoon.wppenhacer.utils.DrawableColors.replaceColor
 import com.freeteaspoon.wppenhacer.utils.IColors
@@ -264,8 +266,9 @@ class CustomThemeV2(loader: ClassLoader, preferences: SharedPreferences) :
         val resourceImpl =
             ReflectionUtils.findClass("android.content.res.ResourcesImpl", classLoader)
 
-        resourceImpl.resolve().method {
+        resourceImpl.resolve().optional().method {
             name = "loadDrawable"
+            superclass()
         }.hookAll {
             after {
                 if (!colorsReady) return@after

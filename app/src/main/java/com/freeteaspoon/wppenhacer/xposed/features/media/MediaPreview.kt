@@ -35,13 +35,14 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.yukihookapi.extension.kavaref.hook
 import com.freeteaspoon.wppenhacer.R
 import com.freeteaspoon.wppenhacer.xposed.core.Feature
 import com.freeteaspoon.wppenhacer.xposed.core.WppCore
 import com.freeteaspoon.wppenhacer.xposed.core.components.FMessageWpp
 import com.freeteaspoon.wppenhacer.xposed.core.db.MessageStore
 import com.freeteaspoon.wppenhacer.xposed.core.devkit.Unobfuscator
-import com.freeteaspoon.wppenhacer.xposed.features.general.Others
+import com.freeteaspoon.wppenhacer.xposed.features.general.PropsHook
 import com.freeteaspoon.wppenhacer.xposed.utils.DesignUtils
 import com.freeteaspoon.wppenhacer.xposed.utils.HKDF
 import com.freeteaspoon.wppenhacer.xposed.utils.ReflectionUtils
@@ -100,7 +101,7 @@ class MediaPreview(
     override fun doHook() {
         if (!xprefs.getBoolean("media_preview", true)) return
 
-        Others.propsBoolean[24205] = false
+        PropsHook.booleans[24205] = false
 
         val layoutClass = Unobfuscator.loadLayoutClass(classLoader)
         View::class.java.resolve().firstMethod {

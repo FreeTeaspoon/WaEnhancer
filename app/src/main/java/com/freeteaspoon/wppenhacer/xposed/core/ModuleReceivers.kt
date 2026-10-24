@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.freeteaspoon.wppenhacer.BuildConfig
 import com.freeteaspoon.wppenhacer.R
+import com.freeteaspoon.wppenhacer.RemotePreferencesSync
 import com.freeteaspoon.wppenhacer.xposed.utils.Utils
 
 internal object ModuleReceivers {
@@ -17,6 +18,7 @@ internal object ModuleReceivers {
     private const val ACTION_CHECK_WPP = "${BuildConfig.APPLICATION_ID}.CHECK_WPP"
     private const val ACTION_MANUAL_RESTART = "${BuildConfig.APPLICATION_ID}.MANUAL_RESTART"
     private const val ACTION_RECEIVER_WPP = "${BuildConfig.APPLICATION_ID}.RECEIVER_WPP"
+    private const val ACTION_PREFS_CHANGED = "${BuildConfig.APPLICATION_ID}.PREFS_CHANGED"
 
     @SuppressLint("WrongConstant")
     fun register(app: Application) {
@@ -25,6 +27,11 @@ internal object ModuleReceivers {
         }
         register(app, ACTION_CHECK_WPP) { context, _ -> sendEnabledBroadcast(context) }
         register(app, ACTION_MANUAL_RESTART) { _, _ -> WppCore.setPrivBoolean("need_restart", true) }
+        register(app, ACTION_PREFS_CHANGED) { _, intent ->
+            RemotePrefs.instance?.invalidate(
+                intent.getBooleanExtra(RemotePreferencesSync.EXTRA_REMOTE_SYNCED, true)
+            )
+        }
     }
 
     fun sendEnabledBroadcast(context: Context) {

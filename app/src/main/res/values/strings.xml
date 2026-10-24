@@ -326,7 +326,7 @@
     <string name="developer" translatable="false">Developer: Dev4Mod</string>
     <string name="about_info">Wa Enhancer is an Xposed module that enhances your WhatsApp experience by offering advanced privacy features, home screen customization, general tweaks, and media improvements.</string>
     <string name="installation">Installation</string>
-    <string name="installation_desc">1. Ensure that your device is rooted.\n2. Install the Xposed Framework on your device.\n3. Download the Wa Enhancer from the Actions section.\n4. Install the Wa Enhancer APK.\n5. Enable the Wa Enhancer module in the Xposed Installer app.</string>
+    <string name="installation_desc">1. Root your device.\n2. Install an Xposed framework that supports libxposed API 101. Legacy Xposed frameworks are not supported.\n3. Download WaEnhancer from this fork\'s GitHub releases.\n4. Install the APK.\n5. Enable WaEnhancer for WhatsApp, WhatsApp Business and System Framework, then restart the device.</string>
     <string name="go_to_telegram">Go to Telegram</string>
     <string name="go_to_github">Go to GitHub</string>
     <string name="contributors">Contributors</string>
@@ -571,6 +571,16 @@
     <string name="diag_hma_no_blocks">No Hide My App List blocks detected for WhatsApp.</string>
     <string name="diag_hma_blocked">Hide My App List is hiding WaEnhancer from:</string>
     <string name="diag_hma_disable">Disable the block for WhatsApp/Business in Hide My App List so WaEnhancer can work correctly.</string>
+    <string tools:ignore="MissingTranslation" name="diag_hma_fix">Fix</string>
+    <string tools:ignore="MissingTranslation" name="diag_hma_fix_confirm_title">Fix Hide My App List?</string>
+    <string tools:ignore="MissingTranslation" name="diag_hma_fix_confirm_message">WaEnhancer will be removed from the Hide My App List blocks applied to WhatsApp/Business. A backup of the configuration is saved as config.json.wae.bak.</string>
+    <string tools:ignore="MissingTranslation" name="diag_hma_fix_confirm">Fix now</string>
+    <string tools:ignore="MissingTranslation" name="diag_hma_fix_reboot_title">Restart required</string>
+    <string tools:ignore="MissingTranslation" name="diag_hma_fix_reboot_message">The configuration was fixed, but Hide My App List only reloads it when the device boots. Restart the device now for the change to take effect.</string>
+    <string tools:ignore="MissingTranslation" name="diag_hma_fix_reboot_now">Restart now</string>
+    <string tools:ignore="MissingTranslation" name="diag_hma_fix_later">Later</string>
+    <string tools:ignore="MissingTranslation" name="diag_hma_fix_failed">Could not fix the Hide My App List configuration.</string>
+    <string tools:ignore="MissingTranslation" name="diag_hma_fix_nothing">Nothing to fix in the Hide My App List configuration.</string>
     <string name="diag_copied">Line copied to clipboard</string>
 
     <!-- Native Miuix manager -->
@@ -739,4 +749,19 @@
     <string translatable="false" name="manager_reset_complete">Settings reset</string>
     <string translatable="false" name="manager_export">Export</string>
     <string translatable="false" name="manager_load_failed">Could not load this page</string>
+    <string tools:ignore="MissingTranslation" name="no_file_picker">No file manager found on this device to pick a file.</string>
+    <string tools:ignore="MissingTranslation" name="disable_document_scanner">Disable document scanner</string>
+    <string tools:ignore="MissingTranslation" name="disable_document_scanner_sum">Disables the ML Kit document scanner in the document picker. Fixes a crash when opening it on some devices</string>
+    <string name="deleted_message_capture_title">Deleted Message Capture</string>
+    <string name="deleted_message_capture_sum">Capture and store deleted messages for later viewing and restoration</string>
+    <string name="deleted_message_notification_channel">Deleted Messages</string>
+    <string name="auth_backup_viewer_description">Authenticate to access deleted messages</string>
+    <string name="restore_all_messages">Restore all messages</string>
+    <string name="delete_all_permanently">Delete permanently</string>
+    <string name="confirm_delete_all_messages">Permanently delete all %1$d messages?</string>
+    <string name="confirm_restore_all_messages">Restore all %1$d messages?</string>
+    <string name="confirm_restore_message">Restore this message to the chat?</string>
+    <string name="confirm_delete_message">Permanently delete this backup entry?</string>
+    <string name="messages_deleted_success">Messages deleted</string>
+    <string name="messages_restored_success">Messages restored</string>
 </resources>

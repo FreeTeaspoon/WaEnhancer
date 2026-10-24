@@ -8,8 +8,8 @@ import android.view.View
 import com.freeteaspoon.wppenhacer.xposed.core.Feature
 import com.freeteaspoon.wppenhacer.xposed.core.WppCore
 import com.freeteaspoon.wppenhacer.xposed.utils.Utils
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedHelpers
+import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.yukihookapi.extension.kavaref.hook
 import java.util.Collections
 import java.util.WeakHashMap
 
@@ -58,44 +58,41 @@ class HideHomeViews(
         }
         if (targetIds.isEmpty()) return
 
-        XposedHelpers.findAndHookMethod(
-            View::class.java,
-            "onAttachedToWindow",
-            object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
-                    val view = param.thisObject as? View ?: return
-                    if (view.id !in targetIds) return
-                    if (!isHomeActivity(view.context)) return
-                    forcedGone.add(view)
-                    view.visibility = View.GONE
-                }
-            })
+        View::class.resolve().firstMethod {
+            name = "onAttachedToWindow"
+            parameters()
+        }.hook {
+            after {
+                val view = instance as? View ?: return@after
+                if (view.id !in targetIds) return@after
+                if (!isHomeActivity(view.context)) return@after
+                forcedGone.add(view)
+                view.visibility = View.GONE
+            }
+        }
 
-        XposedHelpers.findAndHookMethod(
-            View::class.java,
-            "onDetachedFromWindow",
-            object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
-                    val view = param.thisObject as? View ?: return
-                    if (forcedGone.isEmpty()) return
-                    forcedGone.remove(view)
-                }
-            })
+        View::class.resolve().firstMethod {
+            name = "onDetachedFromWindow"
+            parameters()
+        }.hook {
+            after {
+                val view = instance as? View ?: return@after
+                forcedGone.remove(view)
+            }
+        }
 
-        XposedHelpers.findAndHookMethod(
-            View::class.java,
-            "setFlags",
-            Int::class.javaPrimitiveType,
-            Int::class.javaPrimitiveType,
-            object : XC_MethodHook() {
-                override fun beforeHookedMethod(param: MethodHookParam) {
-                    if (forcedGone.isEmpty()) return
-                    if ((param.args[1] as Int) and VISIBILITY_MASK == 0) return
-                    val view = param.thisObject as? View ?: return
-                    if (view !in forcedGone) return
-                    param.args[0] = ((param.args[0] as Int) and VISIBILITY_MASK.inv()) or View.GONE
-                }
-            })
+        View::class.resolve().firstMethod {
+            name = "setFlags"
+            parameters(Int::class, Int::class)
+        }.hook {
+            before {
+                if (forcedGone.isEmpty()) return@before
+                if ((args[1] as Int) and VISIBILITY_MASK == 0) return@before
+                val view = instance as? View ?: return@before
+                if (view !in forcedGone) return@before
+                args[0] = ((args[0] as Int) and VISIBILITY_MASK.inv()) or View.GONE
+            }
+        }
     }
 
     private fun resolveIds(names: Array<String>): List<Int> {

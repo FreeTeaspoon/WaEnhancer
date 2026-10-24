@@ -58,6 +58,9 @@ jobs:
       - name: Build all release variants
         run: ./gradlew testWhatsappDebugUnitTest testBusinessDebugUnitTest assembleWhatsappRelease assembleBusinessRelease
 
+      - name: Verify Xposed module metadata
+        run: python3 scripts/verify-xposed-apk.py app/build/outputs/apk/whatsapp/release/*.apk app/build/outputs/apk/business/release/*.apk
+
       - name: Upload to GitHub release
         uses: softprops/action-gh-release@v3
         with:

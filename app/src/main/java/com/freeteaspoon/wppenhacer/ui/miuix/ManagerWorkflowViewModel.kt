@@ -28,6 +28,10 @@ internal class ManagerWorkflowViewModel(app: Application) : AndroidViewModel(app
     val release = _release.asStateFlow()
     private val _diagnostics = MutableStateFlow(ManagerLoadState<List<RootDiagnostics.LogEntry>>())
     val diagnostics = _diagnostics.asStateFlow()
+    private val _hmaFixRunning = MutableStateFlow(false)
+    val hmaFixRunning = _hmaFixRunning.asStateFlow()
+    private val _hmaRestartRequired = MutableStateFlow(false)
+    val hmaRestartRequired = _hmaRestartRequired.asStateFlow()
 
     private val _rootAvailable = MutableStateFlow<Boolean?>(null)
     val rootAvailable = _rootAvailable.asStateFlow()
@@ -122,5 +126,38 @@ internal class ManagerWorkflowViewModel(app: Application) : AndroidViewModel(app
         } catch (cancel: CancellationException) { throw cancel
         } catch (error: Exception) { _diagnostics.update { it.copy(error = error.message.orEmpty()) }
         } finally { _diagnostics.update { it.copy(refreshing = false) }; diagnosticsLock.unlock() }
+    }
+
+    fun fixHideMyAppList(): Job = viewModelScope.launch {
+        if (!diagnosticsLock.tryLock()) return@launch
+        _hmaFixRunning.value = true
+        val app = getApplication<Application>()
+        try {
+            val result = withContext(Dispatchers.IO) { RootDiagnostics.fixHideMyAppList(app) { } }
+            when (result) {
+                RootDiagnostics.FixResult.FIXED -> {
+                    _hmaRestartRequired.value = true
+                    val logs = withContext(Dispatchers.IO) { RootDiagnostics.collectDiagnostics(app) }
+                    _diagnostics.value = ManagerLoadState(content = logs)
+                }
+                RootDiagnostics.FixResult.NOTHING_TO_FIX ->
+                    ManagerSnackbarEvents.tryShow(app.getString(R.string.diag_hma_fix_nothing))
+                RootDiagnostics.FixResult.FAILED ->
+                    ManagerSnackbarEvents.tryShow(app.getString(R.string.diag_hma_fix_failed))
+            }
+        } catch (cancel: CancellationException) { throw cancel
+        } catch (_: Exception) {
+            ManagerSnackbarEvents.tryShow(app.getString(R.string.diag_hma_fix_failed))
+        } finally {
+            _hmaFixRunning.value = false
+            diagnosticsLock.unlock()
+        }
+    }
+
+    fun dismissHmaRestart() { _hmaRestartRequired.value = false }
+
+    fun rebootAfterHmaFix(): Job = viewModelScope.launch {
+        dismissHmaRestart()
+        withContext(Dispatchers.IO) { RootDiagnostics.rebootDevice() }
     }
 }

@@ -13,9 +13,8 @@ import com.freeteaspoon.wppenhacer.xposed.features.customization.SeparateGroup
 import com.freeteaspoon.wppenhacer.xposed.features.others.MenuHome
 import com.freeteaspoon.wppenhacer.xposed.utils.DesignUtils
 import com.freeteaspoon.wppenhacer.xposed.utils.Utils
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.XposedHelpers
+import com.freeteaspoon.wppenhacer.xposed.utils.ReflectionUtils
+import com.highcapable.yukihookapi.extension.kavaref.hook
 
 private const val PREFERENCE_KEY = "calls_button"
 
@@ -42,8 +41,8 @@ class CallsButton(
     private var tabs: List<Int>? = null
 
     override fun doHook() {
-        if (!prefs.getBoolean(PREFERENCE_KEY, false)) return
-        val action = prefs.getBoolean("buttonaction", true)
+        if (!xprefs.getBoolean(PREFERENCE_KEY, false)) return
+        val action = xprefs.getBoolean("buttonaction", true)
 
         val bottomNavId = Utils.getID("bottom_nav", "id")
         val pagerId = Utils.getID("pager", "id")
@@ -51,14 +50,12 @@ class CallsButton(
         // Keep a reference to the live tab list so pager indexes can be
         // mapped to tab ids.
         try {
-            XposedBridge.hookMethod(
-                Unobfuscator.loadTabListMethod(classLoader),
-                object : XC_MethodHook() {
-                    override fun afterHookedMethod(param: MethodHookParam) {
-                        @Suppress("UNCHECKED_CAST")
-                        tabs = param.result as? List<Int>
-                    }
-                })
+            Unobfuscator.loadTabListMethod(classLoader).hook {
+                after {
+                    @Suppress("UNCHECKED_CAST")
+                    tabs = result as? List<Int>
+                }
+            }
         } catch (e: Throwable) {
             log(e)
         }
@@ -107,7 +104,7 @@ class CallsButton(
         return try {
             if (pagerId <= 0) return null
             val pager = activity.findViewById<View>(pagerId) ?: return null
-            val index = XposedHelpers.callMethod(pager, "getCurrentItem") as Int
+            val index = ReflectionUtils.callMethod(pager, "getCurrentItem") as Int
             tabs?.getOrNull(index)
         } catch (e: Throwable) {
             logDebug(e)
@@ -133,7 +130,7 @@ class CallsButton(
                 return
             }
             val pager = activity.findViewById<View>(pagerId) ?: return
-            XposedHelpers.callMethod(pager, "setCurrentItem", index)
+            ReflectionUtils.callMethod(pager, "setCurrentItem", index)
         } catch (e: Throwable) {
             log(e)
         }

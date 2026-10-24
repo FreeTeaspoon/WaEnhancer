@@ -33,3 +33,6 @@ jobs:
 
       - name: Build WhatsApp Debug
         run: ./gradlew assembleWhatsappDebug
+
+      - name: Verify Xposed module metadata
+        run: python3 scripts/verify-xposed-apk.py app/build/outputs/apk/whatsapp/debug/*.apk

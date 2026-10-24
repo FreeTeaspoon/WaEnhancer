@@ -44,8 +44,8 @@ android {
         minSdk = 33
         //noinspection OldTargetApi
         targetSdk = 34
-        versionCode = 164
-        versionName = "1.6.4 ($gitHash)"
+        versionCode = 165
+        versionName = "1.6.5 ($gitHash)"
         multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -75,7 +75,11 @@ android {
 
     packaging {
         resources {
-            excludes += "META-INF/**"
+            excludes += "META-INF/*.kotlin_module"
+            excludes += "META-INF/AL2.0"
+            excludes += "META-INF/LGPL2.1"
+            excludes += "META-INF/LICENSE*"
+            excludes += "META-INF/NOTICE*"
             excludes += "okhttp3/**"
             excludes += "kotlin/**"
             excludes += "org/**"
@@ -153,15 +157,12 @@ androidComponents {
             output.outputFileName.set("$appName-${output.versionName.get()}.apk")
         }
 
-        // Hotfix: YukiHookAPI's KSP generates xposed_init / yukihookapi_init, so the
-        // asset and resource merge tasks must run after it or the entrypoint is missing.
+        // Hotfix: YukiHookAPI's KSP generates META-INF/xposed/*, so the java resource
+        // merge task must run after it or the entrypoint is missing.
         val cap = variant.name.replaceFirstChar { c ->
             if (c.isLowerCase()) c.titlecase(Locale.getDefault()) else c.toString()
         }
         val kspTask = "ksp${cap}Kotlin"
-        tasks.matching { it.name == "merge${cap}Assets" }.configureEach {
-            dependsOn(kspTask)
-        }
         tasks.matching { it.name == "merge${cap}JavaResource" }.configureEach {
             dependsOn(kspTask)
         }
@@ -186,11 +187,14 @@ dependencies {
     implementation(libs.colorpicker)
     implementation(files("libs/dexkit-android.aar"))
     implementation(libs.flatbuffers)
-    compileOnly(libs.libxposed.legacy)
-    implementation(libs.yukihookapi.api)
+    compileOnly(libs.libxposed.api)
+    implementation(platform(libs.yukihook.bom))
+    implementation(libs.yukihook.core)
+    implementation(libs.yukihook.runtime.libxposed)
+    implementation(libs.yukihook.extension.kavaref)
     implementation(libs.kavaref.core)
     implementation(libs.kavaref.extension)
-    ksp(libs.yukihookapi.ksp.xposed)
+    ksp(libs.yukihook.compiler)
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.core)
@@ -220,7 +224,6 @@ dependencies {
     implementation(libs.bcpkix.jdk18on)
     implementation(libs.arscblamer)
     implementation(libs.markwon.core)
-    implementation(libs.remote.preferences)
     implementation(libs.miuix.ui)
     implementation(libs.miuix.icons)
     implementation(libs.miuix.preference)

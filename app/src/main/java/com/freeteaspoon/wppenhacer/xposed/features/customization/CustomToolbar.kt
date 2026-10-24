@@ -12,13 +12,15 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.yukihookapi.extension.kavaref.hook
+import com.highcapable.yukihookapi.extension.kavaref.hookAll
 import com.highcapable.yukihookapi.hook.param.PackageParam
 import com.freeteaspoon.wppenhacer.R
 import com.freeteaspoon.wppenhacer.listeners.OnMultiClickListener
 import com.freeteaspoon.wppenhacer.xposed.core.Feature
 import com.freeteaspoon.wppenhacer.xposed.core.WppCore
 import com.freeteaspoon.wppenhacer.xposed.core.devkit.Unobfuscator
-import com.freeteaspoon.wppenhacer.xposed.features.general.Others
+import com.freeteaspoon.wppenhacer.xposed.features.general.PropsHook
 import com.freeteaspoon.wppenhacer.xposed.utils.DesignUtils
 import com.freeteaspoon.wppenhacer.xposed.utils.ReflectionUtils
 import com.freeteaspoon.wppenhacer.xposed.utils.Utils
@@ -62,7 +64,7 @@ class CustomToolbar(loader: ClassLoader, preferences: SharedPreferences) :
         }
 
         hookExpirationInfo()
-        Others.propsBoolean[6481] = false
+        PropsHook.booleans[6481] = false
     }
 
     override fun getPluginName(): String {

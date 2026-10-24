@@ -5,6 +5,7 @@ package com.freeteaspoon.wppenhacer.xposed.features.general
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.yukihookapi.extension.kavaref.hook
 import com.freeteaspoon.wppenhacer.xposed.core.Feature
 import com.freeteaspoon.wppenhacer.xposed.core.devkit.Unobfuscator
 import com.freeteaspoon.wppenhacer.xposed.utils.ReflectionUtils

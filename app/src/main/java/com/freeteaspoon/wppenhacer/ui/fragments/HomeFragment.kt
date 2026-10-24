@@ -1,5 +1,6 @@
 package com.freeteaspoon.wppenhacer.ui.fragments
 
+import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -22,7 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.highcapable.yukihookapi.YukiHookAPI
+import com.highcapable.yukihookapi.YukiHook
 import com.freeteaspoon.wppenhacer.App
 import com.freeteaspoon.wppenhacer.BuildConfig
 import com.freeteaspoon.wppenhacer.R
@@ -81,7 +82,6 @@ class HomeFragment : BaseFragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         checkStateWpp(requireActivity())
-
         binding.rebootBtn.setOnClickListener { view ->
             animateClick(view)
             App.instance!!.restartApp(FeatureLoader.PACKAGE_WPP)
@@ -132,6 +132,14 @@ class HomeFragment : BaseFragment() {
         startCardAnimations()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // The view lifecycle exists only after onCreateView returns.
+        YukiHook.Status.observeFrameworkService(viewLifecycleOwner.lifecycle) {
+            if (_binding != null) updateModuleStatus()
+        }
     }
 
     private fun startCardAnimations() {
@@ -269,7 +277,11 @@ class HomeFragment : BaseFragment() {
         }
         val dateFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US)
         val formattedDate = dateFormat.format(Date())
-        FilePicker.fileSalve.launch("wpp_enhacer_configs_$formattedDate.json")
+        try {
+            FilePicker.fileSalve.launch("wpp_enhacer_configs_$formattedDate.json")
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(context, R.string.no_file_picker, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun parseConfigEntries(json: JSONObject): Map<String, Any> {
@@ -356,15 +368,20 @@ class HomeFragment : BaseFragment() {
                 }
             }
         }
-        FilePicker.fileCapture.launch(arrayOf("application/json"))
+        try {
+            FilePicker.fileCapture.launch(arrayOf("application/json"))
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(context, R.string.no_file_picker, Toast.LENGTH_LONG).show()
+        }
     }
 
-    private fun checkStateWpp(activity: FragmentActivity) {
-        if (YukiHookAPI.Status.isModuleActive) {
+    private fun updateModuleStatus() {
+        if (YukiHook.Status.isModuleActive) {
             binding.statusIcon.setImageResource(R.drawable.ic_round_check_circle_24)
             binding.statusTitle.setText(R.string.module_enabled)
             binding.statusSummary.text =
                 String.format(getString(R.string.version_s), BuildConfig.VERSION_NAME)
+            binding.statusSummary.visibility = View.VISIBLE
             binding.status.getChildAt(0).setBackgroundResource(R.drawable.gradient_success)
         } else {
             binding.statusIcon.setImageResource(R.drawable.ic_round_error_outline_24)
@@ -372,6 +389,10 @@ class HomeFragment : BaseFragment() {
             binding.status.getChildAt(0).setBackgroundResource(R.drawable.gradient_error)
             binding.statusSummary.visibility = View.GONE
         }
+    }
+
+    private fun checkStateWpp(activity: FragmentActivity) {
+        updateModuleStatus()
         if (isInstalled(FeatureLoader.PACKAGE_WPP) && App.isWhatsAppFlavor) {
             disableWpp()
         } else {
@@ -587,9 +608,25 @@ class HomeFragment : BaseFragment() {
         val handler = Handler(Looper.getMainLooper())
         val queue = ArrayList<RootDiagnostics.LogEntry>()
 
+        val hmaBlockMessage = getString(R.string.diag_hma_disable)
         RootDiagnostics.runDiagnostics(context) { entry ->
             if (!isAdded) return@runDiagnostics
             queue.add(entry)
+            if (entry.message == hmaBlockMessage) {
+                handler.post { dialogBinding.fixHmaButton.visibility = View.VISIBLE }
+            }
+        }
+
+        dialogBinding.fixHmaButton.setOnClickListener {
+            MaterialAlertDialogBuilder(context)
+                .setTitle(R.string.diag_hma_fix_confirm_title)
+                .setMessage(R.string.diag_hma_fix_confirm_message)
+                .setPositiveButton(R.string.diag_hma_fix_confirm) { _, _ ->
+                    dialogBinding.fixHmaButton.isEnabled = false
+                    fixHideMyAppList(context, dialog, dialogBinding.fixHmaButton)
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
         }
 
         val poller = object : Runnable {
@@ -610,6 +647,40 @@ class HomeFragment : BaseFragment() {
             }
         }
         handler.postDelayed(poller, 120)
+    }
+
+    private fun fixHideMyAppList(
+        context: Context,
+        diagnosticsDialog: androidx.appcompat.app.AlertDialog,
+        button: View
+    ) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val result = RootDiagnostics.fixHideMyAppList(context) { }
+            withContext(Dispatchers.Main) {
+                if (_binding == null || !isAdded) return@withContext
+                button.isEnabled = true
+                when (result) {
+                    RootDiagnostics.FixResult.FIXED -> {
+                        diagnosticsDialog.dismiss()
+                        MaterialAlertDialogBuilder(context)
+                            .setTitle(R.string.diag_hma_fix_reboot_title)
+                            .setMessage(R.string.diag_hma_fix_reboot_message)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.diag_hma_fix_reboot_now) { _, _ ->
+                                RootDiagnostics.rebootDevice()
+                            }
+                            .setNegativeButton(R.string.diag_hma_fix_later, null)
+                            .show()
+                    }
+
+                    RootDiagnostics.FixResult.NOTHING_TO_FIX ->
+                        Toast.makeText(context, R.string.diag_hma_fix_nothing, Toast.LENGTH_LONG).show()
+
+                    RootDiagnostics.FixResult.FAILED ->
+                        Toast.makeText(context, R.string.diag_hma_fix_failed, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

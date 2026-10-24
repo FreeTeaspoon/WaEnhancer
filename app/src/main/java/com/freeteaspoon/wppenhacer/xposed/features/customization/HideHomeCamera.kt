@@ -5,8 +5,8 @@ import android.view.Menu
 import com.freeteaspoon.wppenhacer.xposed.core.Feature
 import com.freeteaspoon.wppenhacer.xposed.core.WppCore
 import com.freeteaspoon.wppenhacer.xposed.utils.Utils
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedHelpers
+import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.yukihookapi.extension.kavaref.hook
 
 private const val PREFERENCE_KEY = "hide_home_camera"
 
@@ -16,7 +16,7 @@ class HideHomeCamera(
 ) : Feature(classLoader, preferences) {
 
     override fun doHook() {
-        if (!prefs.getBoolean(PREFERENCE_KEY, false)) return
+        if (!xprefs.getBoolean(PREFERENCE_KEY, false)) return
 
         val cameraMenuItemId = Utils.getID("menuitem_camera", "id")
         if (cameraMenuItemId <= 0) {
@@ -24,17 +24,16 @@ class HideHomeCamera(
             return
         }
 
-        XposedHelpers.findAndHookMethod(
-            WppCore.homeActivityClass,
-            "onPrepareOptionsMenu",
-            Menu::class.java,
-            object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
-                    val menu = param.args.firstOrNull() as? Menu ?: return
-                    menu.findItem(cameraMenuItemId)?.isVisible = false
-                }
+        WppCore.homeActivityClass.resolve().firstMethod {
+            name = "onPrepareOptionsMenu"
+            parameters(Menu::class.java)
+            superclass()
+        }.hook {
+            after {
+                val menu = args.firstOrNull() as? Menu ?: return@after
+                menu.findItem(cameraMenuItemId)?.isVisible = false
             }
-        )
+        }
     }
 
     override fun getPluginName(): String {

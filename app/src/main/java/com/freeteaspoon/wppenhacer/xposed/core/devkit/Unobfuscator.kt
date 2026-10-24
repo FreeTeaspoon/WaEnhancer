@@ -209,8 +209,6 @@ object Unobfuscator {
         }
     }
 
-    @Throws(Exception::class)
-    @JvmStatic
     fun loadGhostModeMethod(classLoader: ClassLoader): Method {
         return UnobfuscatorCache.getInstance().getMethod(classLoader) {
             val method = findFirstMethodUsingStrings(
@@ -219,7 +217,7 @@ object Unobfuscator {
                 "HandleMeComposing/sendComposing"
             )
                 ?: throw Exception("GhostMode method not found")
-            if (method.parameterTypes.size > 2 && method.parameterTypes[2] == Int::class.java) {
+            if (method.parameterTypes.contains(Int::class.java)) {
                 return@getMethod method
             }
             throw Exception("GhostMode method not found parameter type")
@@ -772,6 +770,24 @@ object Unobfuscator {
         return UnobfuscatorCache.getInstance().getMethod(loader) {
             findFirstMethodUsingStrings(loader, StringMatchType.Contains, "Unknown IntField")
                 ?: throw Exception("Props method not found")
+        }
+    }
+
+    fun loadPropsResolveMethod(loader: ClassLoader): Method {
+        return UnobfuscatorCache.getInstance().getMethod(loader) {
+            val propsClass = loadPropsBooleanMethod(loader).declaringClass
+            val candidates = propsClass.declaredMethods.filter {
+                val types = it.parameterTypes
+                Modifier.isStatic(it.modifiers)
+                        && it.returnType == Any::class.java
+                        && types.size >= 4
+                        && types[1] == propsClass
+                        && types[types.size - 2] == Int::class.javaPrimitiveType
+                        && types[types.size - 1] == Boolean::class.javaPrimitiveType
+            }
+            candidates.singleOrNull()
+                ?: candidates.singleOrNull { it.parameterTypes[2] == Int::class.javaObjectType }
+                ?: throw Exception("Props resolve method not found (${candidates.size} candidates)")
         }
     }
 
@@ -1554,8 +1570,8 @@ object Unobfuscator {
         return UnobfuscatorCache.getInstance().getClass(loader) {
             val clazzList = bridge.findClass {
                 matcher {
+                    addUsingString("selectItem/position ")
                     addMethod {
-                        addUsingString("CONTACTS_FILTER")
                         paramCount(1)
                         addParamType(Int::class.java)
                     }
@@ -2735,15 +2751,6 @@ object Unobfuscator {
         }
     }
 
-    fun loadVideoTranscoderStartMethod(classLoader: ClassLoader): Method {
-        return UnobfuscatorCache.getInstance().getMethod(classLoader) {
-            findFirstMethodUsingStrings(
-                classLoader,
-                StringMatchType.Contains,
-                "VideoTranscoder/transcodeVideoNew/"
-            )!!
-        }
-    }
 
 
     fun loadMediaTranscoderStart(classLoader: ClassLoader): Method {

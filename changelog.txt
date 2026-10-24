@@ -1,16 +1,20 @@
-WaEnhancer 1.6.4
+WaEnhancer 1.6.5
 
 [UPDATED]
-* Merged upstream through 91ba9fc8.
-* Update checks and download buttons use FreeTeaspoon/WaEnhancer GitHub releases, including the update prompt inside WhatsApp.
+* Merged upstream through f4a8da1e.
+* Migrated to YukiHookAPI 1.5.0-beta.13 and libxposed API 101.
+* Ported the fork's home camera, floating button, bottom navigation and Calls menu hooks to the new runtime.
+* Preserved the Miuix manager, settings recovery, fork package IDs and update URLs.
+
+[NEW]
+* Deleted messages can be captured, viewed and restored from the WhatsApp home menu behind device authentication.
+* Root diagnostics can fix Hide My App List blocks, including whitelist mode.
+* Added a setting to disable the document scanner.
 
 [FIXED]
-* Fixed document-picker crashes caused by missing ML Kit registrar metadata on some devices.
-* Fixed missing contacts and unnamed groups in the module's contact picker.
-* Improved module startup and the error shown when the module cannot be found.
-* Removed the unnecessary bridge-connection error pop-up.
-* Fixed hiding all bottom navigation views on the WhatsApp home screen.
+* Improved property overrides, receipt privacy, contact loading and bottom navigation layout.
+* Settings sync through the framework remote store with a provider bridge fallback.
 
 [COMPATIBILITY]
-* Requires Android 13 or later.
-* Keeps the fork's application IDs, preferences, Xposed hooks and Miuix manager.
+* Requires Android 13 or later and an Xposed framework supporting libxposed API 101.
+* Legacy Xposed 82 frameworks are no longer supported.

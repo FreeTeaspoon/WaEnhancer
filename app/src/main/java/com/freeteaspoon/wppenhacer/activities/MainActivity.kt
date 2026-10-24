@@ -29,7 +29,7 @@ import kotlin.math.abs
 class MainActivity : BaseActivity() {
     companion object {
         @JvmStatic
-        fun isXposedEnabled(): Boolean = false
+        fun isXposedEnabled(): Boolean = com.highcapable.yukihookapi.YukiHook.Status.isModuleActive
     }
     private lateinit var binding: ActivityMainBinding
     private val batteryPermissionHelper = BatteryPermissionHelper.getInstance()

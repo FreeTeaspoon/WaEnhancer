@@ -9,7 +9,7 @@ import com.freeteaspoon.wppenhacer.xposed.core.components.FMessageWpp
 import com.freeteaspoon.wppenhacer.xposed.core.components.ProtocolTreeNodeWpp
 import com.freeteaspoon.wppenhacer.xposed.core.db.MessageHistoryStore
 import com.freeteaspoon.wppenhacer.xposed.core.devkit.Unobfuscator
-import com.freeteaspoon.wppenhacer.xposed.features.general.Others
+import com.freeteaspoon.wppenhacer.xposed.features.general.PropsHook
 import com.freeteaspoon.wppenhacer.xposed.utils.ReflectionUtils
 import org.json.JSONObject
 import org.luckypray.dexkit.query.enums.StringMatchType
@@ -30,7 +30,8 @@ class HideSeen(loader: ClassLoader, preferences: SharedPreferences) :
     }
 
     private var hideReceipt = false
-    private var ghostMode = false
+    private val ghostMode: Boolean
+        get() = WppCore.getPrivBoolean("ghostmode", false)
     private var hideRead = false
     private var hideAudioSeen = false
     private var hideOnceSeen = false
@@ -43,37 +44,15 @@ class HideSeen(loader: ClassLoader, preferences: SharedPreferences) :
         hookReceiptMethod()
         hookSenderPlayed()
         hookSenderPlayedBusiness()
-        hookEnforceHiding()
     }
 
     private fun loadPreferences() {
-        ghostMode = WppCore.getPrivBoolean("ghostmode", false)
         hideRead = xprefs.getBoolean("hideread", false)
         hideAudioSeen = xprefs.getBoolean("hideaudioseen", false)
         hideOnceSeen = xprefs.getBoolean("hideonceseen", false)
         hideReadGroup = xprefs.getBoolean("hideread_group", false)
         hideStatusView = xprefs.getBoolean("hidestatusview", false)
         hideReceipt = xprefs.getBoolean("hidereceipt", false)
-
-    }
-
-    private fun hookEnforceHiding() {
-        Unobfuscator.loadReadReceiptMethod(classLoader).hook {
-            before {
-                val fMessage = FMessageWpp(args[0])
-                val fmessageKey = fMessage.key
-                val hideReceipt = checkPrivacyAndHideReceipt(fmessageKey)
-                if (hideReceipt) {
-                    result = null
-                    MessageHistoryStore.getInstance().insertHideSeenMessageAsync(
-                        fmessageKey.remoteJid.phoneRawString,
-                        fmessageKey.messageID,
-                        MessageHistoryStore.ReceiptType.READ,
-                        false
-                    )
-                }
-            }
-        }
     }
 
     private fun hookSendReadReceiptJob() {
@@ -118,9 +97,10 @@ class HideSeen(loader: ClassLoader, preferences: SharedPreferences) :
         userJid: FMessageWpp.UserJid,
         privacy: JSONObject
     ): Boolean {
+        val hideReceiptRead = checkPrivacyAndHideReceipt(userJid)
         return when {
             userJid.isGroup -> {
-                if (privacy.optBoolean("HideSeen", hideReadGroup) || ghostMode) {
+                if (privacy.optBoolean("HideSeen", hideReadGroup) || ghostMode || hideReceiptRead) {
                     param.result = null
                     true
                 } else false
@@ -139,7 +119,7 @@ class HideSeen(loader: ClassLoader, preferences: SharedPreferences) :
             }
 
             else -> {
-                if (privacy.optBoolean("HideSeen", hideRead) || ghostMode) {
+                if (privacy.optBoolean("HideSeen", hideRead) || ghostMode || hideReceiptRead) {
                     param.result = null
                     true
                 } else false
@@ -172,35 +152,30 @@ class HideSeen(loader: ClassLoader, preferences: SharedPreferences) :
                     val message = args[0] as Message
                     val type = message.arg1
                     val obj = message.obj
-                    if (type != 419 && type != 89) return@before
-                    if (!receiptMessageInfoClass.isInstance(obj)) return@before
-                    // We check if the message is duplicated to avoid sending a tick twice causing congestion in the IQ queue
-                    val fmessageKeyField = ReflectionUtils.findFieldUsingFilter(obj.javaClass) {
-                        FMessageWpp.Key.TYPE.isAssignableFrom(it.type)
-                    }
-                    val fmessageKey = FMessageWpp.Key(fmessageKeyField.get(obj))
-                    val hideSeenItem = MessageHistoryStore.getInstance().getHideSeenMessage(
-                        fmessageKey.remoteJid.phoneRawString,
-                        fmessageKey.messageID,
-                        MessageHistoryStore.ReceiptType.READ
-                    )
+                    when (type) {
+                        419 -> {
+                            if (!receiptMessageInfoClass.isInstance(obj)) return@before
+                            val fmessageKeyField =
+                                ReflectionUtils.findFieldUsingFilter(receiptMessageInfoClass) {
+                                    FMessageWpp.Key.TYPE.isAssignableFrom(it.type)
+                                }
+                            val fmessageKey = FMessageWpp.Key(fmessageKeyField.get(obj))
+                            blockReceiptDispatch(message, fmessageKey)
+                        }
 
-                    if (hideSeenItem?.viewed ?: false) return@before
-
-                    hideSeenItem?.let {
-                        message.arg1 = -1
-                        return@before
+                        9 -> {
+                            if (!FMessageWpp.TYPE.isInstance(obj)) return@before
+                            blockReceiptDispatch(message, FMessageWpp(obj).key)
+                        }
                     }
                 }
             }
         }
 
-
-        Others.propsBoolean[19148] = false // Change route IQ
+        PropsHook.booleans[19148] = false // Change route IQ
 
         receiptMethod.hook {
             after {
-
                 val protocolTreeNodeWpp = ProtocolTreeNodeWpp(result!!)
 
                 val typeKV = protocolTreeNodeWpp.attributes.firstOrNull {
@@ -211,41 +186,68 @@ class HideSeen(loader: ClassLoader, preferences: SharedPreferences) :
 
                 if (fmessageKey.remoteJid.isStatus) return@after
 
-                val hideSeenItem = MessageHistoryStore.getInstance().getHideSeenMessage(
-                    fmessageKey.remoteJid.phoneRawString,
-                    fmessageKey.messageID,
-                    MessageHistoryStore.ReceiptType.READ
-                )
+                val isReadType = typeKV?.value == "read"
+                val blockSeen = shouldBlockSeen(fmessageKey, isReadType)
+                val blockReceipt = shouldBlockReceipt(fmessageKey)
 
-                if (hideSeenItem?.viewed ?: false) return@after
+                if (!blockSeen && !blockReceipt) return@after
 
-                val hideSeen = checkPrivacyAndHideSeen(fmessageKey)
-                val hideReceipt = checkPrivacyAndHideReceipt(fmessageKey)
-
-                if (hideReceipt) {
+                if (blockReceipt) {
                     if (typeKV == null) {
                         protocolTreeNodeWpp.addKeyValue("type", "inactive")
                     } else {
                         typeKV.value = "inactive"
                     }
                     protocolTreeNodeWpp.removeAllKeyValuesByKey("sts")
-                } else if (hideSeen && typeKV?.value == "read") {
+                } else {
                     protocolTreeNodeWpp.removeAllKeyValuesByKey("sts")
                     protocolTreeNodeWpp.removeAllKeyValuesByKey("type")
                 }
 
-                if (hideReceipt || hideSeen) {
-                    MessageHistoryStore.getInstance().insertHideSeenMessageAsync(
-                        fmessageKey.remoteJid.phoneRawString,
-                        fmessageKey.messageID,
-                        MessageHistoryStore.ReceiptType.READ,
-                        false
-                    )
-                }
+                insertHidden(fmessageKey)
             }
         }
+    }
 
+    private fun blockReceiptDispatch(message: Message, fmessageKey: FMessageWpp.Key) {
+        if (!shouldBlockReceipt(fmessageKey)) return
+        message.arg1 = -1
+        insertHidden(fmessageKey)
+    }
 
+    private fun insertHidden(fmessageKey: FMessageWpp.Key) {
+        MessageHistoryStore.getInstance().insertHideSeenMessageAsync(
+            fmessageKey.remoteJid.phoneRawString,
+            fmessageKey.messageID,
+            MessageHistoryStore.ReceiptType.READ,
+            false
+        )
+    }
+
+    private fun isAlreadyViewed(fmessageKey: FMessageWpp.Key): Boolean {
+        return MessageHistoryStore.getInstance().getHideSeenMessage(
+            fmessageKey.remoteJid.phoneRawString,
+            fmessageKey.messageID,
+            MessageHistoryStore.ReceiptType.READ
+        )?.viewed == true
+    }
+
+    private fun shouldBlockSeen(
+        fmessageKey: FMessageWpp.Key,
+        isReadType: Boolean = true
+    ): Boolean {
+        if (!isReadType || !checkPrivacyAndHideSeen(fmessageKey)) return false
+        return !isAlreadyViewed(fmessageKey)
+    }
+
+    private fun shouldBlockReceipt(fmessageKey: FMessageWpp.Key): Boolean {
+        if (!checkPrivacyAndHideReceipt(fmessageKey)) return false
+        return !isAlreadyViewed(fmessageKey)
+    }
+
+    private fun checkPrivacyAndHideReceipt(userJid: FMessageWpp.UserJid): Boolean {
+        val privacy = CustomPrivacy.getJSON(userJid.phoneNumber)
+        return privacy.optBoolean("HideReceipt", hideReceipt) || ghostMode
     }
 
     private fun checkPrivacyAndHideReceipt(fmessageKey: FMessageWpp.Key): Boolean {

@@ -432,6 +432,10 @@ internal fun ManagerUpdatesScreen(onBack: () -> Unit) {
 internal fun ManagerDiagnosticsScreen(onBack: () -> Unit) {
     val model: ManagerWorkflowViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val state by model.diagnostics.collectAsStateWithLifecycle()
+    val fixing by model.hmaFixRunning.collectAsStateWithLifecycle()
+    val restartRequired by model.hmaRestartRequired.collectAsStateWithLifecycle()
+    var confirmFix by rememberSaveable { mutableStateOf(false) }
+    val hmaBlockMessage = stringResource(R.string.diag_hma_disable)
     LaunchedEffect(model) { if (state.content == null) model.runDiagnostics() }
     ManagerDetailScaffold(
         stringResource(R.string.manager_root_diagnostics), false, onBack,
@@ -460,12 +464,39 @@ internal fun ManagerDiagnosticsScreen(onBack: () -> Unit) {
                             style = MiuixTheme.textStyles.body1,
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center)
                     }
+                    if (logs.any { it.message == hmaBlockMessage }) {
+                        Spacer(Modifier.height(12.dp))
+                        TextButton(stringResource(R.string.diag_hma_fix), { confirmFix = true },
+                            enabled = !fixing && !state.refreshing,
+                            colors = ButtonDefaults.textButtonColorsPrimary())
+                    }
+                    if (fixing) {
+                        Spacer(Modifier.height(12.dp))
+                        top.yukonga.miuix.kmp.basic.InfiniteProgressIndicator()
+                    }
                     Spacer(Modifier.height(12.dp))
                     TextButton(stringResource(R.string.manager_back), onBack,
                         Modifier.fillMaxWidth().padding(horizontal = 12.dp).padding(bottom = 12.dp),
                         colors = ButtonDefaults.textButtonColorsPrimary())
                 }
             }
+        }
+    }
+    WindowDialog(show = confirmFix, title = stringResource(R.string.diag_hma_fix_confirm_title),
+        summary = stringResource(R.string.diag_hma_fix_confirm_message),
+        onDismissRequest = { confirmFix = false }) {
+        ManagerDialogActions({ confirmFix = false }, stringResource(R.string.diag_hma_fix_confirm)) {
+            confirmFix = false
+            model.fixHideMyAppList()
+        }
+    }
+    WindowDialog(show = restartRequired, title = stringResource(R.string.diag_hma_fix_reboot_title),
+        summary = stringResource(R.string.diag_hma_fix_reboot_message),
+        onDismissRequest = model::dismissHmaRestart) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            TextButton(stringResource(R.string.diag_hma_fix_later), model::dismissHmaRestart, Modifier.weight(1f))
+            TextButton(stringResource(R.string.diag_hma_fix_reboot_now), { model.rebootAfterHmaFix() },
+                Modifier.weight(1f), colors = ButtonDefaults.textButtonColorsPrimary())
         }
     }
 }

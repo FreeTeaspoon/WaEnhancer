@@ -22,10 +22,13 @@ import com.freeteaspoon.wppenhacer.xposed.features.general.CallType
 import com.freeteaspoon.wppenhacer.xposed.features.general.CaptureDevice
 import com.freeteaspoon.wppenhacer.xposed.features.general.ChatLimit
 import com.freeteaspoon.wppenhacer.xposed.features.general.DeleteStatus
+import com.freeteaspoon.wppenhacer.xposed.features.general.DeletedBackupViewer
+import com.freeteaspoon.wppenhacer.xposed.features.general.DeletedMessageCapture
 import com.freeteaspoon.wppenhacer.xposed.features.general.NewChat
 import com.freeteaspoon.wppenhacer.xposed.features.general.CallsButton
 import com.freeteaspoon.wppenhacer.xposed.features.general.Others
 import com.freeteaspoon.wppenhacer.xposed.features.general.PinnedLimit
+import com.freeteaspoon.wppenhacer.xposed.features.general.PropsHook
 import com.freeteaspoon.wppenhacer.xposed.features.general.SeenTick
 import com.freeteaspoon.wppenhacer.xposed.features.general.ShareLimit
 import com.freeteaspoon.wppenhacer.xposed.features.general.ShowEditMessage
@@ -71,6 +74,7 @@ import com.freeteaspoon.wppenhacer.xposed.features.providers.MenuStatusProvider
 /** Every feature installed by [FeatureLoader], in load order. */
 internal object FeatureRegistry {
     val features: List<Class<out Feature>> = listOf(
+        PropsHook::class.java,
         DebugFeature::class.java,
         MinorFixes::class.java,
         ContactItemListener::class.java,
@@ -114,6 +118,8 @@ internal object FeatureRegistry {
         FilterGroups::class.java,
         Tasker::class.java,
         DeleteStatus::class.java,
+        DeletedMessageCapture::class.java,
+        DeletedBackupViewer::class.java,
         DownloadViewOnce::class.java,
         Channels::class.java,
         DownloadProfile::class.java,

@@ -433,9 +433,12 @@ internal fun ManagerDiagnosticsScreen(onBack: () -> Unit) {
     val model: ManagerWorkflowViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val state by model.diagnostics.collectAsStateWithLifecycle()
     val fixing by model.hmaFixRunning.collectAsStateWithLifecycle()
+    val fixingDenylist by model.denylistFixRunning.collectAsStateWithLifecycle()
     val restartRequired by model.hmaRestartRequired.collectAsStateWithLifecycle()
     var confirmFix by rememberSaveable { mutableStateOf(false) }
+    var confirmDenylistFix by rememberSaveable { mutableStateOf(false) }
     val hmaBlockMessage = stringResource(R.string.diag_hma_disable)
+    val denylistBlockMessage = stringResource(R.string.diag_denylist_disable)
     LaunchedEffect(model) { if (state.content == null) model.runDiagnostics() }
     ManagerDetailScaffold(
         stringResource(R.string.manager_root_diagnostics), false, onBack,
@@ -467,10 +470,16 @@ internal fun ManagerDiagnosticsScreen(onBack: () -> Unit) {
                     if (logs.any { it.message == hmaBlockMessage }) {
                         Spacer(Modifier.height(12.dp))
                         TextButton(stringResource(R.string.diag_hma_fix), { confirmFix = true },
-                            enabled = !fixing && !state.refreshing,
+                            enabled = !fixing && !fixingDenylist && !state.refreshing,
                             colors = ButtonDefaults.textButtonColorsPrimary())
                     }
-                    if (fixing) {
+                    if (logs.any { it.message == denylistBlockMessage }) {
+                        Spacer(Modifier.height(12.dp))
+                        TextButton(stringResource(R.string.diag_denylist_fix), { confirmDenylistFix = true },
+                            enabled = !fixing && !fixingDenylist && !state.refreshing,
+                            colors = ButtonDefaults.textButtonColorsPrimary())
+                    }
+                    if (fixing || fixingDenylist) {
                         Spacer(Modifier.height(12.dp))
                         top.yukonga.miuix.kmp.basic.InfiniteProgressIndicator()
                     }
@@ -488,6 +497,14 @@ internal fun ManagerDiagnosticsScreen(onBack: () -> Unit) {
         ManagerDialogActions({ confirmFix = false }, stringResource(R.string.diag_hma_fix_confirm)) {
             confirmFix = false
             model.fixHideMyAppList()
+        }
+    }
+    WindowDialog(show = confirmDenylistFix, title = stringResource(R.string.diag_denylist_fix_confirm_title),
+        summary = stringResource(R.string.diag_denylist_fix_confirm_message),
+        onDismissRequest = { confirmDenylistFix = false }) {
+        ManagerDialogActions({ confirmDenylistFix = false }, stringResource(R.string.diag_hma_fix_confirm)) {
+            confirmDenylistFix = false
+            model.fixMagiskDenylist()
         }
     }
     WindowDialog(show = restartRequired, title = stringResource(R.string.diag_hma_fix_reboot_title),

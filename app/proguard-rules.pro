@@ -1,28 +1,72 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
-
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
--keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
 -dontwarn *
--dontobfuscate
--dontoptimize
 
+# Keep every class and member name as-is; shrinking and optimizations (inlining, class merging,
+# dead code removal, etc.) still apply
+-dontobfuscate
+
+-allowaccessmodification
+
+# Keep line numbers for crash reports; the mapping file is uploaded by CI to retrace them
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
+
+# Mantém os atributos de anotações e assinaturas genéricas (essencial para Room e Reflection)
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
+
+# UnobfuscatorCache derives each cache key from the calling Unobfuscator method name found in
+# the stack trace, so these methods must keep their names and must not be inlined
+-keepclassmembers class com.freeteaspoon.wppenhacer.xposed.core.devkit.Unobfuscator {
+     *;
+}
+
+# FeatureLoader instantiates plugins via reflection with:
+# getConstructor(ClassLoader.class, SharedPreferences.class)
+# Keep only the constructor signature so it is not removed by shrinking.
+-keepclassmembers class * extends com.freeteaspoon.wppenhacer.xposed.core.Feature {
+     public <init>(java.lang.ClassLoader,android.content.SharedPreferences);
+}
+
+# keeps components intact
+-keepclassmembers class com.freeteaspoon.wppenhacer.xposed.core.components.** {
+        *;
+}
+
+# Xposed Init entrypoints
+-keep class com.freeteaspoon.wppenhacer.WppXposed* { *; }
+
+# jStyleParser (CustomView CSS): CSSFactory loads its default implementations with
+# Class.forName and calls getInstance() / the no-arg constructor reflectively
+-keep class cz.vutbr.web.csskit.TermFactoryImpl { public static *** getInstance(); }
+-keep class cz.vutbr.web.csskit.RuleFactoryImpl { public static *** getInstance(); }
+-keep class cz.vutbr.web.domassign.SupportedCSS3 { public static *** getInstance(); }
+-keep class cz.vutbr.web.csskit.ElementMatcherSafeStd { <init>(); }
+-keep class cz.vutbr.web.domassign.SingleMapNodeData { <init>(); }
+# DeclarationTransformerImpl resolves "process" + CamelCase(property) via getDeclaredMethod
+-keep class cz.vutbr.web.domassign.DeclarationTransformerImpl {
+    public static *** getInstance();
+    private boolean process*(cz.vutbr.web.css.Declaration, java.util.Map, java.util.Map);
+}
+# CSSToken.TypeMapper reads the ANTLR token type constants by field name
+-keepclassmembers class cz.vutbr.web.csskit.antlr4.** {
+    public static final int *;
+}
+
+# Avoid fragment obfuscation/shrinking because some are instantiated by class name
+# (Preference XML app:fragment, FragmentManager reflection, deep links, etc.).
+-keep class * extends androidx.fragment.app.Fragment {
+     public <init>();
+}
+
+-assumenosideeffects class kotlin.jvm.internal.Intrinsics {
+    public static void check*(...);
+    public static void throw*(...);
+}
+-assumenosideeffects class android.util.Log {
+    public static *** v(...);
+    public static *** d(...);
+}
+
+# Fork resources and features are also accessed by name and reflection.
 # (R fields are accessed and rewritten via reflection)
 -keep class com.freeteaspoon.wppenhacer.R { *; }
 -keep class com.freeteaspoon.wppenhacer.R$* { *; }
@@ -43,7 +87,5 @@
 -keepclasseswithmembers class com.assemblyai.api.** {
      *;
 }
-# YukiHookAPI & Xposed Init entrypoints
--keep class com.highcapable.yukihookapi.** { *; }
+
 -keep class io.github.libxposed.** { *; }
--keep class com.freeteaspoon.wppenhacer.WppXposed* { *; }

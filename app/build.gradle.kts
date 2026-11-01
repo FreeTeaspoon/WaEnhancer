@@ -143,6 +143,10 @@ android {
     }
 
     androidResources.additionalParameters += listOf("--allow-reserved-package-id", "--package-id", "0x64")
+    // Ship only the languages the app is translated to; libraries bring ~90 others
+    androidResources.localeFilters += listOf(
+        "en", "ar", "de", "es", "fr", "id", "in", "it", "iw", "pt", "ru", "tr", "zh"
+    )
 
 }
 
@@ -185,7 +189,7 @@ dependencies {
     debugImplementation("androidx.concurrent:concurrent-futures:1.2.0")
 
     implementation(libs.colorpicker)
-    implementation(files("libs/dexkit-android.aar"))
+    implementation(libs.dexkit)
     implementation(libs.flatbuffers)
     compileOnly(libs.libxposed.api)
     implementation(platform(libs.yukihook.bom))

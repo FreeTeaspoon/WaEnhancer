@@ -43,13 +43,19 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Business Release
-        run: ./gradlew assembleBusinessDebug -Pminify=true
+        run: ./gradlew assembleBusinessRelease
 
       - name: Verify Xposed module metadata
-        run: python3 scripts/verify-xposed-apk.py app/build/outputs/apk/business/debug/*.apk
+        run: python3 scripts/verify-xposed-apk.py app/build/outputs/apk/business/release/*.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v7
         with:
           name: WaEnhancer-Business
-          path: app/build/outputs/apk/business/debug/WaEnhancer-Business*.apk
+          path: app/build/outputs/apk/business/release/WaEnhancer-Business*.apk
+
+      - name: Upload Proguard mapping
+        uses: actions/upload-artifact@v7
+        with:
+          name: WaEnhancer-Business-mapping
+          path: app/build/outputs/mapping/businessRelease/mapping.txt

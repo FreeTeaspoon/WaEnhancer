@@ -27,16 +27,21 @@ WhatsApp UI is deliberately outside this migration.
 
 ## Xposed runtime, 1.6.5
 
-The fork tracks upstream `f4a8da1e` and uses YukiHookAPI `1.5.0-beta.13` with
+The fork tracks upstream `36c22aed` and uses YukiHookAPI `1.5.0` with
 the libxposed runtime. The generated module metadata requires framework API
 101. The compile-only libxposed artifact is `102.0.0`, as pinned upstream.
 Legacy Xposed 82 is no longer a supported runtime.
 
-Keep the `repo/` Maven artifacts and repository declaration. KSP generates
+YukiHookAPI and DexKit now resolve from their official Maven artifacts. KSP generates
 `META-INF/xposed/java_init.list`, `scope.list` and `module.prop`. Do not exclude
 `META-INF/**` or restore the legacy source entry assets. Run
 `python3 scripts/verify-xposed-apk.py <apk>...` after packaging, including
 minified builds. All build and release workflows run this check.
+
+Keep the fork's version numbering, release signing configuration and disabled resource
+shrinking. Injected resources and fork features still use reflection, so retain their
+keep rules when adopting upstream shrinker changes. The diagnostics screen exposes
+both the HMA and Magisk DenyList repair actions, with confirmation before each repair.
 
 `App` extends `ModuleApplication`, restores `PreferenceSnapshot` before starting
 its retained `RemotePreferencesSync`, and mirrors the existing AndroidX settings

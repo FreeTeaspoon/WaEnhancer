@@ -1,12 +1,28 @@
 WaEnhancer 1.6.5
 
+[IMPROVED]
+* Faster WhatsApp startup: DexKit is now opened only when needed and closed when idle
+* Smoother scrolling and tab switching, with less work done in the theme, custom view and resource hooks
+* IG Status no longer rebuilds the status header and reloads profile photos on every update, removing stutters when opening chats and switching tabs
+* Floating Bottom Bar no longer forces extra layout passes
+* The custom wallpaper now shows on the first Home frame
+* The module connection no longer opens a helper screen when the first attempt succeeds
+
+[FIXED]
+* Fixed Send Blue Tick sending hundreds of messages at once in chats with many hidden receipts;
+* Fixed Send Blue Tick retrying messages that could no longer be found every time a chat was opened
+* Fixed a crash in Locked Chats Enhancer on newer WhatsApp versions
+* Fixed Locked Chats Enhancer showing only locked contacts in the contact list instead of hiding them
+
 [UPDATED]
-* Merged upstream through f4a8da1e.
-* Migrated to YukiHookAPI 1.5.0-beta.13 and libxposed API 101.
+* Merged upstream through 36c22aed.
+* Migrated to YukiHookAPI 1.5.0 and libxposed API 101.
 * Ported the fork's home camera, floating button, bottom navigation and Calls menu hooks to the new runtime.
 * Preserved the Miuix manager, settings recovery, fork package IDs and update URLs.
 
 [NEW]
+* Added an option to hide delivered receipts for unknown numbers.
+* Root diagnostics can detect and fix Magisk DenyList blocks.
 * Deleted messages can be captured, viewed and restored from the WhatsApp home menu behind device authentication.
 * Root diagnostics can fix Hide My App List blocks, including whitelist mode.
 * Added a setting to disable the document scanner.

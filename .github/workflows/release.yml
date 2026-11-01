@@ -72,6 +72,14 @@ jobs:
             app/build/outputs/apk/business/release/WaEnhancer-Business*.apk
           tag_name: ${{ steps.vars.outputs.tag }}
 
+      - name: Upload Proguard mappings
+        uses: actions/upload-artifact@v7
+        with:
+          name: proguard-mappings-${{ steps.vars.outputs.tag }}
+          path: |
+            app/build/outputs/mapping/whatsappRelease/mapping.txt
+            app/build/outputs/mapping/businessRelease/mapping.txt
+
       - name: Read changelog
         id: changelog
         uses: actions/github-script@v9

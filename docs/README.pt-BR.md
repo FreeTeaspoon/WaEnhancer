@@ -140,7 +140,7 @@
 2. Instale um framework Xposed com suporte à API 101 do libxposed. A versão 1.6.5 deste fork exige Android 13 ou superior e não oferece suporte ao Xposed legado de API 82.
 3. Baixe o WaEnhancer em [GitHub Releases](https://github.com/FreeTeaspoon/WaEnhancer/releases/latest).
 4. Instale o APK do WaEnhancer.
-5. Ative o módulo WaEnhancer no aplicativo Xposed Installer(LSPosed).
+5. Ative o módulo WaEnhancer no gerenciador do Vector ou do LSPosed.
 
 ## Suporte
 Se você encontrar algum problema ou tiver dúvidas sobre o WaEnhancer, por favor [Visite o Telegram](https://t.me/waenhancer).

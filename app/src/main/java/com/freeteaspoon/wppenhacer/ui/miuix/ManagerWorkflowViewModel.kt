@@ -30,6 +30,8 @@ internal class ManagerWorkflowViewModel(app: Application) : AndroidViewModel(app
     val diagnostics = _diagnostics.asStateFlow()
     private val _hmaFixRunning = MutableStateFlow(false)
     val hmaFixRunning = _hmaFixRunning.asStateFlow()
+    private val _denylistFixRunning = MutableStateFlow(false)
+    val denylistFixRunning = _denylistFixRunning.asStateFlow()
     private val _hmaRestartRequired = MutableStateFlow(false)
     val hmaRestartRequired = _hmaRestartRequired.asStateFlow()
 
@@ -150,6 +152,29 @@ internal class ManagerWorkflowViewModel(app: Application) : AndroidViewModel(app
             ManagerSnackbarEvents.tryShow(app.getString(R.string.diag_hma_fix_failed))
         } finally {
             _hmaFixRunning.value = false
+            diagnosticsLock.unlock()
+        }
+    }
+
+    fun fixMagiskDenylist(): Job = viewModelScope.launch {
+        if (!diagnosticsLock.tryLock()) return@launch
+        _denylistFixRunning.value = true
+        val app = getApplication<Application>()
+        try {
+            val result = withContext(Dispatchers.IO) { RootDiagnostics.fixMagiskDenylist(app) { } }
+            val message = when (result) {
+                RootDiagnostics.FixResult.FIXED -> R.string.diag_denylist_fix_done
+                RootDiagnostics.FixResult.NOTHING_TO_FIX -> R.string.diag_denylist_fix_nothing
+                RootDiagnostics.FixResult.FAILED -> R.string.diag_denylist_fix_failed
+            }
+            ManagerSnackbarEvents.tryShow(app.getString(message))
+            val logs = withContext(Dispatchers.IO) { RootDiagnostics.collectDiagnostics(app) }
+            _diagnostics.value = ManagerLoadState(content = logs)
+        } catch (cancel: CancellationException) { throw cancel
+        } catch (_: Exception) {
+            ManagerSnackbarEvents.tryShow(app.getString(R.string.diag_denylist_fix_failed))
+        } finally {
+            _denylistFixRunning.value = false
             diagnosticsLock.unlock()
         }
     }

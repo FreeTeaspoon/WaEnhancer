@@ -33,8 +33,9 @@ internal fun themeFolder(name: String): File {
 internal fun loadThemeFolders(): List<File> {
     val root = ThemePreference.rootDirectory
     check(root.isDirectory || root.mkdirs())
-    return root.listFiles(File::isDirectory)?.filter { File(it, "style.css").isFile }
-        .orEmpty().sortedBy(File::getName)
+    recoverThemeImports(root)
+    return checkNotNull(root.listFiles(File::isDirectory)) { "Unable to read theme directory" }
+        .filter { File(it, "style.css").isFile }.sortedBy(File::getName)
 }
 
 internal fun exportThemeArchive(context: Context, folder: File, uri: Uri) {
@@ -88,10 +89,102 @@ internal fun importThemeArchive(context: Context, uri: Uri) {
         } }
         val folders = staging.listFiles(File::isDirectory).orEmpty()
         require(folders.isNotEmpty() && folders.all { validThemeName(it.name) && File(it, "style.css").isFile }) { "No valid theme in archive" }
-        // Validate the complete archive before overwriting any installed theme.
-        folders.forEach { folder ->
-            val destination = themeFolder(folder.name)
-            check(folder.copyRecursively(destination, overwrite = true))
-        }
+        commitThemeFolders(root, folders.toList())
     } finally { staging.deleteRecursively() }
+}
+
+/** Journaled, same-filesystem renames. An interrupted batch rolls back on the next scan. */
+internal fun commitThemeFolders(root: File, folders: List<File>, beforeInstall: (String) -> Unit = {}) {
+    recoverThemeImports(root)
+    val transaction = java.nio.file.Files.createTempDirectory(root.toPath(), ".waenhancer-import-").toFile()
+    java.io.FileOutputStream(File(transaction, "transaction-v1")).use { out ->
+        out.write("WaEnhancer theme import".toByteArray()); out.fd.sync()
+    }
+    val incoming = File(transaction, "new").apply { check(mkdirs()) }
+    val backup = File(transaction, "old").apply { check(mkdirs()) }
+    try {
+        folders.forEach { check(it.copyRecursively(File(incoming, it.name))) }
+        // Base64 keeps names containing newlines intact in the journal.
+        val names = folders.joinToString("\n") { java.util.Base64.getEncoder().encodeToString(it.name.toByteArray(Charsets.UTF_8)) }
+        java.io.FileOutputStream(File(transaction, "names")).use { out -> out.write(names.toByteArray()); out.fd.sync() }
+        folders.forEach { folder ->
+            val destination = File(root, folder.name)
+            if (destination.exists()) check(destination.renameTo(File(backup, folder.name)))
+            beforeInstall(folder.name)
+            check(File(incoming, folder.name).renameTo(destination))
+        }
+        java.io.FileOutputStream(File(transaction, "committed")).use { it.fd.sync() }
+    } finally { recoverThemeImports(root) }
+}
+
+internal fun recoverThemeImports(root: File) {
+    val transactions = checkNotNull(root.listFiles { file -> file.isDirectory && file.name.startsWith(".waenhancer-import-") &&
+        !File(file, "style.css").exists() && File(file, "transaction-v1").isFile &&
+        File(file, "transaction-v1").readText() == "WaEnhancer theme import" }) { "Unable to read theme directory" }
+    transactions.forEach { transaction ->
+        val journal = File(transaction, "names")
+        if (!File(transaction, "committed").exists() && journal.isFile) {
+            journal.readLines().filter(String::isNotBlank).forEach { encoded ->
+                val name = String(java.util.Base64.getDecoder().decode(encoded), Charsets.UTF_8)
+                require(validThemeName(name))
+                val destination = File(root, name)
+                val old = File(transaction, "old/$name")
+                val pending = File(transaction, "new/$name")
+                if (old.exists()) {
+                    check(pending.parentFile!!.isDirectory || pending.parentFile!!.mkdirs())
+                    // Preserve a pending marker before restoring the backup, so recovery can
+                    // itself be interrupted and repeated without deleting the restored theme.
+                    check(!pending.exists() || pending.deleteRecursively())
+                    check(!destination.exists() || destination.renameTo(pending))
+                    if (!pending.exists()) check(pending.mkdirs())
+                    check(old.renameTo(destination))
+                } else if (!pending.exists() && destination.exists()) {
+                    pending.parentFile?.mkdirs()
+                    check(destination.renameTo(pending))
+                }
+            }
+        }
+        // Rename before recursive cleanup. A crash while deleting the journal must
+        // never turn a committed or already restored batch back into a rollback.
+        val garbage = File(root, ".waenhancer-cleanup-${java.util.UUID.randomUUID()}")
+        check(transaction.renameTo(garbage)) { "Unable to finish theme transaction" }
+        check(garbage.deleteRecursively()) { "Unable to clean theme transaction" }
+    }
+}
+
+internal fun parsePreferenceXml(input: InputStream): String {
+    val buffer = java.io.ByteArrayOutputStream()
+    val chunk = ByteArray(8192)
+    while (buffer.size() <= 2 * 1024 * 1024) {
+        val count = input.read(chunk, 0, minOf(chunk.size, 2 * 1024 * 1024 + 1 - buffer.size()))
+        if (count < 0) break
+        buffer.write(chunk, 0, count)
+    }
+    val bytes = buffer.toByteArray()
+    require(bytes.size <= 2 * 1024 * 1024) { "XML document exceeds 2 MB" }
+    // Android's DOM factory does not implement every Xerces security feature.
+    // Reject declarations before parsing, including UTF-16/32 byte encodings.
+    val declarations = bytes.filter { it != 0.toByte() }.toByteArray().toString(Charsets.ISO_8859_1)
+    if (declarations.contains("<!DOCTYPE", ignoreCase = true)) throw org.xml.sax.SAXException("Document types are not allowed")
+    val factory = javax.xml.parsers.DocumentBuilderFactory.newInstance().apply {
+        isExpandEntityReferences = false
+    }
+    val builder = factory.newDocumentBuilder().apply {
+        setEntityResolver { _, _ -> throw org.xml.sax.SAXException("External entities are not allowed") }
+    }
+    val document = builder.parse(bytes.inputStream())
+    if (document.doctype != null) throw org.xml.sax.SAXException("Document types are not allowed")
+    document.documentElement.normalize()
+    val writer = java.io.StringWriter()
+    javax.xml.transform.TransformerFactory.newInstance().newTransformer().transform(
+        javax.xml.transform.dom.DOMSource(document), javax.xml.transform.stream.StreamResult(writer))
+    return writer.toString()
+}
+
+internal fun validateOutputDirectory(path: String) {
+    require(path.startsWith("/") && !path.contains('\u0000')) { "Enter an absolute directory path" }
+    val directory = File(path)
+    require(directory.isDirectory && directory.canRead()) { "Select an existing readable directory" }
+    val probe = File.createTempFile(".waenhancer-", ".tmp", directory)
+    check(probe.delete()) { "Unable to write to this directory" }
 }

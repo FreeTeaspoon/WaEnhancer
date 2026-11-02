@@ -63,6 +63,7 @@
 
         <activity
             android:name=".ui.miuix.MiuixMainActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/NoActionBarTheme">

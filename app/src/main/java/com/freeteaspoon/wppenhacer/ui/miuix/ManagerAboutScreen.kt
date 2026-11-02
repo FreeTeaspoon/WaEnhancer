@@ -171,25 +171,39 @@ private fun AboutScreenContent(
                 progressive = true,
                 scrollBehavior = scrollBehavior
             ) {
-                SmallTopAppBar(
-                    modifier = Modifier.windowInsetsPadding(
-                        WindowInsets.displayCutout.union(WindowInsets.navigationBars).only(WindowInsetsSides.Horizontal),
-                    ),
-                    title = state.title,
-                    color = barColor,
-                    titleColor = MiuixTheme.colorScheme.onSurface.copy(alpha = titleAlpha),
-                    navigationIcon = { top.yukonga.miuix.kmp.basic.IconButton(onClick = actions.onBack) {
-                        top.yukonga.miuix.kmp.basic.Icon(top.yukonga.miuix.kmp.icon.MiuixIcons.Back, stringResource(R.string.manager_back),
-                            Modifier.graphicsLayer { scaleX = if (layoutDirection == androidx.compose.ui.unit.LayoutDirection.Rtl) -1f else 1f })
-                    } },
-                    scrollBehavior = scrollBehavior,
-                    actions = {
-                        top.yukonga.miuix.kmp.menu.OverlayIconDropdownMenu(entry = top.yukonga.miuix.kmp.basic.DropdownEntry(listOf(
-                            top.yukonga.miuix.kmp.basic.DropdownItem(stringResource(R.string.manager_credits), onClick = actions.onCredits)
-                        ))) { top.yukonga.miuix.kmp.basic.Icon(MiuixIcons.More, stringResource(R.string.manager_more)) }
-                    },
-                    defaultWindowInsetsPadding = false
-                )
+                Box {
+                    SmallTopAppBar(
+                        modifier = Modifier.windowInsetsPadding(
+                            WindowInsets.displayCutout.union(WindowInsets.navigationBars).only(WindowInsetsSides.Horizontal),
+                        ),
+                        title = "",
+                        color = barColor,
+                        titleColor = MiuixTheme.colorScheme.onSurface,
+                        navigationIcon = { top.yukonga.miuix.kmp.basic.IconButton(onClick = actions.onBack) {
+                            top.yukonga.miuix.kmp.basic.Icon(top.yukonga.miuix.kmp.icon.MiuixIcons.Back, stringResource(R.string.manager_back),
+                                Modifier.graphicsLayer { scaleX = if (layoutDirection == androidx.compose.ui.unit.LayoutDirection.Rtl) -1f else 1f })
+                        } },
+                        scrollBehavior = scrollBehavior,
+                        actions = {
+                            top.yukonga.miuix.kmp.menu.OverlayIconDropdownMenu(entry = top.yukonga.miuix.kmp.basic.DropdownEntry(listOf(
+                                top.yukonga.miuix.kmp.basic.DropdownItem(stringResource(R.string.manager_credits), onClick = actions.onCredits)
+                            ))) { top.yukonga.miuix.kmp.basic.Icon(MiuixIcons.More, stringResource(R.string.manager_more)) }
+                        },
+                        defaultWindowInsetsPadding = false
+                    )
+                    Box(Modifier.matchParentSize()
+                        .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)
+                            .union(WindowInsets.displayCutout.union(WindowInsets.navigationBars).only(WindowInsetsSides.Horizontal)))
+                        .height(top.yukonga.miuix.kmp.basic.TopAppBarDefaults.SmallTopAppBarCenterHeight),
+                        contentAlignment = Alignment.TopCenter) {
+                        Box(Modifier.height(top.yukonga.miuix.kmp.basic.TopAppBarDefaults.SmallTopAppBarCenterHeight), contentAlignment = Alignment.Center) {
+                            Text(state.title, style = MiuixTheme.textStyles.title3,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.padding(horizontal = 64.dp).graphicsLayer { alpha = titleAlpha }, maxLines = 1,
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+                        }
+                    }
+                }
             }
         },
         contentWindowInsets = WindowInsets.systemBars
@@ -325,7 +339,7 @@ private fun AboutContent(
                         ),
                     painter = painterResource(R.drawable.manager_about_mark),
                     colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onBackground),
-                    contentDescription = state.appName
+                    contentDescription = null
                 )
             }
             Text(
@@ -468,7 +482,6 @@ private fun staticDependencies(): List<AboutDependency> = listOf(
     "libsu" to "https://github.com/topjohnwu/libsu",
     "DexKit" to "https://github.com/LuckyPray/DexKit",
     "OkHttp" to "https://github.com/square/okhttp",
-    "RemotePreferences" to "https://github.com/apsun/RemotePreferences",
     "AndroidX" to "https://github.com/androidx/androidx",
     "Kotlin" to "https://github.com/JetBrains/kotlin",
     "Prism" to "https://github.com/PrismJS/prism",

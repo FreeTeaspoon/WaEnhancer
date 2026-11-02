@@ -22,7 +22,6 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Notes
 import top.yukonga.miuix.kmp.icon.extended.Refresh
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.squircle.squircleSurface
 import top.yukonga.miuix.kmp.utils.PressFeedbackType
 
 internal enum class ManagerPageStateKind { LOADING, EMPTY, ERROR, CONTENT }
@@ -46,50 +45,44 @@ internal fun ManagerPageStateHost(
         if (target == ManagerPageStateKind.CONTENT) {
             Box(Modifier.fillMaxSize()) { content() }
         } else {
-            Box(Modifier.fillMaxSize().then(stateModifier), contentAlignment = Alignment.Center) {
-                Column(
-                    Modifier.fillMaxSize()
-                        .padding(horizontal = 28.dp, vertical = if (target == ManagerPageStateKind.LOADING) 56.dp else 48.dp)
-                        .semantics(mergeDescendants = true) {
+            Box(
+                Modifier.fillMaxSize().then(stateModifier)
+                    .padding(horizontal = 28.dp, vertical = if (target == ManagerPageStateKind.LOADING) 56.dp else 0.dp),
+                contentAlignment = androidx.compose.ui.BiasAlignment(0f, -0.12f),
+            ) {
+                Column(Modifier.widthIn(max = 320.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        Modifier.semantics(mergeDescendants = true) {
                             contentDescription = listOf(title, message).filter(String::isNotBlank).joinToString(". ")
                         },
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    if (target == ManagerPageStateKind.LOADING) {
-                        InfiniteProgressIndicator(size = 20.dp)
-                        Spacer(Modifier.height(10.dp))
-                        Text(title, style = MiuixTheme.textStyles.body1, fontWeight = FontWeight.Normal, textAlign = TextAlign.Center)
-                    } else if (target == ManagerPageStateKind.EMPTY) {
-                        val muted = MiuixTheme.colorScheme.onSurfaceVariantSummary
-                        Box(
-                            Modifier.size(48.dp).squircleSurface(
-                                color = muted.copy(alpha = if (LocalManagerDarkMode.current) 0.38f else 0.23f),
-                                cornerRadius = 12.dp,
-                            ),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Icon(MiuixIcons.Notes, null, Modifier.size(27.dp), tint = MiuixTheme.colorScheme.surface)
-                        }
-                        Spacer(Modifier.height(18.dp))
-                        Text(title, fontSize = 15.sp, fontWeight = FontWeight.Normal, color = muted, textAlign = TextAlign.Center)
-                    } else {
-                        Icon(
-                            MiuixIcons.Refresh,
-                            null,
-                            Modifier.size(30.dp),
-                            tint = MiuixTheme.colorScheme.primary,
-                        )
-                        Spacer(Modifier.height(18.dp))
-                        Text(title, style = MiuixTheme.textStyles.title2, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
-                        if (target == ManagerPageStateKind.ERROR) {
-                            Spacer(Modifier.height(6.dp))
-                            Text(message, style = MiuixTheme.textStyles.body1, color = MiuixTheme.colorScheme.onSurfaceVariantSummary, textAlign = TextAlign.Center)
-                            onRetry?.let { retry ->
-                                Spacer(Modifier.height(18.dp))
-                                TextButton(stringResource(R.string.manager_try_again), retry, colors = ButtonDefaults.textButtonColorsPrimary())
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        if (target == ManagerPageStateKind.LOADING) {
+                            InfiniteProgressIndicator(size = 20.dp)
+                            Spacer(Modifier.height(10.dp))
+                            Text(title, style = MiuixTheme.textStyles.body1, fontWeight = FontWeight.Normal, textAlign = TextAlign.Center)
+                        } else {
+                            Icon(if (target == ManagerPageStateKind.EMPTY) MiuixIcons.Notes else MiuixIcons.Refresh,
+                                null, Modifier.size(36.dp), tint = MiuixTheme.colorScheme.onSurfaceVariantSummary.copy(alpha = 0.7f))
+                            Spacer(Modifier.height(18.dp))
+                            Text(title, fontSize = 15.sp, fontWeight = FontWeight.Medium,
+                                color = MiuixTheme.colorScheme.onSurface, textAlign = TextAlign.Center)
+                            if (message.isNotBlank()) {
+                                Spacer(Modifier.height(7.dp))
+                                Text(message, fontSize = 13.sp, fontWeight = FontWeight.Normal,
+                                    color = MiuixTheme.colorScheme.onSurfaceVariantSummary, textAlign = TextAlign.Center)
                             }
                         }
+                    }
+                    if (target == ManagerPageStateKind.ERROR && onRetry != null) {
+                        Spacer(Modifier.height(10.dp))
+                        TextButton(stringResource(R.string.manager_try_again), onRetry,
+                            colors = ButtonDefaults.textButtonColors(
+                                color = androidx.compose.ui.graphics.Color.Transparent,
+                                disabledColor = androidx.compose.ui.graphics.Color.Transparent,
+                                textColor = MiuixTheme.colorScheme.primary),
+                            insideMargin = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                            textStyle = MiuixTheme.textStyles.footnote1.copy(fontSize = 13.sp, fontWeight = FontWeight.Normal))
                     }
                 }
             }

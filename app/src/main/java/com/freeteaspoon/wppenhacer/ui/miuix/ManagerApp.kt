@@ -1,5 +1,7 @@
 package com.freeteaspoon.wppenhacer.ui.miuix
 
+import kotlinx.coroutines.launch
+import androidx.compose.foundation.layout.*
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -71,13 +73,14 @@ internal fun WaEnhancerManagerApp(
             ManagerSnackbarEvents.register()
             try {
                 ManagerSnackbarEvents.events.collect { message ->
-                    snackbarHostState.showSnackbar(message)
+                    launch { snackbarHostState.showSnackbar(message) }
                 }
             } finally {
                 ManagerSnackbarEvents.unregister()
             }
         }
         Scaffold(
+            contentWindowInsets = WindowInsets.systemBars.union(WindowInsets.displayCutout).union(WindowInsets.ime),
             snackbarHost = {
                 if (routeStack.lastOrNull() != ManagerStackRoute.Root) {
                     SnackbarHost(state = snackbarHostState)

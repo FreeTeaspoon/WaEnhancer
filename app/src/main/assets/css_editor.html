@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{theme}}">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+        :root { color-scheme: light; --editor-background: {{editorBackground}}; --editor-text: {{editorText}}; }
+        :root[data-theme="dark"] { color-scheme: dark; }
         * {
             margin: 0;
             padding: 0;
@@ -12,7 +14,7 @@
         html, body{
             height: 100vh;
             width: 100%;
-            background: #2d2d2d;
+            background: var(--editor-background);
             overflow: hidden;
         }
         label { display: none; }
@@ -23,9 +25,17 @@
     <link href="www/prism.css" rel="stylesheet"/>
     <link href="www/prism-live.css" rel="stylesheet">
     <style>
+        pre[class*="language-"], code[class*="language-"] { background: var(--editor-background) !important; color: var(--editor-text); text-shadow: none !important; }
+        :root[data-theme="light"] .token { color: #385c90; }
+        :root[data-theme="light"] .token.comment { color: #62676f; }
+        :root[data-theme="light"] .token.punctuation { color: var(--editor-text); }
+        :root[data-theme="light"] .token.property { color: #77530b; }
+        :root[data-theme="light"] .token.selector { color: #80448a; }
+        :root[data-theme="light"] .token.string { color: #276d43; }
+        :root[data-theme="light"] .token.number { color: #99501c; }
         textarea.prism-live:not(.prism-live-source) {
-            color: #f8f8f2;
-            caret-color: #f8f8f2;
+            color: var(--editor-text);
+            caret-color: var(--editor-text);
             font-family: monospace;
         }
     </style>
@@ -34,7 +44,7 @@
 </head>
 <body>
 <label for="code"></label>
-<textarea class="prism-live language-css fill" id="code"
+<textarea class="prism-live language-css fill" id="code" aria-label="{{editorLabel}}"
           style="--height: 100vh">{{content}}</textarea>
 <script type="text/javascript">
     document.getElementById('code').addEventListener('input', function () {

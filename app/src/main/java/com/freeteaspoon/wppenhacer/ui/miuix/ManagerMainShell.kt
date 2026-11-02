@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -124,6 +126,7 @@ internal fun ManagerMainShell(
             LaunchedEffect(expanded) { if (expanded) rail.expand() else rail.collapse() }
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
+                contentWindowInsets = WindowInsets.systemBars.union(WindowInsets.displayCutout).union(WindowInsets.ime),
                 snackbarHost = { SnackbarHost(state = snackbarHostState) },
             ) { _ ->
                 Row(Modifier.fillMaxSize().background(MiuixTheme.colorScheme.surface)) {
@@ -148,6 +151,7 @@ internal fun ManagerMainShell(
             val appearance = state.appearance
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
+                contentWindowInsets = WindowInsets.systemBars.union(WindowInsets.displayCutout).union(WindowInsets.ime),
                 snackbarHost = { SnackbarHost(state = snackbarHostState) },
                 bottomBar = {
                     when {

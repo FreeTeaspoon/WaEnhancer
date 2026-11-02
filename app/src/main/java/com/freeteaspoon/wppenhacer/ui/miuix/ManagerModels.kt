@@ -127,15 +127,15 @@ internal data class PreferenceGroup(
     val preferences: List<PreferenceSpec>,
 )
 
-// Each group renders an optional heading and one native card containing its rows.
+// Each grouped preference is an independently keyed lazy row.
 internal fun List<PreferenceGroup>.preferenceItemIndex(key: String?): Int {
     if (key == null) return -1
     var index = 0
     val headings = size > 1
     for (group in this) {
         val row = group.preferences.indexOfFirst { it.key == key }
-        if (row >= 0) return index + (if (headings) 1 else 0)
-        index += 1 + if (headings) 1 else 0
+        if (row >= 0) return index + row + (if (headings) 1 else 0)
+        index += group.preferences.size + if (headings) 1 else 0
     }
     return -1
 }
@@ -260,7 +260,10 @@ internal data class ManagerUiState(
 }
 
 internal fun preferenceRoute(specs: List<PreferenceSpec>, spec: PreferenceSpec): ManagerRoute {
-    val master = spec.dependency ?: spec.key.takeIf { key -> specs.any { it.dependency == key } }
+    val master = preferenceFeatureOwner(spec.key) ?: spec.dependency ?: spec.key.takeIf { key -> specs.any { it.dependency == key } }
     return if (master != null) ManagerRoute.PreferenceFeature(spec.source, master, spec.key)
         else ManagerRoute.PreferencePage(spec.source, spec.key)
 }
+
+internal val callBlockingKeys = setOf("call_privacy", "call_type", "call_block_contacts", "call_white_contacts")
+internal fun preferenceFeatureOwner(key: String): String? = if (key in callBlockingKeys) "call_privacy" else null

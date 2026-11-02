@@ -1,221 +1,169 @@
-# HyperOS manager audit
+# HyperOS manager audit and fixes
 
-Audited on 2026-10-05, completed on 2026-10-06 using `hyperos-android-app-builder`, including its design,
-page spacing, Appearance/About and verification contracts. Scope is this
-WaEnhancer checkout, both existing product flavors. The app remains an Xposed
-module with the same application IDs, preference keys, file formats and hook
-capabilities.
+Updated 2026-11-02 against the `hyperos-android-app-builder` skill. This report
+supersedes the October parity report. It covers the 71 source findings from the
+November audit, including workflow bugs, data recovery, accessibility and UI
+contract differences. Source changes do not establish device or visual parity.
 
-## Screen inventory
+The starting application revision was `f4dcf9c5e870e0244db1549c074f290baf62096e`.
+The Miuix source profile remains `2afdbb39f1aac5747165cc354cafd4b918fa55a5`, based
+on v0.9.4 with reference pager fixes. This task does not upgrade dependencies
+or claim this profile is the newest stable Miuix release.
 
-| Screen | Changes or preserved behavior |
-| --- | --- |
-| Home | Existing fork dashboard and module status retained; native card feedback and 6 dp card gaps; shared safe-area ownership. |
-| Features and Search | Fixed search above results; remaining-viewport empty state accounts for IME; typed search destinations; native grouped cards. |
-| General, Home screen, Conversation, Status, Privacy, Media, Customize | Registry still reads all seven upstream XML files; headings only when multiple groups; common cards, validated value dialogs, preserved dependency and mutual-exclusion behavior. |
-| Dependent feature pages | Typed routes for color, wallpaper, filters/CSS, bubble colors, floating bar, bootloader customization, read receipt options, double-tap, video quality, call recording and transcription groups. Parent rows show On/Off. |
-| File imports | Native storage-permission recovery before copying into the existing public folder; XML string imports need no shared-storage permission; failed copies preserve the previous file. |
-| Tools | Native destination/action rows; battery permission state refreshes on resume. |
-| Appearance | ThemeController, system bars, Monet conditions, full-width layout, validated 80–110 percent scale dialog, native menus and animated conditional rows. |
-| About | Actual launcher silhouette; Language Selector OS3 background and measured fixed hero; progressive top bar; one glass dependency card. |
-| Credits | Typed child route preserving all contributor links, GPL and support links. |
-| Configuration | First tip, concise import/export rows, separate destructive Reset card, confirmations, ViewModel operation lock and snackbar feedback. |
-| Updates | Complete asynchronous result, first-load/error states, native refresh retaining prior content. |
-| Diagnostics | Whole result published after checks finish; centred result and full-width Back; refreshing preserves the previous result. |
-| Call recording mode | Native choice menu; authoritative root check and serialized selection. |
-| Recordings and contact detail | Storage permission recovery, retained refresh content, stable keys, top-bar share/delete/overflow, selection, confirmation and a real contact child route. |
-| Themes | Storage recovery, first tip, native entity rows, validated creation, confirmed archive replacement, retained model state. |
-| Theme editor | Real full-viewport WebView; Save and overflow Apply/Clear/Export; Clear confirmation, atomic writes, draft retained during activity recreation. |
-| Crash report | Existing selectable report and sharing retained; native copy icon and snackbar. |
+## Findings addressed
 
-All scrolling child pages use the shared detail scaffold. It owns adaptive bars,
-880 dp ordinary content width, horizontal cutout safety, Miuix overscroll and
-haptics, page-start classification, refresh geometry and collapsed-title
-correction. Appearance and About keep their explicit width/hero exceptions.
-Native `IconButton` geometry is preserved.
+Paths below refer to `app/src/main/java/com/freeteaspoon/wppenhacer/ui/miuix/`
+unless a different directory is named.
 
-The shared empty-state host uses the required 48 dp muted squircle, 12 dp
-corners, 27 dp Notes icon, 18 dp gap and regular 15 sp title. The squircle
-uses summary-color alpha 0.23 in light mode and 0.38 in dark mode. Explanations
-remain in the merged accessibility description, while error pages retain
-their separate Refresh icon, message and available retry action.
+| ID | Finding | Implementation |
+| --- | --- | --- |
+| 1 | Missing Magisk DenyList check | `utils/RootDiagnostics.kt` includes the check in collected diagnostics. |
+| 2 | Missing editor image import | `SpecialScreens.kt` restores image selection, PNG naming and replacement confirmation copy; `ManagerFileWorkflowViewModel.kt` decodes and atomically writes the image. |
+| 3 | Contact selection chooses the first host | `PreferenceScreens.kt` offers an explicit WhatsApp/Business selector. |
+| 4 | Contact-picker failures escape | Picker construction and launch failures report feedback. |
+| 5 | Download switches bypass permissions | The page requests all-files access; `PreferenceController.kt` also rejects enabling without access. |
+| 6 | File MIME filters are discarded | Page-owned launchers retain each preference's configured types. |
+| 7 | Unchecked XML import | `ManagerFileRepository.kt` validates and normalizes bounded XML, rejects document types and external entities before committing. |
+| 8 | Unusable directory paths accepted | Paths are checked off the UI thread for existence, readability and an actual write/delete probe before saving. |
+| 9 | Contact summaries expose raw identifiers | Summaries use a localized selected-contact count or empty label. |
+| 10 | Call-blocking controls remain on the parent | `ManagerModels.kt` and `PreferenceScreens.kt` group all four controls on one feature route. |
+| 11 | Theme scans race mutations | Theme scans and file operations share a mutex; confirmed mutations publish reconciled lists. |
+| 12 | Theme archive replacement can corrupt existing data | `ManagerFileRepository.kt` stages archives, journals same-filesystem folder renames, and recovers interrupted batches. Recovery is repeatable and preserves transaction-like user theme names. |
+| 13 | Unreadable themes appear empty | A failed directory listing becomes an error while cached content remains available. |
+| 14 | Unsaved CSS is lost on process recreation | Private atomic draft files restore unsaved input; accepted writes finish when the route leaves. |
+| 15 | Growing lists compose eagerly | `managerGroupedCardItems` emits independent lazy rows, including themes, recordings, contacts and search results. |
+| 16 | Growing rows lack lazy identity | Every row has a stable group/row key and row content type. Search positioning counts real lazy items. |
+| 17 | Growing rows lack mutation motion | Each row uses Miuix spring insertion, removal and placement animation. |
+| 18 | Installed-app queries run in composition | `ManagerRestartAction.kt` loads and caches installed packages off the UI thread. |
+| 19 | Editor assets load during view creation | The model reads the template on the IO dispatcher before WebView creation. |
+| 20 | Theme-name validation performs synchronous IO | Validation uses the loaded theme snapshot; creation checks the real filesystem under the operation lock. |
+| 21 | Message states are exactly centered | `ManagerPageStates.kt` uses `BiasAlignment(0f, -0.12f)`. |
+| 22 | Message states reserve extra vertical space | Empty/error states use no vertical reserve; loading keeps 56 dp. |
+| 23 | Messages have no width cap | The group is capped at 320 dp. |
+| 24 | Empty artwork uses the old tile | The shared state uses a bare 36 dp muted Notes icon. |
+| 25 | Empty title has the wrong style | The title is 15 sp, medium, onSurface. |
+| 26 | Empty hints are visually absent | Useful hints render at 13 sp with a 7 dp gap. |
+| 27 | Error artwork has the wrong size/color | Error uses the same bare 36 dp muted icon treatment. |
+| 28 | Error title has the wrong style | Error uses the shared 15 sp medium title. |
+| 29 | Error hint has the wrong style/gap | Error uses 13 sp regular muted text and a 7 dp gap. |
+| 30 | Retry action has excess separation | Hint-to-action spacing is 10 dp. |
+| 31 | Retry is a filled primary button | Retry uses transparent normal/disabled backgrounds, 13 sp primary text, 16/8 dp margins and native minimum touch height. |
+| 32 | Retry merges with message semantics | Retry is a separate accessible action outside the message group. |
+| 33 | Empty/error refresh has no scroll path | `ManagerDesignSystem.kt` retains a scrollable lazy host and viewport-sized state item for empty/error results. |
+| 34 | Search is pinned | `ManagerSearchContent.kt` puts search in the same lazy host as its results. |
+| 35 | Search-to-result spacing is 18 dp | The control owns the single 6 dp gap; page entry remains 12 dp. |
+| 36 | Interrupted navigation can draw two scrims | The Miuix patch assigns ownership to the last visible entry by identity. A desktop pixel regression exercises pop-then-push interruption. |
+| 37 | Wide windows use device corner radius | `navigation/ManagerStackNavigator.kt` uses device corners below 600 dp and zero above. |
+| 38 | Liquid Glass bottom offsets differ | `liquid/LiquidGlassNavigationBar.kt` uses 12 dp plus the actual inset, including zero. |
+| 39 | Snackbar events serialize | The collector launches a child coroutine for each native snackbar. |
+| 40 | Snackbars can overlap the IME | Root and shell scaffold insets include the IME. |
+| 41 | Ordinary prompts use separate windows | Prompts use native `OverlayDialog`; the patch supplies dialog semantics. |
+| 42 | Destructive confirmations use filled actions | Shared actions support neutral error-colored destructive text beside Cancel. |
+| 43 | Blocking popup geometry differs | `ManagerOperation.kt` provides a titleless 36 dp overlay, horizontal contrasting 24 dp indicator, 8 dp gap and regular body1 status. |
+| 44 | Locked popup moves under predictive Back | The Miuix dialog collector only applies gesture translation/dimming when dismissal is available. Back remains consumed for locked popups. |
+| 45 | Work starts while confirmation exits | Configuration, theme, repair, picker and deletion handoffs run from dismissal completion. |
+| 46 | Busy ownership ends before popup exit | `ManagerOperation` keeps ownership until exit completion, including queued operations and host recreation. |
+| 47 | Blocking operations have no progress host | File preferences, recordings and editor operations use the shared host; operations queue under mutexes. |
+| 48 | Percent suffix lacks the required tint | `ManagerInputDialog.kt` uses onSurfaceVariantActions. |
+| 49 | Interface-scale summary differs | The resource uses the contract wording and 80% - 110% range. |
+| 50 | Invalid inputs lack accessible errors | Validation publishes error semantics and a polite live announcement. |
+| 51 | Restart is a Tools preference row | Relevant settings pages and Tools use a bare top-bar Refresh action. |
+| 52 | Restart lacks confirmation | The prompt names the affected installed hosts and explains the consequence. |
+| 53 | Missing-host restart rows lack disabled semantics | Those rows are removed; restart appears when installed hosts are available. |
+| 54 | Unnecessary page introductions remain | Configuration, Themes and Credits introductory cards are removed. Real error feedback remains. |
+| 55 | Diagnostics uses extra centered repair buttons | Repairs move to top-bar overflow; the result has one full-width Back action. |
+| 56 | Repair adds a spinner to the result | Repairs use the operation overlay while retaining the result. |
+| 57 | Failed diagnostics still claims to be checking | Failure uses the shared load-failed title. |
+| 58 | Failed diagnostics refresh has no feedback | Refresh retains content and reports the error through a snackbar. |
+| 59 | Raw diagnostic output is proportional | Raw entries are explicitly marked and rendered in monospace. |
+| 60 | Call-recording summary overpromises controls | The resource describes recording mode and root availability. |
+| 61 | WebView renderer death has no recovery | `ManagerEditorAssets.kt` handles renderer loss; the editor releases the view and offers Retry with a new instance. |
+| 62 | Editor textarea has no name | The bundled document receives a localized accessible name. |
+| 63 | Editor is permanently dark | The document follows resolved light/dark mode, surface/text colors and a light syntax palette. |
+| 64 | About stage intervals are halved | `HyperOsAboutBackground.kt` uses the full 5/8 second presets. |
+| 65 | Hidden About background still advances | Visibility changes cancel the pending timer/animation until visible again. |
+| 66 | About title alpha recomposes the bar | Alpha is consumed in the title graphics layer. |
+| 67 | About mark duplicates the app name | Decorative artwork has no content description. |
+| 68 | About credits an unused library | RemotePreferences is removed from acknowledgements. |
+| 69 | Crash-report Share is a row | `MiuixCrashReportActivity.kt` places Share in the top bar; Copy remains a row. |
+| 70 | Injected labels use middle-dot separators | `xposed/features/others/GoogleTranslateChatUi.kt` uses colons. |
+| 71 | Audit claims superseded patterns are required | This report replaces the stale compliance claims and separates source fixes from runtime evidence. |
 
-## Navigation and dependencies
+## Reproducible library changes
 
-The root handler observes the immediate pager target outside NavDisplay.
-Programmatic navigation uses `springAnimateToPage`; user paging uses the same
-spring fling profile, `pagerGestureOverride` and its nested-scroll connection.
-Child routes use Miuix NavDisplay and the standard transitions with directional
-swipe-back.
-
-All Miuix modules resolve to the local source profile `2afdbb39`, including
-icons, preferences and blur. Stable tag v0.9.4 resolves to `39c40f99`; the source
-profile adds the reference pager fixes. The former checkout was `ac7802c7` on
-0.9.3. Dialogs, dropdown wrappers, TextField, refresh and backdrop signatures
-were inspected and the app wrappers compiled against the new profile.
-
-Runtime dependency inspection resolves Activity 1.13.0 and NavigationEvent
-1.1.2. `javap` confirms that ComponentActivity implements
-NavigationEventDispatcherOwner. The manifest enables platform Back support.
-The local nav patch consumes all changes during a claimed held swipe, releasing
-ownership when its initiating pointer lifts. Its regression checks both held
-secondary touches and interactive release settle.
-
-The current blur module requires API 33. Minimum SDK therefore changes from 28
-to 33; target SDK remains 34 and compile SDK remains 37. No manifest floor
-override remains. Kotlin 2.4.20, AGP 9.4.1 and Gradle 9.7.0 match the source
-profile. Compose instrumentation follows the resolved Compose 1.12.1 profile.
-
-## References and notices
-
-Exact revisions and patch application are in
-[UPSTREAM_MIUix_MAINTENANCE.md](UPSTREAM_MIUix_MAINTENANCE.md).
-Actual reference Kotlin was inspected, including HyperLPA's shared scaffolds,
-dialogs and pager; Mishka's page-entry composition and current HintCard; and
-Language Selector's About and shader implementation.
-
-The adapted shader files retain their Apache copyright/SPDX notices. A full
-Apache license and adaptation notice are included in the APK's `assets/licenses`
-and in this repository. Existing GPL, WeKit and AndroidLiquidGlass notices
-remain. New manager copy follows the existing manager's English resource
-policy. Incomplete inherited translations fall back to the base resources and
-are acknowledged per string in lint, without deleting existing translations.
-Synthetic injected view IDs retain their values and carry a narrowly scoped
-ResourceType annotation because they are not Android resource IDs.
-
-## Product boundaries
-
-Legacy Activities, Fragments, adapters and XML remain available for upstream
-merges. They are not normal manager navigation. Xposed-injected WhatsApp views
-retain the host app's UI and are deliberately outside the Miuix manager scope.
-The fork's existing dashboard artwork and persisted appearance choices are
-preserved. There is no new onboarding, credential form, OTP inbox or message
-history workflow, so their conditional skill rules do not introduce new pages.
-
-Runtime hook behavior requires WhatsApp and LSPosed, and successful root
-checks require an authorized rooted device. An isolated emulator verifies the
-manager and denied/unavailable states; it cannot establish those integrations.
-
-## Preference compatibility exception
-
-The fork's XML defaults `wae_color_preset` to `green`, so the manager retains
-Green as its default accent instead of the skill's System accent default.
-Existing Cyan selections also remain readable. These values belong to the
-existing preference contract and are not reported as standard Appearance
-parity. Theme mode, Monet, palette, blur, scale and navigation retain the
-specified manager defaults.
-
-The final review also corrected the theme manager's denied-storage title and
-removed refresh where storage access is unavailable. Recording-mode requests
-now retain the latest selection if a root check finishes after the user has
-selected non-root mode.
-
-Transcription credential rows now mask saved AssemblyAI and Groq keys, and their
-editors use password keyboard and visual transformation. The existing storage
-format remains compatible with the Xposed readers. Palette and accent labels
-use resources; a retained Cyan selection appears accurately in the menu.
-About combines horizontal system and cutout insets with their maximum, and its
-top bar includes side navigation-bar safety.
-
-Unavailable preference rows now expose disabled accessibility semantics. Miuix's
-native disabled arrow row removes click handling but does not publish that state,
-so the manager adds it without changing native row geometry or press feedback.
-
-Predictive Back follows the persisted appearance state for switch changes,
-configuration imports and resets. Applying a changed value updates the platform
-flag and recreates the Activity without a transition, retaining its child route.
-
-Safe legacy theme names longer than 64 characters remain readable and editable.
-Only the new-name dialog applies the 64-character input limit; repository path
-validation preserves existing themes while rejecting traversal and unsafe names.
-
-The CSS editor retains Prism Live syntax highlighting with bundled Bliss
-modules at revision `4f38d6effbbf7084f83ed3b686e3f8222a23527a` and the complete
-MIT notice. It needs no remote scripts. The asset loader allows WebView to
-handle its internal `data:` document; previously the external-request fallback
-returned 404 for that document and showed a WebView error page. File/content
-access remain disabled and unhandled external requests remain blocked.
-The WebView has explicit `MATCH_PARENT` native layout parameters. Compose's
-measured size alone did not prevent Chromium's wrap-content mode from forcing
-its CSS layout height to zero, leaving the textarea only about 6 pixels tall.
-The document now sizes its editor with viewport units rather than depending on
-a chain of percentage heights. The sizing behavior was checked against
-[Chromium's AwLayoutSizer](https://chromium.googlesource.com/chromium/src/+/HEAD/android_webview/java/src/org/chromium/android_webview/AwLayoutSizer.java).
+Run `./scripts/apply-miuix-patches.sh` after initializing submodules. The original
+held-swipe patch is preserved. `third_party/patches/miuix-dialog-navigation.patch`
+adds the scrim, locked-dialog and overlay semantics changes. The script skips
+already applied patches individually; Gradle checks for all required fixes.
+Both patches were checked against files extracted from the pinned revision,
+then applied and reverse-checked. No submodule commit or dependency pin changes
+are required.
 
 ## Verification
 
-The final Gradle check ran these tasks with one worker, local JVM memory limits
-and a disk-backed Java temporary directory:
+Passed for the final source changes:
+
+- Both app flavors compile and pass 35 unit tests each, with no failures or skips.
+- Both debug APKs and both instrumentation APKs assemble, including all five new Compose regressions.
+- Both debug APKs pass the libxposed API 101 metadata verifier.
+- Miuix navigation passes 194 desktop tests; Miuix UI passes three desktop tests.
+- Both modified Miuix modules pass `spotlessCheck`.
+- Root and Miuix worktrees pass `git diff --check`; patch-script syntax and idempotency checks pass.
+
+Both flavors pass lint against the existing baseline, with no unfiltered
+errors. Existing warnings and hints remain. The first lint run identified three
+new errors, which were corrected without changing the baseline.
+
+The first combined validation attempt exhausted the 512 MiB JVM metaspace
+budget. The failed build's orphaned daemon was terminated after confirming it
+belonged to this task and had requested shutdown. A fresh normal-wrapper run
+completed compilation, tests and packaging within the existing host limits.
+No other build or emulator was stopped.
+
+Reproduce the checks using the normal Gradle wrappers:
 
 ```sh
-./gradlew :app:assembleWhatsappDebug :app:assembleBusinessDebug \
-  :app:assembleWhatsappDebugAndroidTest :app:assembleBusinessDebugAndroidTest \
-  :app:testWhatsappDebugUnitTest :app:testBusinessDebugUnitTest \
-  :app:lintWhatsappDebug :app:lintBusinessDebug --no-daemon --max-workers=1
+./scripts/apply-miuix-patches.sh
+./gradlew :app:testWhatsappDebugUnitTest :app:testBusinessDebugUnitTest \
+  :app:assembleWhatsappDebug :app:assembleBusinessDebug \
+  :app:assembleWhatsappDebugAndroidTest :app:assembleBusinessDebugAndroidTest
+./gradlew :app:lintWhatsappDebug :app:lintBusinessDebug
+(cd third_party/miuix && ./gradlew :miuix-nav:desktopTest :miuix-ui:desktopTest \
+  :miuix-nav:spotlessCheck :miuix-ui:spotlessCheck)
+python3 scripts/verify-xposed-apk.py <whatsapp-debug-apk> <business-debug-apk>
+git diff --check
+git -C third_party/miuix diff --check
 ```
 
-Lint succeeds with the existing repository baseline. The final reports contain
-412 WhatsApp warnings and 413 Business warnings.
+The desktop interrupted-navigation regression passed with the fix. Running it
+against the original renderer failed with the expected duplicate-dim assertion,
+then the fixed source was restored. This negative control establishes that the
+test exercises the original bug.
 
-Both `whatsapp` and `business` pass Kotlin compilation, debug assembly and
-instrumentation APK assembly. Each flavor passes 24 unit tests and 18 permanent
-device tests. Two file-import permission tests per flavor also pass with
-all-files access granted,
-after running the full suites with access denied. The desktop Miuix held-swipe
-regression passed separately.
+Device verification is unavailable. The dedicated audit emulator failed to boot
+twice with exit code 1. No other session's device was taken over. No current
+instrumentation runs, screenshots, gesture recordings or live hook checks are
+claimed. New Compose regressions cover lazy row composition and anchor retention,
+separate retry semantics, and initial-loading versus empty-result refresh.
+They still need a working device to run. Search focus across empty results and
+consecutive instant operation completion also have regression coverage.
 
-Permanent device coverage includes native menus and dialog Back, child routes,
-rapid Back during tab motion and immediately after a pop, search positioning
-within large grouped cards, restored scroll positions, collapsed-title retention,
-file-import permissions, Liquid Glass drag reversal and release, and platform
-Predictive Back changes after replacing settings.
-The editor regression covers invalid theme names, visible syntax-highlighted
-CSS containing HTML-sensitive characters, viewport geometry, unsaved draft
-restoration after Activity recreation, exact saved bytes, Apply preference
-values, reopening, Clear cancellation and confirmed draft clearing.
+Runtime checks remain for cold start/insets; IME and all dialog dismissal paths;
+held, cancelled and committed predictive Back; interrupted navigation on Android;
+empty/error/held/deep refresh; row motion and scroll retention; stacked snackbars;
+About timing and title alignment; editor image import, renderer loss and process
+recreation; compact/wide, landscape, RTL, font and interface scaling; blur and
+contrast; and large-list release performance. Root diagnostics, permissions,
+contacts, restart and actual WhatsApp/Business hooks need a suitably configured
+rooted device with the host apps and framework.
 
-The earlier adaptive and motion captures used the isolated API 35 emulator
-with host GPU rendering. Final permanent suites and editor/empty-state captures
-used the same private AVD with SwiftShader rendering. Visual checks cover all
-seven preference categories, card/heading/tip/input page starts, empty search
-with the keyboard, masked transcription keys, denied and granted storage,
-recordings empty state, diagnostics and refresh, live update results,
-Appearance at 80/90/100/110 percent, dark Monet with pure black, opaque fallback,
-About expanded/collapsed, and both floating navigation styles with labels or
-icons only.
+## Preserved compatibility decisions
 
-Adaptive captures passed at compact, wide and expanded sizes, forced RTL,
-150 percent system font, landscape with a simulated tall cutout and three-button
-navigation, and disabled system animations. Held pager swipes verify selection
-before release and after reversal. A separate rotated-device capture confirms
-three-button navigation mode `0`, the visible side buttons, and cutout safety.
+- Green remains the default accent to preserve the upstream/persisted preference default.
+- Existing credential storage remains compatible with Xposed readers. Secret manager fields remain masked.
+- Home retains its WeKit dashboard and artwork as a product choice.
+- minSdk 33 remains required by the pinned blur module.
+- Legacy Activities, Fragments, XML and Material dependencies remain for upstream merge compatibility. Injected WhatsApp UI follows host styling.
+- No onboarding, OTP, credential, FAB or other unrelated workflow was invented.
 
-All three animation scales were `1` for the native motion recording. That
-recording runs outside the Compose test clock and verifies native page motion,
-system Back and edge Back. Its frames
-were extracted and inspected with FFmpeg. Display overrides, rotation, font,
-RTL, overlays and animation scales were restored afterwards.
-
-Adaptive and motion evidence is in
-`/home/kerry/.local/share/waenhancer-audit/2026-10-05/`.
-Final build, unit/lint and permanent device-suite evidence is in
-`/home/kerry/.local/share/waenhancer-audit/2026-10-06/`.
-Final suite logs are `whatsapp-instrumentation.log` and
-`business-instrumentation.log`; permission rechecks are the corresponding
-`storage-granted.log` files. Editor logs are the corresponding `theme-editor.log`
-files. Both flavor `*-theme` folders contain visible CSS, restored draft,
-selected theme and reopened editor captures. Light/dark empty recordings and
-search with/without the keyboard are captured as `empty-*.png`.
-The final Gradle log is `editor-native-viewport-build.log`, and
-`verification-summary.json` records APK hashes and test counts.
-Scenario folders in the October 5 evidence contain screenshots and their
-passing instrumentation logs. `native-motion.mp4` records normal motion;
-`waenhancer-native-motion-frames.png` contains the inspected frames.
-Earlier failed collection attempts are retained under `prior-attempts`.
-Final device logcat contains no fatal application exception or navigation
-dispatcher/linkage exception.
-
-The temporary instrumentation screenshot collector was removed from the
-repository. Test APKs and seeded app state were cleared from the isolated
-emulator, its original animation settings were restored, and it was stopped.
-`cleanup.json` records those checks. The permanent tests remain in the repository.
+These are recorded exceptions or scope boundaries, not claims of standard parity.

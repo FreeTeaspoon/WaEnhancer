@@ -68,8 +68,8 @@ internal class ManagerWorkflowViewModel(app: Application) : AndroidViewModel(app
     private val recordingsLock = Mutex()
     private val _recordings = MutableStateFlow(ManagerLoadState<List<ManagerRecording>>())
     val recordings = _recordings.asStateFlow()
-    private val _recordingOperation = MutableStateFlow(false)
-    val recordingOperation = _recordingOperation.asStateFlow()
+    val recordingProgress = ManagerOperation()
+    val recordingOperation = recordingProgress.busy
 
     fun loadRecordings(userRefresh: Boolean = false): Job = viewModelScope.launch {
         if (!recordingsLock.tryLock()) return@launch
@@ -87,15 +87,24 @@ internal class ManagerWorkflowViewModel(app: Application) : AndroidViewModel(app
     }
 
     fun deleteRecordings(paths: Set<String>): Job = viewModelScope.launch {
-        if (!recordingsLock.tryLock()) return@launch
-        _recordingOperation.value = true
-        try {
-            val failed = withContext(Dispatchers.IO) { paths.filter { java.io.File(it).exists() && !java.io.File(it).delete() }.toSet() }
-            _recordings.update { previous -> previous.copy(content = previous.content?.filter { it.file.absolutePath !in paths || it.file.absolutePath in failed }) }
-            val app = getApplication<Application>()
-            ManagerSnackbarEvents.tryShow(if (failed.isEmpty()) app.getString(R.string.manager_recordings_deleted, paths.size)
-                else app.getString(R.string.manager_delete_failed))
-        } finally { _recordingOperation.value = false; recordingsLock.unlock() }
+        recordingsLock.withLock {
+            recordingProgress.run(getApplication<Application>().getString(R.string.manager_deleting_recordings)) {
+                try {
+                    val failed = withContext(Dispatchers.IO) {
+                        paths.filter { java.io.File(it).exists() && !java.io.File(it).delete() }.toSet()
+                    }
+                    _recordings.update { previous -> previous.copy(content = previous.content?.filter {
+                        it.file.absolutePath !in paths || it.file.absolutePath in failed
+                    }) }
+                    val app = getApplication<Application>()
+                    ManagerSnackbarEvents.tryShow(if (failed.isEmpty()) app.getString(R.string.manager_recordings_deleted, paths.size)
+                        else app.getString(R.string.manager_delete_failed))
+                } catch (cancel: CancellationException) { throw cancel
+                } catch (error: Exception) {
+                    ManagerSnackbarEvents.tryShow(getApplication<Application>().getString(R.string.manager_operation_failed, error.message.orEmpty()))
+                }
+            }
+        }
     }
 
     fun loadRelease(userRefresh: Boolean = false): Job = viewModelScope.launch {
@@ -130,53 +139,58 @@ internal class ManagerWorkflowViewModel(app: Application) : AndroidViewModel(app
         } finally { _diagnostics.update { it.copy(refreshing = false) }; diagnosticsLock.unlock() }
     }
 
+    val diagnosticOperation = ManagerOperation()
+
     fun fixHideMyAppList(): Job = viewModelScope.launch {
-        if (!diagnosticsLock.tryLock()) return@launch
-        _hmaFixRunning.value = true
-        val app = getApplication<Application>()
         try {
-            val result = withContext(Dispatchers.IO) { RootDiagnostics.fixHideMyAppList(app) { } }
-            when (result) {
-                RootDiagnostics.FixResult.FIXED -> {
-                    _hmaRestartRequired.value = true
-                    val logs = withContext(Dispatchers.IO) { RootDiagnostics.collectDiagnostics(app) }
-                    _diagnostics.value = ManagerLoadState(content = logs)
+            diagnosticsLock.withLock {
+                _hmaFixRunning.value = true
+                val app = getApplication<Application>()
+                diagnosticOperation.run(app.getString(R.string.manager_repairing_hma)) {
+                    try {
+                        when (withContext(Dispatchers.IO) { RootDiagnostics.fixHideMyAppList(app) { } }) {
+                            RootDiagnostics.FixResult.FIXED -> {
+                                _hmaRestartRequired.value = true
+                                val logs = withContext(Dispatchers.IO) { RootDiagnostics.collectDiagnostics(app) }
+                                _diagnostics.value = ManagerLoadState(content = logs)
+                            }
+                            RootDiagnostics.FixResult.NOTHING_TO_FIX ->
+                                ManagerSnackbarEvents.tryShow(app.getString(R.string.diag_hma_fix_nothing))
+                            RootDiagnostics.FixResult.FAILED ->
+                                ManagerSnackbarEvents.tryShow(app.getString(R.string.diag_hma_fix_failed))
+                        }
+                    } catch (cancel: CancellationException) { throw cancel
+                    } catch (_: Exception) {
+                        ManagerSnackbarEvents.tryShow(app.getString(R.string.diag_hma_fix_failed))
+                    }
                 }
-                RootDiagnostics.FixResult.NOTHING_TO_FIX ->
-                    ManagerSnackbarEvents.tryShow(app.getString(R.string.diag_hma_fix_nothing))
-                RootDiagnostics.FixResult.FAILED ->
-                    ManagerSnackbarEvents.tryShow(app.getString(R.string.diag_hma_fix_failed))
             }
-        } catch (cancel: CancellationException) { throw cancel
-        } catch (_: Exception) {
-            ManagerSnackbarEvents.tryShow(app.getString(R.string.diag_hma_fix_failed))
-        } finally {
-            _hmaFixRunning.value = false
-            diagnosticsLock.unlock()
-        }
+        } finally { _hmaFixRunning.value = false }
     }
 
     fun fixMagiskDenylist(): Job = viewModelScope.launch {
-        if (!diagnosticsLock.tryLock()) return@launch
-        _denylistFixRunning.value = true
-        val app = getApplication<Application>()
         try {
-            val result = withContext(Dispatchers.IO) { RootDiagnostics.fixMagiskDenylist(app) { } }
-            val message = when (result) {
-                RootDiagnostics.FixResult.FIXED -> R.string.diag_denylist_fix_done
-                RootDiagnostics.FixResult.NOTHING_TO_FIX -> R.string.diag_denylist_fix_nothing
-                RootDiagnostics.FixResult.FAILED -> R.string.diag_denylist_fix_failed
+            diagnosticsLock.withLock {
+                _denylistFixRunning.value = true
+                val app = getApplication<Application>()
+                diagnosticOperation.run(app.getString(R.string.manager_repairing_denylist)) {
+                    try {
+                        val result = withContext(Dispatchers.IO) { RootDiagnostics.fixMagiskDenylist(app) { } }
+                        val message = when (result) {
+                            RootDiagnostics.FixResult.FIXED -> R.string.diag_denylist_fix_done
+                            RootDiagnostics.FixResult.NOTHING_TO_FIX -> R.string.diag_denylist_fix_nothing
+                            RootDiagnostics.FixResult.FAILED -> R.string.diag_denylist_fix_failed
+                        }
+                        ManagerSnackbarEvents.tryShow(app.getString(message))
+                        val logs = withContext(Dispatchers.IO) { RootDiagnostics.collectDiagnostics(app) }
+                        _diagnostics.value = ManagerLoadState(content = logs)
+                    } catch (cancel: CancellationException) { throw cancel
+                    } catch (_: Exception) {
+                        ManagerSnackbarEvents.tryShow(app.getString(R.string.diag_denylist_fix_failed))
+                    }
+                }
             }
-            ManagerSnackbarEvents.tryShow(app.getString(message))
-            val logs = withContext(Dispatchers.IO) { RootDiagnostics.collectDiagnostics(app) }
-            _diagnostics.value = ManagerLoadState(content = logs)
-        } catch (cancel: CancellationException) { throw cancel
-        } catch (_: Exception) {
-            ManagerSnackbarEvents.tryShow(app.getString(R.string.diag_denylist_fix_failed))
-        } finally {
-            _denylistFixRunning.value = false
-            diagnosticsLock.unlock()
-        }
+        } finally { _denylistFixRunning.value = false }
     }
 
     fun dismissHmaRestart() { _hmaRestartRequired.value = false }

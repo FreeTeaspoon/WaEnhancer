@@ -1,5 +1,6 @@
 package com.freeteaspoon.wppenhacer.ui.miuix
 
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -15,22 +16,23 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
@@ -62,8 +64,6 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Back
 import top.yukonga.miuix.kmp.shader.isRenderEffectSupported
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.theme.LocalContentColor
-import top.yukonga.miuix.kmp.squircle.squircleSurface
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
@@ -172,10 +172,22 @@ internal fun LazyListScope.managerGroupedCardItems(
     outerTopPadding: Dp = 0.dp,
     outerBottomPadding: Dp = 6.dp,
 ) {
-    if (items.isEmpty()) return
-    item(key = keyPrefix) {
-        ManagerGroupCard(Modifier.padding(top = outerTopPadding).animateItem()) {
-            Column { items.forEach { row -> androidx.compose.runtime.key(row.key) { row.content(this) } } }
+    items(count = items.size, key = { "$keyPrefix:${items[it].key}" }, contentType = { "manager-group-row" }) { index ->
+        val first = index == 0
+        val last = index == items.lastIndex
+        val shape = androidx.compose.foundation.shape.RoundedCornerShape(
+            topStart = if (first) 16.dp else 0.dp, topEnd = if (first) 16.dp else 0.dp,
+            bottomStart = if (last) 16.dp else 0.dp, bottomEnd = if (last) 16.dp else 0.dp)
+        Column(Modifier
+            .animateItem(
+                fadeInSpec = top.yukonga.miuix.kmp.anim.folmeSpring(damping = 0.9f, response = 0.3f),
+                placementSpec = top.yukonga.miuix.kmp.anim.folmeSpring(damping = 0.9f, response = 0.3f),
+                fadeOutSpec = top.yukonga.miuix.kmp.anim.folmeSpring(damping = 0.9f, response = 0.3f))
+            .padding(horizontal = 12.dp)
+            .padding(top = if (first) outerTopPadding else 0.dp, bottom = if (last) outerBottomPadding else 0.dp)
+            .fillMaxWidth().then(Modifier.background(MiuixTheme.colorScheme.surfaceContainer, shape))
+            .then(Modifier.clip(shape))) {
+            items[index].content(this)
         }
     }
 }
@@ -228,6 +240,7 @@ internal fun ManagerDetailScaffold(
     listState: LazyListState = rememberLazyListState(),
     bottomPadding: Dp = 0.dp,
     isRefreshing: Boolean = false,
+    refreshEnabled: Boolean = true,
     onRefresh: (() -> Unit)? = null,
     pageState: ManagerPageStateKind = ManagerPageStateKind.CONTENT,
     stateTitle: String = stringResource(if (pageState == ManagerPageStateKind.ERROR) R.string.manager_load_failed else R.string.manager_loading),
@@ -235,10 +248,13 @@ internal fun ManagerDetailScaffold(
     onRetry: (() -> Unit)? = null,
     actions: @Composable androidx.compose.foundation.layout.RowScope.() -> Unit = {},
     fixedContent: (@Composable () -> Unit)? = null,
+    scrollingControl: (@Composable () -> Unit)? = null,
     content: LazyListScope.() -> Unit,
 ) {
     val layoutDirection = androidx.compose.ui.platform.LocalLayoutDirection.current
     val pageContent = MishkaPageContent(content)
+    var controlHeight by androidx.compose.runtime.remember { androidx.compose.runtime.mutableIntStateOf(0) }
+    var pullProgress by androidx.compose.runtime.remember { androidx.compose.runtime.mutableFloatStateOf(0f) }
     val behavior = rememberManagerListScrollBehavior(listState)
     val backdrop = rememberManagerBackdrop()
     androidx.compose.foundation.layout.BoxWithConstraints(modifier.fillMaxSize()) {
@@ -293,42 +309,55 @@ internal fun ManagerDetailScaffold(
                 val stateBottom = maxOf(safeBottom, with(density) {
                     maxOf(WindowInsets.ime.getBottom(this), WindowInsets.captionBar.getBottom(this)).toDp()
                 })
-                val list: @Composable () -> Unit = {
-                    ManagerPageStateHost(
-                        state = pageState,
-                        title = stateTitle,
-                        message = stateMessage,
-                        onRetry = onRetry,
-                        modifier = Modifier.fillMaxSize(),
-                        stateModifier = Modifier.padding(top = listTopPadding, bottom = stateBottom),
+                val list: @Composable (Dp) -> Unit = { viewportHeight ->
+                    // Keep one list and one search-field composition across result changes.
+                    // Replacing the whole host would drop focus when a query becomes empty.
+                    val target = pageState
+                    val entryGap = when {
+                        scrollingControl != null -> 12.dp
+                        target != ManagerPageStateKind.CONTENT -> 0.dp
+                        else -> pageContent.topPadding
+                    }
+                    val refreshReserve = if (target == ManagerPageStateKind.CONTENT && scrollingControl == null)
+                        (12.dp - entryGap).coerceAtLeast(0.dp) * pullProgress else 0.dp
+                    val top = listTopPadding + entryGap + refreshReserve
+                    LazyColumn(
+                        state = listState,
+                        userScrollEnabled = target != ManagerPageStateKind.LOADING && refreshEnabled,
+                        modifier = Modifier.fillMaxSize().scrollEndHaptic().overScrollVertical()
+                            .nestedScroll(behavior.nestedScrollConnection),
+                        overscrollEffect = null,
+                        contentPadding = PaddingValues(start = sideGutter, end = sideGutter, top = top,
+                            bottom = stateBottom + if (target == ManagerPageStateKind.CONTENT) 24.dp else 0.dp),
                     ) {
-                        LazyColumn(
-                            state = listState,
-                            modifier = Modifier.fillMaxSize()
-                                .scrollEndHaptic()
-                                .overScrollVertical()
-                                .nestedScroll(behavior.nestedScrollConnection),
-                            overscrollEffect = null,
-                            contentPadding = PaddingValues(
-                                start = sideGutter,
-                                end = sideGutter,
-                                top = listTopPadding + pageContent.topPadding,
-                                bottom = safeBottom + 24.dp,
-                            ),
-                            content = pageContent.content,
-                        )
+                        if (scrollingControl != null) item("page-control", contentType = "page-control") {
+                            Box(Modifier.onSizeChanged { controlHeight = it.height }) { scrollingControl() }
+                        }
+                        if (target != ManagerPageStateKind.CONTENT) item("page-state", contentType = PageStart.Viewport) {
+                            val preceding = if (scrollingControl == null) 0.dp else with(density) { controlHeight.toDp() }
+                            ManagerPageStateHost(target, stateTitle, stateMessage,
+                                modifier = Modifier.animateItem().fillMaxWidth().height((viewportHeight - top - stateBottom - preceding).coerceAtLeast(0.dp)),
+                                onRetry = onRetry, content = {})
+                        }
+                        if (target == ManagerPageStateKind.CONTENT) pageContent.content(this)
                     }
                 }
-                Box(Modifier.weight(1f).fillMaxWidth()) {
+
+                androidx.compose.foundation.layout.BoxWithConstraints(Modifier.weight(1f).fillMaxWidth()) {
                     if (onRefresh != null) {
                         top.yukonga.miuix.kmp.basic.PullToRefresh(
                             isRefreshing = isRefreshing,
-                            onRefresh = onRefresh,
+                            onRefresh = { if (refreshEnabled && pageState != ManagerPageStateKind.LOADING && !isRefreshing) onRefresh() },
+                            onPullProgress = { pullProgress = it },
                             topAppBarScrollBehavior = behavior,
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(top = listTopPadding + 12.dp),
-                        ) { list() }
-                    } else list()
+                        ) {
+                            // The native header takes layout height while stretched. Measure
+                            // messages in the remaining refresh viewport, not behind the header.
+                            androidx.compose.foundation.layout.BoxWithConstraints(Modifier.fillMaxSize()) { list(maxHeight) }
+                        }
+                    } else list(maxHeight)
                 }
             }
         }

@@ -18,7 +18,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.isActive
 import top.yukonga.miuix.kmp.blur.isRuntimeShaderSupported
 import top.yukonga.miuix.kmp.shader.isRenderEffectSupported
@@ -72,15 +72,13 @@ private fun Os3ShaderBackground(
 
     LaunchedEffect(dynamicBackground, preset) {
         if (!dynamicBackground) return@LaunchedEffect
-        var targetStage = floor(colorStage.value) + 1f
-        while (isActive) {
-            snapshotFlow { currentAlpha() > 0f }.first { it }
-            delay((preset.colorInterpPeriod * 500).toLong())
-            colorStage.animateTo(
-                targetValue = targetStage,
-                animationSpec = spring(dampingRatio = 0.9f, stiffness = 35f)
-            )
-            targetStage += 1f
+        snapshotFlow { currentAlpha() > 0f }.collectLatest { visible ->
+            if (!visible) return@collectLatest
+            while (isActive) {
+                delay((preset.colorInterpPeriod * 1000).toLong())
+                colorStage.animateTo(floor(colorStage.value) + 1f,
+                    animationSpec = spring(dampingRatio = 0.9f, stiffness = 35f))
+            }
         }
     }
 

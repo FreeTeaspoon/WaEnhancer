@@ -206,7 +206,7 @@ internal class GoogleTranslateChatUi(
         val value = config(chat)
         val state =
             if (value.enabled) "${label(value.source)} → ${label(value.target)}" else "Automatic translation off"
-        return if (chat != null && !hasOverride(chat)) "Global default · $state" else state
+        return if (chat != null && !hasOverride(chat)) "Global default: $state" else state
     }
 
     private fun updateInfoSummary(row: View, chat: String) {
@@ -317,7 +317,7 @@ internal class GoogleTranslateChatUi(
             setPadding(0, Utils.dipToPixels(12), 0, Utils.dipToPixels(8))
         })
         update()
-        AlertDialogWpp(activity).setTitle(if (chat == null) "Google Translate · Global" else "Google Translate")
+        AlertDialogWpp(activity).setTitle(if (chat == null) "Google Translate: Global" else "Google Translate")
             .setView(ScrollView(ctx).apply { addView(layout) })
             .setNegativeButton("Cancel", null)
             .setPositiveButton("Save") { _, _ ->

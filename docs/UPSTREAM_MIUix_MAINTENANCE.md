@@ -79,10 +79,16 @@ WhatsApp nor LSPosed, and its UI session was occupied during this verification.
 - Mishka page spacing: `94573b0a0b11b624d75592558d34bc3f2e6ef451`
 - WeKit's retained Home adaptation: `a55e0d4f7221c3bc3ee5b32f9b0bd62c1291381b`
 
-After checking out submodules, run `./scripts/apply-miuix-patches.sh`. The tracked
-patch contains the held-swipe fix and its desktop regression. Gradle rejects an
-unpatched navigation checkout, and every CI workflow applies the patch before
-building.
+After checking out submodules, run `./scripts/apply-miuix-patches.sh`. It applies
+these independent patches idempotently to the pinned source profile:
+
+- `third_party/patches/miuix-held-swipe.patch` preserves the existing held-swipe fix and desktop regression.
+- `third_party/patches/miuix-dialog-navigation.patch` gives interrupted navigation one scrim owner, keeps locked dialogs fixed during predictive Back, and adds overlay dialog semantics. It includes the interrupted-pop pixel regression.
+
+Gradle rejects a checkout missing either set of fixes. CI applies both through
+the same script before building. Preserve the notices and revalidate both
+patches when changing the Miuix pin. See [the current audit](HYPEROS_MANAGER_AUDIT.md)
+for implementation and verification status.
 
 ## Direct source adaptations
 
@@ -98,7 +104,10 @@ For Liquid Glass, preserve the additional Apache-2.0 attribution to
 graphics-layer recording scope; moving `Dp.toPx()` into that nested scope causes a main-thread
 `StackOverflowError` on current Android Compose builds.
 
-## HyperOS manager parity audit, 2026-10-05
+## Historical HyperOS manager parity audit, 2026-10-05
+
+This section records the earlier implementation. The November audit supersedes
+its parity claims; it is not verification of the current worktree.
 
 The manager was audited against `hyperos-android-app-builder` and its linked
 contracts. The normal launcher is the Miuix Compose manager; legacy activities,
@@ -154,3 +163,22 @@ restoration after Activity recreation, atomic save, Apply,
 reopening, and the Clear confirmation. The existing permission tests run in
 both denied and granted states. Changing this appop while a suite runs kills
 the process on Android.
+
+## File operations and editor recovery
+
+Blocking operations use `ManagerOperation`, with the operation and repository
+locks retained through the popup exit. Start work and navigation from a prompt's
+`onDismissFinished`. Keep external activity-result launchers at page scope.
+
+Theme imports stage and validate archives before touching installed themes.
+A same-filesystem rename journal backs up every replaced folder and rolls back
+an interrupted batch on the next scan. Recovery only reads verified transaction
+directories, preserves similarly named user themes, and moves completed journals
+aside before recursive cleanup. Do not restore direct overwrite copying.
+
+Editor input writes private, atomically replaced drafts, keyed by a hash of the
+theme name. Accepted writes finish when a route is popped. Save commits the CSS
+and removes the durable draft. Keep template reads off the UI thread, resolved
+theme colors and the textarea's accessible name. Renderer death must release
+the old WebView and expose Retry. Image import preserves PNG naming and replacement
+with explicit copy in the confirmation prompt.

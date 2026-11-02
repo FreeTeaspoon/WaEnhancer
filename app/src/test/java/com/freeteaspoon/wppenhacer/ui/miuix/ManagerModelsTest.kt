@@ -37,9 +37,9 @@ class ManagerModelsTest {
         val groups = state.groups(PreferenceSource.GENERAL)
 
         assertEquals(1, groups.preferenceItemIndex("first"))
-        assertEquals(1, groups.preferenceItemIndex("same_group"))
-        assertEquals(3, groups.preferenceItemIndex("other_group"))
-        assertEquals(3, groups.preferenceItemIndex("last"))
+        assertEquals(2, groups.preferenceItemIndex("same_group"))
+        assertEquals(4, groups.preferenceItemIndex("other_group"))
+        assertEquals(5, groups.preferenceItemIndex("last"))
         assertEquals(-1, groups.preferenceItemIndex(ManagerAppearanceSettings.KEY_THEME_MODE))
         assertEquals(-1, groups.preferenceItemIndex("missing"))
         assertEquals(-1, groups.preferenceItemIndex(null))

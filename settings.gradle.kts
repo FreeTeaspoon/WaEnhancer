@@ -31,6 +31,15 @@ check(file("third_party/miuix/miuix-nav/src/commonMain/kotlin/top/yukonga/miuix/
     "Apply the pinned Miuix gesture fix with ./scripts/apply-miuix-patches.sh"
 }
 
+check(file("third_party/miuix/miuix-nav/src/commonMain/kotlin/top/yukonga/miuix/kmp/nav/core/NavDisplay.kt")
+    .readText().contains("entry.contentKey == scrimOwnerKey") &&
+    file("third_party/miuix/miuix-ui/src/commonMain/kotlin/top/yukonga/miuix/kmp/layout/DialogContentLayout.kt")
+        .readText().contains("currentOnDismissRequest != null &&") &&
+    file("third_party/miuix/miuix-ui/src/commonMain/kotlin/top/yukonga/miuix/kmp/overlay/OverlayDialog.kt")
+        .readText().contains("semantics { dialog() }")) {
+    "Apply the pinned Miuix dialog/navigation fixes with ./scripts/apply-miuix-patches.sh"
+}
+
 includeBuild("third_party/miuix") {
     dependencySubstitution {
         substitute(module("top.yukonga.miuix.kmp:miuix-icons-android"))

@@ -15,6 +15,10 @@ internal class PreferenceController(
     private val preferences: SharedPreferences,
 ) {
     fun put(spec: PreferenceSpec, value: Any) {
+        if (spec.key in setOf("downloadstatus", "downloadviewonce") && value == true && !android.os.Environment.isExternalStorageManager()) {
+            ManagerSnackbarEvents.tryShow(context.getString(com.freeteaspoon.wppenhacer.R.string.manager_permission_needed))
+            return
+        }
         preferences.edit(commit = spec.key == ManagerAppearanceSettings.KEY_FORCE_ENGLISH) {
             when (spec.kind) {
                 PreferenceKind.SWITCH -> putBoolean(spec.key, value as Boolean)

@@ -51,7 +51,7 @@ import top.yukonga.miuix.kmp.preference.ArrowPreference
 import top.yukonga.miuix.kmp.preference.OverlayDropdownPreference
 import top.yukonga.miuix.kmp.preference.SwitchPreference
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.window.WindowDialog
+import top.yukonga.miuix.kmp.overlay.OverlayDialog
 import java.io.File
 
 @Composable
@@ -70,11 +70,29 @@ internal fun PreferencePageScreen(
     val title = feature?.title ?: preferenceSourceTitle(source)
     var editing by remember { mutableStateOf<PreferenceSpec?>(null) }
     var showEditor by remember { mutableStateOf(false) }
-    val masters = state.specs.mapNotNull { it.dependency }.toSet()
+    val masters = state.specs.mapNotNull { it.dependency }.toSet() + "call_privacy"
+    val context = LocalContext.current
+    val resources = androidx.compose.ui.platform.LocalResources.current
+    val fileModel: ManagerFileWorkflowViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    var pendingFileKey by rememberSaveable { mutableStateOf<String?>(null) }
+    var pendingContactsKey by rememberSaveable { mutableStateOf<String?>(null) }
+    var afterDismiss by remember { mutableStateOf<(() -> Unit)?>(null) }
+    val openFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        val spec = state.specs.firstOrNull { it.key == pendingFileKey }
+        if (uri != null && spec != null) fileModel.importPreference(spec, uri)
+        pendingFileKey = null
+    }
+    val selectContacts = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val spec = state.specs.firstOrNull { it.key == pendingContactsKey }
+        if (result.resultCode == android.app.Activity.RESULT_OK && spec != null) {
+            result.data?.getStringArrayListExtra("contacts")?.let { controller.put(spec, it.toString()) }
+        }
+        pendingContactsKey = null
+    }
     val groups = if (featureKey == null) state.groups(source).map { group ->
-        group.copy(preferences = group.preferences.filter { it.dependency == null })
+        group.copy(preferences = group.preferences.filter { it.dependency == null && (preferenceFeatureOwner(it.key) == null || it.key == "call_privacy") })
     }.filter { it.preferences.isNotEmpty() } else listOf(PreferenceGroup(title,
-        state.specs.filter { it.key == featureKey || it.dependency == featureKey }))
+        state.specs.filter { it.key == featureKey || it.dependency == featureKey || preferenceFeatureOwner(it.key) == featureKey }))
     val highlightedIndex = groups.preferenceItemIndex(highlightKey)
     val listState = rememberLazyListState()
     val highlightRequester = remember { androidx.compose.foundation.relocation.BringIntoViewRequester() }
@@ -87,7 +105,7 @@ internal fun PreferencePageScreen(
             highlightPositionApplied = true
         }
     }
-    ManagerDetailScaffoldWithState(title, wide, onBack, listState) {
+    ManagerDetailScaffold(title, wide, onBack, listState = listState, actions = { ManagerRestartAction() }) {
         groups.forEachIndexed { groupIndex, group ->
             if (groups.size > 1) managerSection(group.title, "$source-$groupIndex")
             managerGroupedCardItems(
@@ -97,7 +115,7 @@ internal fun PreferencePageScreen(
                         val enabled = controller.isEnabled(spec, state.preferences)
                         if (featureKey == null && spec.key in masters) {
                             ArrowPreference(spec.title, summary = stringResource(
-                                if (state.preferences[spec.key] == true) R.string.manager_on else R.string.manager_off),
+                                if (if (spec.key == "call_privacy") state.preferences[spec.key]?.toString().let { it != null && it != "0" } else state.preferences[spec.key] == true) R.string.manager_on else R.string.manager_off),
                                 onClick = { onNavigate(ManagerRoute.PreferenceFeature(source, spec.key)) })
                         } else androidx.compose.foundation.layout.Box(Modifier.testTag("preference-${spec.key}")
                             .semantics(mergeDescendants = !enabled) {
@@ -110,7 +128,11 @@ internal fun PreferencePageScreen(
                             enabled = enabled,
                             highlighted = spec.key == highlightKey,
                             onEdit = { editing = spec; showEditor = true },
-                            onPut = { controller.put(spec, it) },
+                            onPut = {
+                                if (spec.key in setOf("downloadstatus", "downloadviewonce") && it == true && !android.os.Environment.isExternalStorageManager()) {
+                                    (context as? android.app.Activity)?.let(App::showRequestStoragePermission)
+                                } else controller.put(spec, it)
+                            },
                             onNavigate = onNavigate,
                         ) }
                     }
@@ -126,10 +148,33 @@ internal fun PreferencePageScreen(
             value = state.preferences[spec.key],
             onDismiss = { showEditor = false },
             // Keep the dialog composed until its exit animation finishes.
-            onDismissFinished = { editing = null },
-            onSave = { controller.put(spec, it); showEditor = false },
+            onDismissFinished = { editing = null; val launch = afterDismiss; afterDismiss = null; launch?.invoke() },
+            onChooseFile = {
+                pendingFileKey = spec.key
+                afterDismiss = { openFile.launch(spec.entryValues.toTypedArray().ifEmpty { arrayOf("*/*") }) }
+                showEditor = false
+            },
+            onChooseContacts = { packageName ->
+                try {
+                    val contacts = state.preferences[spec.key]?.toString()?.removeSurrounding("[", "]")?.split(',')?.map(String::trim)?.filter(String::isNotEmpty).orEmpty()
+                    val intent = WhatsAppContactPickerLauncher.createPickerIntent(context, packageName, spec.key, ArrayList(contacts))
+                    pendingContactsKey = spec.key
+                    afterDismiss = {
+                        runCatching { selectContacts.launch(intent) }.onFailure { ManagerSnackbarEvents.tryShow(resources.getString(R.string.manager_operation_failed, it.message.orEmpty())) }
+                    }
+                    showEditor = false
+                } catch (error: Exception) { ManagerSnackbarEvents.tryShow(resources.getString(R.string.manager_operation_failed, error.message.orEmpty())) }
+            },
+            onSave = {
+                if (spec.kind == PreferenceKind.FILE && spec.key in setOf("download_local", "call_recording_path")) {
+                    val path = it.toString()
+                    afterDismiss = { fileModel.saveDirectory(spec, path) }
+                } else controller.put(spec, it)
+                showEditor = false
+            },
         )
     }
+    ManagerOperationHost(fileModel.operation)
 }
 
 @Composable
@@ -142,7 +187,10 @@ private fun PreferenceSpecRow(
     onPut: (Any) -> Unit,
     onNavigate: (ManagerRoute) -> Unit,
 ) {
-    val summary = preferenceSummary(spec, value)
+    val summary = if (spec.kind == PreferenceKind.CONTACTS) {
+        val count = value?.toString()?.removeSurrounding("[", "]")?.split(',')?.count { it.isNotBlank() } ?: 0
+        if (count == 0) stringResource(R.string.no_contacts_selected) else androidx.compose.ui.platform.LocalResources.current.getQuantityString(R.plurals.manager_contact_count, count, count)
+    } else preferenceSummary(spec, value)
     val title = spec.title
     val titleColor = top.yukonga.miuix.kmp.basic.BasicComponentDefaults.titleColor(
         color = if (highlighted) MiuixTheme.colorScheme.primary else MiuixTheme.colorScheme.onSurfaceContainer)
@@ -228,22 +276,16 @@ private fun PreferenceValueDialog(
     onDismiss: () -> Unit,
     onDismissFinished: () -> Unit,
     onSave: (Any) -> Unit,
+    onChooseFile: () -> Unit,
+    onChooseContacts: (String) -> Unit,
 ) {
     val context = LocalContext.current
-    val fileModel: ManagerFileWorkflowViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-    val openFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        if (uri != null) { onDismiss(); fileModel.importPreference(spec, uri) }
-    }
-    val selectContacts = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == android.app.Activity.RESULT_OK) {
-            result.data?.getStringArrayListExtra("contacts")?.let { onSave(it.toString()) }
-        }
-    }
     val resources = androidx.compose.ui.platform.LocalResources.current
     val plainInput = spec.kind !in setOf(PreferenceKind.FILE, PreferenceKind.CONTACTS)
     if (spec.kind == PreferenceKind.FILE && spec.key in setOf("download_local", "call_recording_path")) {
-        ManagerTextInputDialog(show, spec.title, value?.toString().orEmpty(), onDismiss, { onSave(it) },
+        ManagerTextInputDialog(show, spec.title, value?.toString().orEmpty(), onDismiss, { path -> onSave(path) },
             summary = spec.summary, maxLength = 4096, onDismissFinished = onDismissFinished,
+            validateAsync = { path -> runCatching { validateOutputDirectory(path) }.exceptionOrNull()?.let { resources.getString(R.string.manager_directory_unavailable) } },
             validate = { path -> if (path.startsWith("/") && !path.contains('\u0000')) null
                 else resources.getString(R.string.manager_invalid_value) })
     } else if (plainInput) {
@@ -291,7 +333,7 @@ private fun PreferenceValueDialog(
                 onSave(parsed)
             },
         )
-    } else WindowDialog(show = show, title = spec.title, summary = spec.summary,
+    } else OverlayDialog(show = show, title = spec.title, summary = spec.summary,
         onDismissRequest = onDismiss, onDismissFinished = onDismissFinished) {
         if (spec.kind == PreferenceKind.FILE) {
             val storageAccess = rememberManagerStorageAccess()
@@ -299,17 +341,18 @@ private fun PreferenceValueDialog(
             if (!canImport) ManagerStoragePermissionPreference()
             ArrowPreference(stringResource(R.string.manager_choose_file), enabled = canImport,
                 modifier = Modifier.semantics(mergeDescendants = true) { if (!canImport) disabled() },
-                onClick = { openFile.launch(arrayOf("*/*")) })
+                onClick = onChooseFile)
         } else {
-            ArrowPreference(stringResource(R.string.manager_choose_contacts), onClick = {
-                val installed = WhatsAppContactPickerLauncher.getInstalledWhatsAppPackages(context).firstOrNull()
-                if (installed == null) ManagerSnackbarEvents.tryShow(resources.getString(R.string.manager_not_installed))
-                installed?.let { packageName ->
-                    val contacts = value?.toString()?.removeSurrounding("[", "]")?.split(',')?.map(String::trim)
-                        ?.filter(String::isNotEmpty)?.let { ArrayList(it) } ?: arrayListOf()
-                    selectContacts.launch(WhatsAppContactPickerLauncher.createPickerIntent(context, packageName, spec.key, contacts))
-                }
-            })
+            val apps by androidx.compose.runtime.produceState<List<String>>(emptyList()) {
+                this.value = withContext(Dispatchers.IO) { WhatsAppContactPickerLauncher.getInstalledWhatsAppPackages(context) }
+            }
+            var selectedApp by remember { mutableStateOf(0) }
+            if (apps.isNotEmpty()) {
+                OverlayDropdownPreference(title = stringResource(R.string.manager_target_app),
+                    items = apps.map { WhatsAppContactPickerLauncher.getPackageLabel(it).toString() }, selectedIndex = selectedApp,
+                    onSelectedIndexChange = { selectedApp = it })
+                ArrowPreference(stringResource(R.string.manager_choose_contacts), onClick = { apps.getOrNull(selectedApp)?.let(onChooseContacts) })
+            } else Text(stringResource(R.string.manager_not_installed))
         }
     }
 }

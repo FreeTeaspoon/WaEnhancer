@@ -158,7 +158,7 @@ private fun ManagerToolsScreen(wide: Boolean, bottomPadding: Dp, onNavigate: (Ma
         DestinationRow(stringResource(R.string.manager_appearance), stringResource(R.string.manager_appearance_summary), ManagerRoute.Appearance, MiuixIcons.Theme),
         DestinationRow(stringResource(R.string.about), stringResource(R.string.manager_about_summary), ManagerRoute.About, MiuixIcons.Info),
     )
-    ManagerDetailScaffold(title = stringResource(R.string.manager_tools), wide = wide, onBack = null, bottomPadding = bottomPadding) {
+    ManagerDetailScaffold(title = stringResource(R.string.manager_tools), wide = wide, onBack = null, bottomPadding = bottomPadding, actions = { ManagerRestartAction() }) {
         managerGroupedCardItems(
             keyPrefix = "tools-destinations",
             items = rows.map { row ->
@@ -173,21 +173,6 @@ private fun ManagerToolsScreen(wide: Boolean, bottomPadding: Dp, onNavigate: (Ma
             },
 
         )
-        item("app-actions") {
-            ManagerGroupCard {
-                listOf("com.whatsapp" to R.string.manager_whatsapp, "com.whatsapp.w4b" to R.string.manager_whatsapp_business)
-                    .forEach { (packageName, title) ->
-                        val installed = runCatching { context.packageManager.getPackageInfo(packageName, 0) }.isSuccess
-                        ArrowPreference(
-                            title = stringResource(title),
-                            summary = if (installed) stringResource(R.string.manager_restart_summary)
-                            else stringResource(R.string.manager_not_installed),
-                            enabled = installed,
-                            onClick = { (context.applicationContext as? App)?.restartApp(packageName) },
-                        )
-                    }
-            }
-        }
         item("configuration") {
             ManagerGroupCard {
                 ArrowPreference(

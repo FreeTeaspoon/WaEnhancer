@@ -9,7 +9,7 @@ import androidx.webkit.WebViewAssetLoader
 
 internal const val MANAGER_EDITOR_BASE_URL = "https://appassets.androidplatform.net/assets/"
 
-internal class ManagerEditorAssets(context: Context) : WebViewClient() {
+internal class ManagerEditorAssets(context: Context, private val onRendererGone: (WebView) -> Unit = {}) : WebViewClient() {
     private val assets = WebViewAssetLoader.AssetsPathHandler(context)
     private val loader = WebViewAssetLoader.Builder()
         .addPathHandler("/assets/") { path ->
@@ -19,6 +19,11 @@ internal class ManagerEditorAssets(context: Context) : WebViewClient() {
             }
         }
         .build()
+
+    override fun onRenderProcessGone(view: WebView, detail: android.webkit.RenderProcessGoneDetail): Boolean {
+        onRendererGone(view)
+        return true
+    }
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest) = true
 

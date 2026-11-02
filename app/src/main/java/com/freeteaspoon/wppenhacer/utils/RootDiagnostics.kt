@@ -36,7 +36,7 @@ object RootDiagnostics {
 
     enum class FixResult { FIXED, NOTHING_TO_FIX, FAILED }
 
-    data class LogEntry(val message: String, val type: LogType = LogType.INFO)
+    data class LogEntry(val message: String, val type: LogType = LogType.INFO, val raw: Boolean = false)
 
     fun interface Callback {
         fun onLog(entry: LogEntry)
@@ -71,6 +71,7 @@ object RootDiagnostics {
         } else {
             entries += LogEntry(context.getString(R.string.diag_root_granted), LogType.SUCCESS)
             checkSepolicy(context, callback)
+            checkMagiskDenylist(context, callback)
             checkHideMyAppList(context, callback)
         }
         return entries.filter { it.message.isNotBlank() && !it.message.endsWith("...") }
@@ -124,7 +125,7 @@ object RootDiagnostics {
             presetBlocked = presetBlocked || preset
             if (removed || preset) {
                 changed = true
-                callback.onLog(LogEntry("- $pkg", LogType.SUCCESS))
+                callback.onLog(LogEntry(pkg, LogType.SUCCESS, raw = true))
             }
         }
 
@@ -243,7 +244,7 @@ object RootDiagnostics {
         listed.forEach { pkg ->
             if (Shell.cmd("magisk --denylist rm $pkg").exec().isSuccess) {
                 Shell.cmd("am force-stop $pkg").exec()
-                callback.onLog(LogEntry("- $pkg", LogType.SUCCESS))
+                callback.onLog(LogEntry(pkg, LogType.SUCCESS, raw = true))
             } else {
                 failed = true
             }
@@ -279,7 +280,7 @@ object RootDiagnostics {
             )
         } else {
             callback.onLog(LogEntry(context.getString(R.string.diag_sepolicy_found), LogType.ERROR))
-            callback.onLog(LogEntry(foundLine.trim(), LogType.WARNING))
+            callback.onLog(LogEntry(foundLine.trim(), LogType.WARNING, raw = true))
             callback.onLog(LogEntry(""))
             callback.onLog(
                 LogEntry(
@@ -337,8 +338,8 @@ object RootDiagnostics {
         }
 
         callback.onLog(LogEntry(context.getString(R.string.diag_denylist_blocked), LogType.ERROR))
-        blocked.forEach { callback.onLog(LogEntry("- $it", LogType.WARNING)) }
-        logLines.lastOrNull()?.let { callback.onLog(LogEntry(it.trim(), LogType.WARNING)) }
+        blocked.forEach { callback.onLog(LogEntry(it, LogType.WARNING, raw = true)) }
+        logLines.lastOrNull()?.let { callback.onLog(LogEntry(it.trim(), LogType.WARNING, raw = true)) }
         callback.onLog(LogEntry(""))
         callback.onLog(LogEntry(context.getString(R.string.diag_denylist_disable), LogType.ERROR))
     }
@@ -399,7 +400,7 @@ object RootDiagnostics {
             )
         } else {
             callback.onLog(LogEntry(context.getString(R.string.diag_hma_blocked), LogType.ERROR))
-            blockedTargets.forEach { callback.onLog(LogEntry("- $it", LogType.WARNING)) }
+            blockedTargets.forEach { callback.onLog(LogEntry(it, LogType.WARNING, raw = true)) }
             callback.onLog(LogEntry(""))
             callback.onLog(LogEntry(context.getString(R.string.diag_hma_disable), LogType.ERROR))
         }

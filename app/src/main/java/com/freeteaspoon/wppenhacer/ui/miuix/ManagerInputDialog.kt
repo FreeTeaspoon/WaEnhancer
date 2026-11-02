@@ -16,19 +16,21 @@ import androidx.compose.ui.unit.dp
 import com.freeteaspoon.wppenhacer.R
 import top.yukonga.miuix.kmp.basic.*
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.window.WindowDialog
+import top.yukonga.miuix.kmp.overlay.OverlayDialog
+import androidx.compose.ui.semantics.*
 
 @Composable
 internal fun ManagerDialogActions(
     onCancel: () -> Unit,
     confirmText: String = stringResource(R.string.manager_save),
     confirmEnabled: Boolean = true,
+    destructive: Boolean = false,
     onConfirm: () -> Unit,
 ) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         TextButton(stringResource(android.R.string.cancel), onCancel, Modifier.weight(1f))
         TextButton(confirmText, onConfirm, Modifier.weight(1f), enabled = confirmEnabled,
-            colors = ButtonDefaults.textButtonColorsPrimary())
+            colors = if (destructive) ButtonDefaults.textButtonColors(textColor = MiuixTheme.colorScheme.error) else ButtonDefaults.textButtonColorsPrimary())
     }
 }
 
@@ -51,15 +53,25 @@ internal fun ManagerTextInputDialog(
     suffix: String? = null,
     confirmText: String = stringResource(R.string.manager_save),
     singleLine: Boolean = true,
+    validateAsync: ((String) -> String?)? = null,
 ) {
-    WindowDialog(show = show, title = title, summary = summary,
+    OverlayDialog(show = show, title = title, summary = summary,
         onDismissRequest = onDismiss, onDismissFinished = onDismissFinished) {
         var value by remember { mutableStateOf(TextFieldValue(initialValue, TextRange(initialValue.length))) }
         val focus = remember { FocusRequester() }
         val keyboard = LocalSoftwareKeyboardController.current
         LaunchedEffect(Unit) { focus.requestFocus(); keyboard?.show() }
-        val error = validate(value.text)
-        val valid = error == null && (allowBlank || value.text.isNotBlank())
+        var checkedDraft by remember { mutableStateOf<String?>(null) }
+        var asyncError by remember { mutableStateOf<String?>(null) }
+        LaunchedEffect(value.text) {
+            if (validateAsync != null) {
+                kotlinx.coroutines.delay(150)
+                asyncError = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { validateAsync(value.text) }
+                checkedDraft = value.text
+            }
+        }
+        val error = validate(value.text) ?: asyncError.takeIf { checkedDraft == value.text }
+        val valid = error == null && (allowBlank || value.text.isNotBlank()) && (validateAsync == null || checkedDraft == value.text)
         TextField(
             value = value,
             onValueChange = { input ->
@@ -74,10 +86,10 @@ internal fun ManagerTextInputDialog(
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = { if (valid) onConfirm(value.text) }),
             visualTransformation = visualTransformation,
-            trailingIcon = suffix?.let { text -> { Text(text, Modifier.padding(horizontal = 16.dp)) } },
+            trailingIcon = suffix?.let { text -> { Text(text, Modifier.padding(horizontal = 16.dp), color = MiuixTheme.colorScheme.onSurfaceVariantActions) } },
         )
         if (error != null) Text(error, color = MiuixTheme.colorScheme.error,
-            style = MiuixTheme.textStyles.footnote1, modifier = Modifier.padding(top = 8.dp))
+            style = MiuixTheme.textStyles.footnote1, modifier = Modifier.padding(top = 8.dp).semantics { this.error(error); liveRegion = LiveRegionMode.Polite })
         Spacer(Modifier.height(12.dp))
         ManagerDialogActions(onDismiss, confirmText, valid) { onConfirm(value.text) }
     }

@@ -33,11 +33,11 @@ internal fun ManagerSearchContent(
         pageState = if (query.isNotBlank() && results.isEmpty()) ManagerPageStateKind.EMPTY else ManagerPageStateKind.CONTENT,
         stateTitle = stringResource(R.string.manager_no_results),
         stateMessage = stringResource(R.string.manager_no_results_hint),
-        fixedContent = {
+        scrollingControl = {
             TextField(
                 value = query,
                 onValueChange = onQueryChange,
-                modifier = Modifier.testTag("features-search").padding(horizontal = 12.dp).padding(top = 12.dp, bottom = 6.dp).fillMaxWidth(),
+                modifier = Modifier.testTag("features-search").padding(horizontal = 12.dp).padding(bottom = 6.dp).fillMaxWidth(),
                 label = stringResource(R.string.manager_search_features),
                 useLabelAsPlaceholder = true,
                 singleLine = true,

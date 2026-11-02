@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import top.yukonga.miuix.kmp.nav.core.NavBackStack
 import top.yukonga.miuix.kmp.nav.core.NavCornerClipMode
 import top.yukonga.miuix.kmp.nav.core.NavDisplay
@@ -54,7 +55,8 @@ internal fun ManagerStackNavigator(
         LayoutDirection.Rtl -> NavSwipeDirection.RightToLeft
         else -> NavSwipeDirection.LeftToRight
     }
-    val navCornerRadius = rememberNavSystemCornerRadius()
+    val systemCornerRadius = rememberNavSystemCornerRadius()
+    val navCornerRadius = if (androidx.compose.ui.platform.LocalWindowInfo.current.containerDpSize.width < 600.dp) systemCornerRadius else 0.dp
 
     NavDisplay(
         backStack = stack,

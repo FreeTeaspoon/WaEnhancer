@@ -39,6 +39,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
@@ -77,7 +78,7 @@ import top.yukonga.miuix.kmp.preference.SwitchPreference
 import top.yukonga.miuix.kmp.blur.isRuntimeShaderSupported
 import top.yukonga.miuix.kmp.shader.isRenderEffectSupported
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.window.WindowDialog
+import top.yukonga.miuix.kmp.overlay.OverlayDialog
 import top.yukonga.miuix.kmp.icon.extended.Share
 import top.yukonga.miuix.kmp.icon.extended.Delete
 import top.yukonga.miuix.kmp.icon.extended.More
@@ -358,40 +359,35 @@ internal fun ManagerConfigurationScreen(controller: PreferenceController, onBack
     val busy by model.busy.collectAsStateWithLifecycle()
     var confirmReset by rememberSaveable { mutableStateOf(false) }
     var importUri by remember { mutableStateOf<Uri?>(null) }
-    val importFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { importUri = it }
+    var showImport by remember { mutableStateOf(false) }
+    var afterDismiss by remember { mutableStateOf<(() -> Unit)?>(null) }
+    val importFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { importUri = it; showImport = it != null }
     val exportFile = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
         uri?.let(model::exportConfiguration)
     }
     ManagerDetailScaffold(stringResource(R.string.manager_configuration), false, onBack) {
-        item("tip", contentType = PageStart.Inset) { ManagerTipCard(stringResource(R.string.manager_configuration_tip)) }
         item("actions") { ManagerGroupCard {
-            ArrowPreference(stringResource(R.string.manager_import), summary = stringResource(R.string.manager_import_summary), enabled = !busy,
-                onClick = { importFile.launch(arrayOf("application/json", "text/json")) })
-            ArrowPreference(stringResource(R.string.manager_export), summary = stringResource(R.string.manager_export_summary), enabled = !busy,
-                onClick = { exportFile.launch("WaEnhancer-settings.json") })
+            ArrowPreference(stringResource(R.string.manager_import), summary = stringResource(R.string.manager_import_summary),                 onClick = { importFile.launch(arrayOf("application/json", "text/json")) })
+            ArrowPreference(stringResource(R.string.manager_export), summary = stringResource(R.string.manager_export_summary),                 onClick = { exportFile.launch("WaEnhancer-settings.json") })
         } }
         item("reset") { ManagerGroupCard {
-            ArrowPreference(stringResource(R.string.manager_reset), summary = stringResource(R.string.manager_reset_summary), enabled = !busy,
-                titleColor = top.yukonga.miuix.kmp.basic.BasicComponentDefaults.titleColor(color = MiuixTheme.colorScheme.error),
+            ArrowPreference(stringResource(R.string.manager_reset), summary = stringResource(R.string.manager_reset_summary),                 titleColor = top.yukonga.miuix.kmp.basic.BasicComponentDefaults.titleColor(color = MiuixTheme.colorScheme.error),
                 onClick = { confirmReset = true })
         } }
     }
-    WindowDialog(show = busy, title = stringResource(R.string.manager_configuration), onDismissRequest = {}) {
-        androidx.compose.foundation.layout.Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            top.yukonga.miuix.kmp.basic.InfiniteProgressIndicator()
-        }
-    }
-    WindowDialog(show = confirmReset, title = stringResource(R.string.reset_settings), summary = stringResource(R.string.manager_reset_confirm), onDismissRequest = { confirmReset = false }) {
-        ManagerDialogActions({ confirmReset = false }, stringResource(R.string.manager_reset)) {
+    ManagerOperationHost(model.operation)
+    OverlayDialog(show = confirmReset, title = stringResource(R.string.reset_settings), summary = stringResource(R.string.manager_reset_confirm), onDismissRequest = { confirmReset = false }, onDismissFinished = { val action = afterDismiss; afterDismiss = null; action?.invoke() }) {
+        ManagerDialogActions({ confirmReset = false }, stringResource(R.string.manager_reset), destructive = true) {
             confirmReset = false
-            model.resetConfiguration()
+            afterDismiss = { model.resetConfiguration() }
         }
     }
-    WindowDialog(show = importUri != null, title = stringResource(R.string.import_settings), summary = stringResource(R.string.manager_import_confirm), onDismissRequest = { importUri = null }) {
-        ManagerDialogActions({ importUri = null }, stringResource(R.string.manager_import)) {
+    OverlayDialog(show = showImport, title = stringResource(R.string.import_settings), summary = stringResource(R.string.manager_import_confirm), onDismissRequest = { showImport = false },
+        onDismissFinished = { importUri = null; val action = afterDismiss; afterDismiss = null; action?.invoke() }) {
+        ManagerDialogActions({ showImport = false }, stringResource(R.string.manager_import)) {
             val uri = importUri ?: return@ManagerDialogActions
-            importUri = null
-            model.importConfiguration(uri)
+            showImport = false
+            afterDismiss = { model.importConfiguration(uri) }
         }
     }
 }
@@ -442,16 +438,25 @@ internal fun ManagerDiagnosticsScreen(onBack: () -> Unit) {
     LaunchedEffect(model) { if (state.content == null) model.runDiagnostics() }
     ManagerDetailScaffold(
         stringResource(R.string.manager_root_diagnostics), false, onBack,
-        isRefreshing = state.refreshing,
+        isRefreshing = state.refreshing, refreshEnabled = !fixing && !fixingDenylist,
         onRefresh = { model.runDiagnostics(true) },
         pageState = when {
             state.content != null -> ManagerPageStateKind.CONTENT
             state.error != null -> ManagerPageStateKind.ERROR
             else -> ManagerPageStateKind.LOADING
         },
-        stateTitle = stringResource(R.string.manager_root_checking),
+        stateTitle = stringResource(if (state.error != null) R.string.manager_load_failed else R.string.manager_root_checking),
         stateMessage = state.error.orEmpty(),
         onRetry = { model.runDiagnostics() },
+        actions = {
+            val items = buildList {
+                if (state.content.orEmpty().any { it.message == hmaBlockMessage }) add(top.yukonga.miuix.kmp.basic.DropdownItem(stringResource(R.string.diag_hma_fix), onClick = { confirmFix = true }))
+                if (state.content.orEmpty().any { it.message == denylistBlockMessage }) add(top.yukonga.miuix.kmp.basic.DropdownItem(stringResource(R.string.diag_denylist_fix), onClick = { confirmDenylistFix = true }))
+            }
+            if (items.isNotEmpty()) top.yukonga.miuix.kmp.menu.OverlayIconDropdownMenu(entry = top.yukonga.miuix.kmp.basic.DropdownEntry(items)) {
+                top.yukonga.miuix.kmp.basic.Icon(top.yukonga.miuix.kmp.icon.MiuixIcons.More, stringResource(R.string.manager_more))
+            }
+        },
     ) {
         state.content?.let { logs ->
             item("result", contentType = PageStart.Viewport) {
@@ -465,23 +470,8 @@ internal fun ManagerDiagnosticsScreen(onBack: () -> Unit) {
                     logs.forEach { log ->
                         Text(log.message, modifier = Modifier.padding(top = 6.dp),
                             style = MiuixTheme.textStyles.body1,
+                            fontFamily = if (log.raw) androidx.compose.ui.text.font.FontFamily.Monospace else null,
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center)
-                    }
-                    if (logs.any { it.message == hmaBlockMessage }) {
-                        Spacer(Modifier.height(12.dp))
-                        TextButton(stringResource(R.string.diag_hma_fix), { confirmFix = true },
-                            enabled = !fixing && !fixingDenylist && !state.refreshing,
-                            colors = ButtonDefaults.textButtonColorsPrimary())
-                    }
-                    if (logs.any { it.message == denylistBlockMessage }) {
-                        Spacer(Modifier.height(12.dp))
-                        TextButton(stringResource(R.string.diag_denylist_fix), { confirmDenylistFix = true },
-                            enabled = !fixing && !fixingDenylist && !state.refreshing,
-                            colors = ButtonDefaults.textButtonColorsPrimary())
-                    }
-                    if (fixing || fixingDenylist) {
-                        Spacer(Modifier.height(12.dp))
-                        top.yukonga.miuix.kmp.basic.InfiniteProgressIndicator()
                     }
                     Spacer(Modifier.height(12.dp))
                     TextButton(stringResource(R.string.manager_back), onBack,
@@ -491,23 +481,26 @@ internal fun ManagerDiagnosticsScreen(onBack: () -> Unit) {
             }
         }
     }
-    WindowDialog(show = confirmFix, title = stringResource(R.string.diag_hma_fix_confirm_title),
+    ManagerOperationHost(model.diagnosticOperation)
+    LaunchedEffect(state.error) { if (state.content != null) state.error?.let(ManagerSnackbarEvents::tryShow) }
+    var afterRepairDismiss by remember { mutableStateOf<(() -> Unit)?>(null) }
+    OverlayDialog(show = confirmFix, title = stringResource(R.string.diag_hma_fix_confirm_title),
         summary = stringResource(R.string.diag_hma_fix_confirm_message),
-        onDismissRequest = { confirmFix = false }) {
+        onDismissRequest = { confirmFix = false }, onDismissFinished = { val action = afterRepairDismiss; afterRepairDismiss = null; action?.invoke() }) {
         ManagerDialogActions({ confirmFix = false }, stringResource(R.string.diag_hma_fix_confirm)) {
             confirmFix = false
-            model.fixHideMyAppList()
+            afterRepairDismiss = { model.fixHideMyAppList() }
         }
     }
-    WindowDialog(show = confirmDenylistFix, title = stringResource(R.string.diag_denylist_fix_confirm_title),
+    OverlayDialog(show = confirmDenylistFix, title = stringResource(R.string.diag_denylist_fix_confirm_title),
         summary = stringResource(R.string.diag_denylist_fix_confirm_message),
-        onDismissRequest = { confirmDenylistFix = false }) {
+        onDismissRequest = { confirmDenylistFix = false }, onDismissFinished = { val action = afterRepairDismiss; afterRepairDismiss = null; action?.invoke() }) {
         ManagerDialogActions({ confirmDenylistFix = false }, stringResource(R.string.diag_hma_fix_confirm)) {
             confirmDenylistFix = false
-            model.fixMagiskDenylist()
+            afterRepairDismiss = { model.fixMagiskDenylist() }
         }
     }
-    WindowDialog(show = restartRequired, title = stringResource(R.string.diag_hma_fix_reboot_title),
+    OverlayDialog(show = restartRequired && !fixing && !fixingDenylist, title = stringResource(R.string.diag_hma_fix_reboot_title),
         summary = stringResource(R.string.diag_hma_fix_reboot_message),
         onDismissRequest = model::dismissHmaRestart) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -557,6 +550,8 @@ internal fun ManagerRecordingsScreen(onBack: () -> Unit, onNavigate: (ManagerRou
     var selectedPaths by rememberSaveable { mutableStateOf(setOf<String>()) }
     var sort by rememberSaveable { mutableStateOf(RecordingSort.DATE) }
     var confirmDelete by rememberSaveable { mutableStateOf(false) }
+    var deletingSnapshot by remember { mutableStateOf<Set<String>>(emptySet()) }
+    var deleteConfirmed by remember { mutableStateOf(false) }
     LaunchedEffect(model, storageGranted) { if (storageGranted) model.loadRecordings() }
     val recordings = state.content.orEmpty().filter { contact == null || it.contactName == contact }
     val visible = when (sort) {
@@ -569,7 +564,7 @@ internal fun ManagerRecordingsScreen(onBack: () -> Unit, onNavigate: (ManagerRou
     val pageTitle = contact ?: stringResource(R.string.manager_recordings)
     ManagerDetailScaffold(pageTitle, false, onBack,
         fixedContent = if (!storageGranted) ({ ManagerStoragePermissionRow() }) else null,
-        isRefreshing = state.refreshing, onRefresh = if (storageGranted) ({ model.loadRecordings(true); Unit }) else null,
+        isRefreshing = state.refreshing, refreshEnabled = !busy, onRefresh = if (storageGranted) ({ model.loadRecordings(true); Unit }) else null,
         pageState = when {
             !storageGranted -> ManagerPageStateKind.EMPTY
             state.content == null && state.error != null -> ManagerPageStateKind.ERROR
@@ -585,8 +580,7 @@ internal fun ManagerRecordingsScreen(onBack: () -> Unit, onNavigate: (ManagerRou
         }),
         stateMessage = state.error.orEmpty(), onRetry = { model.loadRecordings() },
         actions = {
-            if (busy) top.yukonga.miuix.kmp.basic.InfiniteProgressIndicator()
-            else if (visible.isNotEmpty()) {
+            if (visible.isNotEmpty()) {
                 if (selectedPaths.isNotEmpty()) {
                     top.yukonga.miuix.kmp.basic.IconButton(onClick = {
                         val uris = ArrayList(selectedPaths.map { FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", File(it)) })
@@ -594,7 +588,7 @@ internal fun ManagerRecordingsScreen(onBack: () -> Unit, onNavigate: (ManagerRou
                             .putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION), resources.getString(R.string.share)))
                     }) { top.yukonga.miuix.kmp.basic.Icon(top.yukonga.miuix.kmp.icon.MiuixIcons.Share, stringResource(R.string.share)) }
                 }
-                top.yukonga.miuix.kmp.basic.IconButton(onClick = { confirmDelete = true }) {
+                top.yukonga.miuix.kmp.basic.IconButton(onClick = { deletingSnapshot = if (selectedPaths.isEmpty()) visible.map { it.file.absolutePath }.toSet() else selectedPaths; confirmDelete = true }) {
                     top.yukonga.miuix.kmp.basic.Icon(top.yukonga.miuix.kmp.icon.MiuixIcons.Delete, stringResource(R.string.delete))
                 }
                 val items = RecordingSort.entries.map { mode -> top.yukonga.miuix.kmp.basic.DropdownItem(
@@ -618,7 +612,7 @@ internal fun ManagerRecordingsScreen(onBack: () -> Unit, onNavigate: (ManagerRou
         if (grouped && !selectionMode) {
             managerGroupedCardItems("recording-contacts", visible.groupBy { it.contactName }.map { (name, items) ->
                 ManagerCardItem(name) { ArrowPreference(name, summary = resources.getQuantityString(R.plurals.manager_recording_count, items.size, items.size),
-                    enabled = !busy, onClick = { onNavigate(ManagerRoute.RecordingContact(name)) }) }
+                    onClick = { onNavigate(ManagerRoute.RecordingContact(name)) }) }
             })
         } else managerGroupedCardItems("recordings", visible.map { recording ->
             ManagerCardItem(recording.file.absolutePath) {
@@ -627,8 +621,7 @@ internal fun ManagerRecordingsScreen(onBack: () -> Unit, onNavigate: (ManagerRou
                 if (selectionMode) top.yukonga.miuix.kmp.preference.CheckboxPreference(
                     checked = recording.file.absolutePath in selectedPaths,
                     onCheckedChange = { checked -> selectedPaths = if (checked) selectedPaths + recording.file.absolutePath else selectedPaths - recording.file.absolutePath },
-                    title = recording.contactName, summary = summary, enabled = !busy,
-                ) else ArrowPreference(recording.contactName, summary = summary, enabled = !busy, onClick = {
+                    title = recording.contactName, summary = summary,                 ) else ArrowPreference(recording.contactName, summary = summary, onClick = {
                     val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", recording.file)
                     runCatching { context.startActivity(Intent(Intent.ACTION_VIEW).setDataAndType(uri, "audio/*").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)) }
                         .onFailure { ManagerSnackbarEvents.tryShow(resources.getString(R.string.manager_operation_failed, it.message.orEmpty())) }
@@ -636,11 +629,16 @@ internal fun ManagerRecordingsScreen(onBack: () -> Unit, onNavigate: (ManagerRou
             }
         })
     }
-    val deleting = if (selectedPaths.isEmpty()) visible.map { it.file.absolutePath }.toSet() else selectedPaths
-    WindowDialog(show = confirmDelete, title = stringResource(R.string.delete), summary = stringResource(R.string.manager_delete_recordings_confirm, deleting.size), onDismissRequest = { confirmDelete = false }) {
-        ManagerDialogActions({ confirmDelete = false }, stringResource(R.string.delete)) {
+    ManagerOperationHost(model.recordingProgress)
+    OverlayDialog(show = confirmDelete, title = stringResource(R.string.delete),
+        summary = stringResource(R.string.manager_delete_recordings_confirm, deletingSnapshot.size),
+        onDismissRequest = { confirmDelete = false }, onDismissFinished = {
+            if (deleteConfirmed) model.deleteRecordings(deletingSnapshot)
+            deleteConfirmed = false
+        }) {
+        ManagerDialogActions({ confirmDelete = false }, stringResource(R.string.delete), destructive = true) {
+            deleteConfirmed = true
             confirmDelete = false
-            model.deleteRecordings(deleting)
         }
     }
 }
@@ -661,12 +659,14 @@ internal fun ManagerThemeManagerScreen(state: ManagerUiState, onBack: () -> Unit
     val refreshing = loaded.refreshing
     var creating by remember { mutableStateOf(false) }
     var importUri by remember { mutableStateOf<Uri?>(null) }
+    var showImport by remember { mutableStateOf(false) }
+    var pendingAction by remember { mutableStateOf<(() -> Unit)?>(null) }
     LaunchedEffect(storageGranted) { if (storageGranted) model.loadThemes() }
-    LaunchedEffect(created) { created?.let { model.consumeCreated(); onNavigate(ManagerRoute.ThemeEditor(it)) } }
-    val importTheme = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { importUri = it }
+    LaunchedEffect(created, importing) { if (!importing) created?.let { model.consumeCreated(); onNavigate(ManagerRoute.ThemeEditor(it)) } }
+    val importTheme = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { importUri = it; showImport = it != null }
     ManagerDetailScaffold(stringResource(R.string.theme_manager), false, onBack,
         fixedContent = if (!storageGranted) ({ ManagerStoragePermissionRow() }) else null,
-        isRefreshing = refreshing, onRefresh = if (storageGranted) ({ model.loadThemes(true); Unit }) else null,
+        isRefreshing = refreshing, refreshEnabled = !importing, onRefresh = if (storageGranted) ({ model.loadThemes(true); Unit }) else null,
         pageState = if (!storageGranted) ManagerPageStateKind.EMPTY else if (themes != null) ManagerPageStateKind.CONTENT else if (error == null) ManagerPageStateKind.LOADING else ManagerPageStateKind.ERROR,
         stateTitle = stringResource(when {
             !storageGranted -> R.string.storage_permission
@@ -676,39 +676,40 @@ internal fun ManagerThemeManagerScreen(state: ManagerUiState, onBack: () -> Unit
         stateMessage = error.orEmpty(), onRetry = { model.loadThemes() },
     ) {
         error?.let { message -> item("refresh-error", contentType = PageStart.Inset) { ManagerTipCard(message) } }
-        item("tip", contentType = PageStart.Inset) { ManagerTipCard(stringResource(R.string.manager_theme_tip)) }
         item("actions") { ManagerGroupCard {
-            ArrowPreference(stringResource(R.string.create_new_theme), enabled = !importing, onClick = { creating = true })
-            ArrowPreference(stringResource(R.string.import_theme), enabled = !importing, onClick = { importTheme.launch(arrayOf("application/zip")) })
+            ArrowPreference(stringResource(R.string.create_new_theme), onClick = { creating = true })
+            ArrowPreference(stringResource(R.string.import_theme), onClick = { importTheme.launch(arrayOf("application/zip")) })
         } }
-        item("themes") { ManagerGroupCard {
-            ArrowPreference(stringResource(R.string.manager_default_theme), summary = if (state.preferences["folder_theme"] == null) stringResource(R.string.manager_selected) else null,
-                enabled = !importing, onClick = model::selectDefault)
-            themes.orEmpty().forEach { folder ->
+        managerGroupedCardItems("themes", buildList {
+            add(ManagerCardItem("default") {
+                ArrowPreference(stringResource(R.string.manager_default_theme), summary = if (state.preferences["folder_theme"] == null) stringResource(R.string.manager_selected) else null,
+                    onClick = model::selectDefault)
+            })
+            themes.orEmpty().forEach { folder -> add(ManagerCardItem(folder.name) {
                 ArrowPreference(folder.name, summary = if (state.preferences["folder_theme"] == folder.name) stringResource(R.string.manager_selected) else null,
-                    enabled = !importing, onClick = { onNavigate(ManagerRoute.ThemeEditor(folder.name)) })
-            }
-        } }
+                    onClick = { onNavigate(ManagerRoute.ThemeEditor(folder.name)) })
+            }) }
+        })
     }
     ManagerTextInputDialog(
         show = creating, title = stringResource(R.string.new_theme_name), initialValue = "",
         onDismiss = { creating = false }, maxLength = 64,
         validate = { name ->
-            if (!validThemeName(name) || File(ThemePreference.rootDirectory, name.trim()).exists())
+            if (!validThemeName(name) || themes.orEmpty().any { it.name == name.trim() })
                 resources.getString(R.string.manager_theme_name_invalid) else null
         },
-        onConfirm = { name -> creating = false; model.createTheme(name) },
+        onConfirm = { name -> creating = false; pendingAction = { model.createTheme(name) } },
+        onDismissFinished = { val action = pendingAction; pendingAction = null; action?.invoke() },
     )
-    WindowDialog(show = importUri != null, title = stringResource(R.string.import_theme), summary = stringResource(R.string.manager_theme_import_confirm), onDismissRequest = { importUri = null }) {
-        ManagerDialogActions({ importUri = null }, stringResource(R.string.manager_import)) {
+    OverlayDialog(show = showImport, title = stringResource(R.string.import_theme), summary = stringResource(R.string.manager_theme_import_confirm), onDismissRequest = { showImport = false },
+        onDismissFinished = { importUri = null; val action = pendingAction; pendingAction = null; action?.invoke() }) {
+        ManagerDialogActions({ showImport = false }, stringResource(R.string.manager_import)) {
             val uri = importUri ?: return@ManagerDialogActions
-            importUri = null
-            model.importTheme(uri)
+            showImport = false
+            pendingAction = { model.importTheme(uri) }
         }
     }
-    WindowDialog(show = importing, title = stringResource(R.string.theme_manager), onDismissRequest = {}) {
-        androidx.compose.foundation.layout.Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) { top.yukonga.miuix.kmp.basic.InfiniteProgressIndicator() }
-    }
+    ManagerOperationHost(model.operation)
 }
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -719,11 +720,22 @@ internal fun ManagerThemeEditorScreen(folderName: String, onBack: () -> Unit) {
     val model: ManagerFileWorkflowViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val editors by model.editors.collectAsStateWithLifecycle()
     val loaded = editors[folderName] ?: ManagerLoadState()
+    val template by model.template.collectAsStateWithLifecycle()
+    val dark = LocalManagerDarkMode.current
+    val editorLabel = stringResource(R.string.manager_css_editor_label)
+    val editorBackground = "#%06x".format(MiuixTheme.colorScheme.surface.toArgb() and 0xffffff)
+    val editorText = "#%06x".format(MiuixTheme.colorScheme.onSurface.toArgb() and 0xffffff)
+    var rendererFailed by remember { mutableStateOf(false) }
+    var rendererGeneration by remember { androidx.compose.runtime.mutableIntStateOf(0) }
     val css = loaded.content
     val error = loaded.error
     val busy by model.busy.collectAsStateWithLifecycle()
     var webView by remember { mutableStateOf<WebView?>(null) }
     var confirmClear by remember { mutableStateOf(false) }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var imagePrompt by remember { mutableStateOf(false) }
+    var importAfterDismiss by remember { mutableStateOf<(() -> Unit)?>(null) }
+    val importImage = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { imageUri = it; imagePrompt = it != null }
     LaunchedEffect(folderName) { model.loadEditor(folderName) }
     fun save(apply: Boolean = false) {
         if (busy) return
@@ -740,15 +752,16 @@ internal fun ManagerThemeEditorScreen(folderName: String, onBack: () -> Unit) {
         uri?.let { model.exportTheme(folderName, it) }
     }
     ManagerDetailScaffold(folderName, false, onBack, contentMaxWidth = null,
-        pageState = if (css != null) ManagerPageStateKind.CONTENT else if (error == null) ManagerPageStateKind.LOADING else ManagerPageStateKind.ERROR,
-        stateMessage = error.orEmpty(),
+        pageState = if (rendererFailed) ManagerPageStateKind.ERROR else if (css != null && template != null) ManagerPageStateKind.CONTENT else if (error == null) ManagerPageStateKind.LOADING else ManagerPageStateKind.ERROR,
+        stateMessage = if (rendererFailed) stringResource(R.string.manager_editor_renderer_failed) else error.orEmpty(),
+        onRetry = { rendererFailed = false; rendererGeneration++; model.loadEditor(folderName) },
         actions = {
-            if (busy) top.yukonga.miuix.kmp.basic.InfiniteProgressIndicator()
-            else if (webView != null) {
+            if (webView != null) {
                 top.yukonga.miuix.kmp.basic.IconButton(onClick = { save() }) {
                     top.yukonga.miuix.kmp.basic.Icon(top.yukonga.miuix.kmp.icon.MiuixIcons.Ok, stringResource(R.string.manager_save))
                 }
                 top.yukonga.miuix.kmp.menu.OverlayIconDropdownMenu(entry = top.yukonga.miuix.kmp.basic.DropdownEntry(listOf(
+                    top.yukonga.miuix.kmp.basic.DropdownItem(stringResource(R.string.import_image), onClick = { importImage.launch(arrayOf("image/*")) }),
                     top.yukonga.miuix.kmp.basic.DropdownItem(stringResource(R.string.manager_apply), onClick = { save(true) }),
                     top.yukonga.miuix.kmp.basic.DropdownItem(stringResource(R.string.clear), onClick = { confirmClear = true }),
                     top.yukonga.miuix.kmp.basic.DropdownItem(stringResource(R.string.export_as_zip), onClick = { export.launch("$folderName.zip") }),
@@ -757,7 +770,7 @@ internal fun ManagerThemeEditorScreen(folderName: String, onBack: () -> Unit) {
         },
     ) {
         css?.let { initial -> item("editor", contentType = PageStart.Viewport) {
-            AndroidView(
+            androidx.compose.runtime.key(rendererGeneration) { AndroidView(
                 modifier = Modifier.fillParentMaxSize(),
                 factory = { activityContext ->
                     WebView(activityContext).apply {
@@ -771,21 +784,36 @@ internal fun ManagerThemeEditorScreen(folderName: String, onBack: () -> Unit) {
                         settings.allowContentAccess = false
                         settings.allowFileAccess = false
                         settings.domStorageEnabled = false
-                        webViewClient = ManagerEditorAssets(activityContext)
+                        webViewClient = ManagerEditorAssets(activityContext) { view ->
+                            if (webView === view) webView = null
+                            rendererFailed = true
+                        }
                         addJavascriptInterface(ManagerEditorBridge { model.updateDraft(folderName, it) }, "ManagerEditor")
                         webChromeClient = WebChromeClient()
-                        val template = activityContext.assets.open("css_editor.html").bufferedReader().use { it.readText() }
                         val escaped = android.text.TextUtils.htmlEncode(model.editorContent(folderName, initial))
-                        loadDataWithBaseURL(MANAGER_EDITOR_BASE_URL, template.replace("{{content}}", escaped), "text/html", "UTF-8", null)
+                        loadDataWithBaseURL(MANAGER_EDITOR_BASE_URL, requireNotNull(template)
+                            .replace("{{theme}}", if (dark) "dark" else "light")
+                            .replace("{{editorBackground}}", editorBackground).replace("{{editorText}}", editorText)
+                            .replace("{{editorLabel}}", android.text.TextUtils.htmlEncode(editorLabel))
+                            .replace("{{content}}", escaped), "text/html", "UTF-8", null)
                         webView = this
                     }
                 },
-                onRelease = { view -> webView = null; view.stopLoading(); view.destroy() },
-            )
+                update = { view -> view.evaluateJavascript("document.documentElement.dataset.theme = '${if (dark) "dark" else "light"}'; document.documentElement.style.setProperty('--editor-background', '$editorBackground'); document.documentElement.style.setProperty('--editor-text', '$editorText');", null) },
+                onRelease = { view -> if (webView === view) webView = null; view.stopLoading(); view.destroy() },
+            ) }
         } }
     }
-    WindowDialog(show = confirmClear, title = stringResource(R.string.clear), summary = stringResource(R.string.manager_clear_editor_confirm), onDismissRequest = { confirmClear = false }) {
-        ManagerDialogActions({ confirmClear = false }, stringResource(R.string.clear)) {
+    ManagerOperationHost(model.operation)
+    ManagerTextInputDialog(show = imagePrompt, title = stringResource(R.string.enter_image_file_name), initialValue = "image.png", summary = stringResource(R.string.manager_import_image_summary), confirmText = stringResource(R.string.manager_import),
+        onDismiss = { imagePrompt = false }, validate = { name ->
+            if (validThemeName(name) && name.endsWith(".png", ignoreCase = true)) null else resources.getString(R.string.error_image_name)
+        }, onConfirm = { name ->
+            imageUri?.let { uri -> importAfterDismiss = { model.importImage(folderName, name, uri) } }
+            imagePrompt = false
+        }, onDismissFinished = { imageUri = null; val action = importAfterDismiss; importAfterDismiss = null; action?.invoke() })
+    OverlayDialog(show = confirmClear, title = stringResource(R.string.clear), summary = stringResource(R.string.manager_clear_editor_confirm), onDismissRequest = { confirmClear = false }) {
+        ManagerDialogActions({ confirmClear = false }, stringResource(R.string.clear), destructive = true) {
             webView?.evaluateJavascript("document.getElementById('code').value = ''; document.getElementById('code').dispatchEvent(new Event('input', {bubbles:true}));", null)
             model.updateDraft(folderName, "")
             confirmClear = false

@@ -667,7 +667,7 @@
     <string translatable="false" name="manager_predictive_back">Predictive back gesture</string>
     <string translatable="false" name="manager_predictive_back_summary">Animate manager screens with Android predictive back</string>
     <string translatable="false" name="manager_interface_scale">Interface scale</string>
-    <string translatable="false" name="manager_interface_scale_summary">Adjust the manager display scale from 80% to 110%</string>
+    <string translatable="false" name="manager_interface_scale_summary">Adjust the global display scale (80% - 110%)</string>
     <string translatable="false" name="manager_section_navigation">Bottom navigation</string>
     <string translatable="false" name="manager_floating_navigation">Floating bottom bar</string>
     <string translatable="false" name="manager_floating_navigation_summary">Use a floating bottom navigation bar on phones</string>
@@ -702,7 +702,7 @@
     <string translatable="false" name="manager_installed">Installed</string>
     <string translatable="false" name="manager_running_version">Running version %1$s</string>
     <string translatable="false" name="manager_recordings">Recordings</string>
-    <string translatable="false" name="manager_call_recording_summary">Recording mode, selected contacts, output path, and root verification</string>
+    <string translatable="false" name="manager_call_recording_summary">Choose the recording mode and check root availability</string>
     <string translatable="false" name="manager_root_diagnostics">Root diagnostics</string>
     <string translatable="false" name="manager_search_results">Results</string>
     <string translatable="false" name="manager_non_root_mode">Non-root mode</string>
@@ -776,4 +776,25 @@
     <string name="messages_restored_success">Messages restored</string>
     <string name="hide_delivered_unknown">Hide Delivered for unknown numbers</string>
     <string name="hide_delivered_unknown_sum">Shows only one tick for numbers not saved in your contacts, as if the message hadn\'t arrived</string>
+    <string name="manager_importing_file" translatable="false">Importing file</string>
+    <string name="manager_exporting_settings" translatable="false">Exporting settings</string>
+    <string name="manager_importing_settings" translatable="false">Importing settings</string>
+    <string name="manager_resetting_settings" translatable="false">Resetting settings</string>
+    <string name="manager_creating_theme" translatable="false">Creating theme</string>
+    <string name="manager_importing_theme" translatable="false">Importing theme</string>
+    <string name="manager_saving_theme" translatable="false">Saving theme</string>
+    <string name="manager_exporting_theme" translatable="false">Exporting theme</string>
+    <string name="manager_checking_directory" translatable="false">Checking directory</string>
+    <string name="manager_importing_image" translatable="false">Importing image</string>
+    <string name="manager_deleting_recordings" translatable="false">Deleting recordings</string>
+    <string name="manager_repairing_hma" translatable="false">Repairing app visibility</string>
+    <string name="manager_repairing_denylist" translatable="false">Repairing DenyList</string>
+    <string name="manager_restart_apps" translatable="false">Restart apps</string>
+    <string name="manager_restart_confirm" translatable="false">Restart %1$s to apply your settings. Any active calls or transfers will be interrupted.</string>
+    <string name="manager_target_app" translatable="false">WhatsApp app</string>
+    <string name="manager_editor_renderer_failed" translatable="false">The editor stopped responding. Try again to restore your draft.</string>
+    <string name="manager_css_editor_label" translatable="false">Theme CSS</string>
+    <plurals name="manager_contact_count" translatable="false"><item quantity="one">%d contact selected</item><item quantity="other">%d contacts selected</item></plurals>
+    <string name="manager_directory_unavailable" translatable="false">Choose an existing directory that WaEnhancer can read and write.</string>
+    <string name="manager_import_image_summary" translatable="false">Choose a PNG file name. An existing image with this name will be replaced.</string>
 </resources>

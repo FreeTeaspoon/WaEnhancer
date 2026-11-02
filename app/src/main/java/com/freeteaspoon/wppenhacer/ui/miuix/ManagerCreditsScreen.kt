@@ -14,7 +14,6 @@ internal fun ManagerCreditsScreen(onBack: () -> Unit) {
     val licenceTitle = stringResource(R.string.manager_licence)
     val contributorsTitle = stringResource(R.string.manager_contributors)
     ManagerDetailScaffold(stringResource(R.string.manager_credits), false, onBack) {
-        item("tip", contentType = PageStart.Inset) { ManagerTipCard(stringResource(R.string.manager_about_credits)) }
         managerSection(licenceTitle, "licence")
         item("links") { ManagerGroupCard {
             ArrowPreference(stringResource(R.string.manager_licence), summary = stringResource(R.string.manager_licence_summary), onClick = { open("https://www.gnu.org/licenses/gpl-3.0.html") })

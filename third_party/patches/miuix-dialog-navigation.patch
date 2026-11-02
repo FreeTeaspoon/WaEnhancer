@@ -1,0 +1,130 @@
+diff --git a/miuix-nav/src/commonMain/kotlin/top/yukonga/miuix/kmp/nav/core/NavDisplay.kt b/miuix-nav/src/commonMain/kotlin/top/yukonga/miuix/kmp/nav/core/NavDisplay.kt
+index c6f6c28f..257058fb 100644
+--- a/miuix-nav/src/commonMain/kotlin/top/yukonga/miuix/kmp/nav/core/NavDisplay.kt
++++ b/miuix-nav/src/commonMain/kotlin/top/yukonga/miuix/kmp/nav/core/NavDisplay.kt
+@@ -686,10 +686,9 @@ private fun NavDisplayLayout(
+             }
+         }
+ 
+-        // Highest visible layer; the fullscreen dim scrim renders just beneath it.
+-        val topMostVisibleIndex = visibleEntries.fold(-1) { acc, e ->
+-            maxOf(acc, indexByContentKey[e.contentKey] ?: -1)
+-        }
++        // Popped and entering entries can share an index. Only the last visible
++        // entry in draw order owns the scrim, including during interrupted pops.
++        val scrimOwnerKey = visibleEntries.lastOrNull()?.contentKey
+ 
+         visibleEntries.fastForEach { entry ->
+             key(entry.contentKey) {
+@@ -713,7 +712,7 @@ private fun NavDisplayLayout(
+                     val upperEntry = presentation.presented.firstOrNull { indexByContentKey[it.contentKey] == entryIndex + 1 }
+                     val upperTransition = upperEntry?.transitionOrNull() ?: transition
+ 
+-                    if (effects.dimAmount > 0f && entryIndex == topMostVisibleIndex && entryIndex > 0) {
++                    if (effects.dimAmount > 0f && entry.contentKey == scrimOwnerKey && entryIndex > 0) {
+                         // Fullscreen dim scrim UNDER the top-most visible layer (reference shell
+                         // behavior): it must cover the entering page AND the backdrop revealed
+                         // around it when a card-style transition scales layers down — a scrim
+diff --git a/miuix-ui/src/commonMain/kotlin/top/yukonga/miuix/kmp/layout/DialogContentLayout.kt b/miuix-ui/src/commonMain/kotlin/top/yukonga/miuix/kmp/layout/DialogContentLayout.kt
+index 52cca6f8..f5b78a5d 100644
+--- a/miuix-ui/src/commonMain/kotlin/top/yukonga/miuix/kmp/layout/DialogContentLayout.kt
++++ b/miuix-ui/src/commonMain/kotlin/top/yukonga/miuix/kmp/layout/DialogContentLayout.kt
+@@ -205,6 +205,7 @@ internal fun DialogContentLayout(
+             snapshotFlow { navigationEventState.transitionState }
+                 .collect { transitionState ->
+                     if (
++                        currentOnDismissRequest != null &&
+                         transitionState is NavigationEventTransitionState.InProgress &&
+                         transitionState.direction == NavigationEventTransitionState.TRANSITIONING_BACK
+                     ) {
+diff --git a/miuix-ui/src/commonMain/kotlin/top/yukonga/miuix/kmp/overlay/OverlayDialog.kt b/miuix-ui/src/commonMain/kotlin/top/yukonga/miuix/kmp/overlay/OverlayDialog.kt
+index 734c2bd5..d47eaeb1 100644
+--- a/miuix-ui/src/commonMain/kotlin/top/yukonga/miuix/kmp/overlay/OverlayDialog.kt
++++ b/miuix-ui/src/commonMain/kotlin/top/yukonga/miuix/kmp/overlay/OverlayDialog.kt
+@@ -5,11 +5,15 @@ package top.yukonga.miuix.kmp.overlay
+ 
+ import androidx.compose.animation.EnterTransition
+ import androidx.compose.animation.ExitTransition
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.fillMaxSize
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.mutableStateOf
+ import androidx.compose.runtime.remember
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.semantics.dialog
++import androidx.compose.ui.semantics.semantics
+ import androidx.compose.ui.unit.Dp
+ import androidx.compose.ui.unit.DpSize
+ import top.yukonga.miuix.kmp.layout.DialogContentLayout
+@@ -82,7 +86,9 @@ fun OverlayDialog(
+                 enableAutoLargeScreen = false,
+                 renderInRootScaffold = renderInRootScaffold,
+             ) {
+-                hostContent()
++                Box(Modifier.fillMaxSize().semantics { dialog() }) {
++                    hostContent()
++                }
+             }
+         },
+         modifier = modifier,
+diff --git a/miuix-nav/src/desktopTest/kotlin/top/yukonga/miuix/kmp/nav/core/NavInterruptedScrimTest.kt b/miuix-nav/src/desktopTest/kotlin/top/yukonga/miuix/kmp/nav/core/NavInterruptedScrimTest.kt
+new file mode 100644
+index 00000000..5861e9cc
+--- /dev/null
++++ b/miuix-nav/src/desktopTest/kotlin/top/yukonga/miuix/kmp/nav/core/NavInterruptedScrimTest.kt
+@@ -0,0 +1,54 @@
++// Copyright 2026, compose-miuix-ui contributors
++// SPDX-License-Identifier: Apache-2.0
++
++package top.yukonga.miuix.kmp.nav.core
++
++import androidx.compose.foundation.background
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.graphics.toPixelMap
++import androidx.compose.ui.test.ExperimentalTestApi
++import androidx.compose.ui.test.captureToImage
++import androidx.compose.ui.test.onRoot
++import androidx.compose.ui.test.v2.runComposeUiTest
++import kotlin.test.Test
++import kotlin.test.assertTrue
++
++private data object ScrimHome : NavKey
++private data object ScrimFirst : NavKey
++private data object ScrimSecond : NavKey
++
++@OptIn(ExperimentalTestApi::class)
++class NavInterruptedScrimTest {
++    @Test
++    fun interruptedPopNeverDoublesTheNativeDim() = runComposeUiTest {
++        mainClock.autoAdvance = false
++        val stack = navBackStackOf(ScrimHome)
++        setContent {
++            NavDisplay(
++                backStack = stack,
++                effects = NavDisplayEffects(enableCornerClip = false, dimAmount = 0.5f, backdropColor = Color.White),
++            ) {
++                entry<ScrimHome> { Box(Modifier.fillMaxSize().background(Color.White)) }
++                entry<ScrimFirst> { Box(Modifier.fillMaxSize().background(Color.White)) }
++                entry<ScrimSecond> { Box(Modifier.fillMaxSize().background(Color.White)) }
++            }
++        }
++        mainClock.advanceTimeBy(64)
++        stack.add(ScrimFirst)
++        mainClock.advanceTimeBy(800)
++        stack.removeAt(stack.lastIndex)
++        mainClock.advanceTimeBy(80)
++        stack.add(ScrimSecond)
++        repeat(25) {
++            mainClock.advanceTimeBy(16)
++            val pixels = onRoot().captureToImage().toPixelMap()
++            // All pages are white. With the native 0.5 cap, no exposed page pixel
++            // can become darker than one black scrim, regardless of motion timing.
++            val pixel = pixels[1, pixels.height / 2]
++            assertTrue(pixel.red >= 0.49f, "duplicate dim during interrupted navigation: $pixel")
++        }
++    }
++}

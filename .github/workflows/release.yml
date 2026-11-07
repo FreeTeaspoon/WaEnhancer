@@ -62,12 +62,24 @@ jobs:
 
       - name: Validate both variants
         run: >-
-          ./gradlew --no-daemon --no-parallel --max-workers=2
+          ./gradlew --no-daemon --no-parallel --max-workers=2 --continue
           -Pkotlin.compiler.execution.strategy=in-process
           testWhatsappDebugUnitTest testBusinessDebugUnitTest
           lintWhatsappDebug lintBusinessDebug
           assembleWhatsappDebug assembleBusinessDebug
           assembleWhatsappDebugAndroidTest assembleBusinessDebugAndroidTest
+
+      - name: Upload validation diagnostics
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: validation-diagnostics-${{ steps.vars.outputs.tag }}
+          retention-days: 7
+          if-no-files-found: ignore
+          path: |
+            app/build/test-results/
+            app/build/reports/lint-results-*
+            app/build/intermediates/lint_intermediate_text_report/
 
       - name: Check patched Miuix formatting and regressions
         run: >-

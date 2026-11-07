@@ -64,7 +64,7 @@ class ContactVerify(loader: ClassLoader, preferences: SharedPreferences) :
     private fun registerActivityListener() {
         WppCore.addListenerActivity { activity, state ->
             if (activity.javaClass.simpleName == "Conversation" && state == WppCore.ActivityChangeState.ChangeType.STARTED) {
-                CompletableFuture.runAsync { onConversationStarted(activity) }
+                activity.runOnUiThread { onConversationStarted(activity) }
             }
         }
     }

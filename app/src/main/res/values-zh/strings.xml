@@ -112,6 +112,8 @@
     <string name="about">关于</string>
     <string name="igstatus_on_home_screen">在主页启用IGStatus</string>
     <string name="igstatus_on_home_screen_sum">在主页上显示Instagram风格的“动态”</string>
+    <string name="native_igstatus">原生 IGStatus</string>
+    <string name="native_igstatus_sum">在聊天标签页中使用 WhatsApp 原生动态栏，替代模块的动态栏</string>
     <string name="chatfilter_no_search">不使用搜索</string>
     <string name="chatfilter_search_icon">搜索图标</string>
     <string name="chatfilter_search_bar">搜索栏</string>

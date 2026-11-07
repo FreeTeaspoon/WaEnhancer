@@ -112,6 +112,8 @@
     <string name="about">Info</string>
     <string name="igstatus_on_home_screen">Abilita IGStatus nella Home</string>
     <string name="igstatus_on_home_screen_sum">Mostra lo stato in stile Instagram nella Home</string>
+    <string name="native_igstatus">IGStatus nativo</string>
+    <string name="native_igstatus_sum">Usa la barra degli stati nativa di WhatsApp nella scheda Chat al posto della barra del modulo</string>
     <string name="chatfilter_no_search">Nessuna ricerca</string>
     <string name="chatfilter_search_icon">Icona di ricerca</string>
     <string name="chatfilter_search_bar">Barra di ricerca</string>

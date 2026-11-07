@@ -112,6 +112,8 @@
     <string name="about">О приложении</string>
     <string name="igstatus_on_home_screen">Включить Инстаграмм подобный статус на домашнем экране</string>
     <string name="igstatus_on_home_screen_sum">Показать стиль Instagram подобный статус на главном экране</string>
+    <string name="native_igstatus">Встроенный IGStatus</string>
+    <string name="native_igstatus_sum">Использовать встроенную панель статусов WhatsApp на вкладке чатов вместо панели модуля</string>
     <string name="chatfilter_no_search">Без поиска</string>
     <string name="chatfilter_search_icon">Значок поиска</string>
     <string name="chatfilter_search_bar">Строка поиска</string>

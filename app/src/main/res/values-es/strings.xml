@@ -112,6 +112,8 @@
     <string name="about">Acerca de</string>
     <string name="igstatus_on_home_screen">Habilite estilo \"Historias de Instagram\" en la pantalla de inicio</string>
     <string name="igstatus_on_home_screen_sum">Mostrar estados estilo Instagram en la pantalla de inicio</string>
+    <string name="native_igstatus">IGStatus nativo</string>
+    <string name="native_igstatus_sum">Usar la barra de estados nativa de WhatsApp en la pestaña Chats en lugar de la barra del módulo</string>
     <string name="chatfilter_no_search">Sin búsqueda</string>
     <string name="chatfilter_search_icon">Icono de búsqueda</string>
     <string name="chatfilter_search_bar">Barra de búsqueda</string>

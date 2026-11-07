@@ -112,6 +112,8 @@
     <string name="about">حول</string>
     <string name="igstatus_on_home_screen">تفعيل ستايل الستوري مثل انستجرام على الشاشة الرئيسية </string>
     <string name="igstatus_on_home_screen_sum">إظهار نمط حالة Instagram في الشاشة الرئيسية</string>
+    <string name="native_igstatus">IGStatus الأصلي</string>
+    <string name="native_igstatus_sum">استخدام شريط الحالة الأصلي في WhatsApp ضمن علامة تبويب الدردشات بدلاً من شريط الوحدة</string>
     <string name="chatfilter_no_search">لا يوجد بحث</string>
     <string name="chatfilter_search_icon">أيقونة البحث</string>
     <string name="chatfilter_search_bar">شريط البحث</string>

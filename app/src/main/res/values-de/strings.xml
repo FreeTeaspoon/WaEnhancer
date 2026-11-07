@@ -112,6 +112,8 @@
     <string name="about">Über</string>
     <string name="igstatus_on_home_screen">Aktiviere IGStatus auf dem Startbildschirm</string>
     <string name="igstatus_on_home_screen_sum">Instagram Status-Stil im Startbildschirm anzeigen</string>
+    <string name="native_igstatus">Natives IGStatus</string>
+    <string name="native_igstatus_sum">Die native Statusleiste von WhatsApp im Chats-Tab anstelle der Modulleiste verwenden</string>
     <string name="chatfilter_no_search">Keine Suche</string>
     <string name="chatfilter_search_icon">Symbol \"Suche\"</string>
     <string name="chatfilter_search_bar">Suchleiste</string>

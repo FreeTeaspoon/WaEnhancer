@@ -116,6 +116,8 @@
     <string name="about">Tentang</string>
     <string name="igstatus_on_home_screen">Aktifkan IGStatus di Layar Beranda</string>
     <string name="igstatus_on_home_screen_sum">Tampilkan gaya status Instagram di layar beranda</string>
+    <string name="native_igstatus">IGStatus bawaan</string>
+    <string name="native_igstatus_sum">Gunakan bilah status bawaan WhatsApp di tab chat sebagai pengganti bilah modul</string>
     <string name="chatfilter_no_search">Tidak ada pencarian</string>
     <string name="chatfilter_search_icon">Ikon pencarian</string>
     <string name="chatfilter_search_bar">Bilah pencarian</string>

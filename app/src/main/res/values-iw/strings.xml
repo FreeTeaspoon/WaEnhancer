@@ -113,6 +113,8 @@
     <string name="about">אודות</string>
     <string name="igstatus_on_home_screen">אפשר סטטוס במסך הבית (כמו אינסטגרם)</string>
     <string name="igstatus_on_home_screen_sum">הצג סטטוס בסגנון אינסטגרם במסך הבית</string>
+    <string name="native_igstatus">IGStatus מובנה</string>
+    <string name="native_igstatus_sum">שימוש בסרגל הסטטוסים המובנה של WhatsApp בלשונית הצ’אטים במקום בסרגל של המודול</string>
     <string name="chatfilter_no_search">אין חיפוש</string>
     <string name="chatfilter_search_icon">אייקון חיפוש</string>
     <string name="chatfilter_search_bar">שורת החיפוש החדשה</string>

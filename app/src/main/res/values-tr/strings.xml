@@ -112,6 +112,8 @@
     <string name="about">Hakkında</string>
     <string name="igstatus_on_home_screen">Ana ekranda Instagram tarzı durumu etkinleştir</string>
     <string name="igstatus_on_home_screen_sum">Ana ekranda Instagram tarzı durumları göster</string>
+    <string name="native_igstatus">Yerel IGStatus</string>
+    <string name="native_igstatus_sum">Sohbetler sekmesinde modülün çubuğu yerine WhatsApp’ın yerel durum çubuğunu kullan</string>
     <string name="chatfilter_no_search">Arama yok</string>
     <string name="chatfilter_search_icon">Arama simgesi</string>
     <string name="chatfilter_search_bar">Arama çubuğu</string>

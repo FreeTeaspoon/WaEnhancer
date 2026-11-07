@@ -112,6 +112,8 @@
     <string name="about">À propos</string>
     <string name="igstatus_on_home_screen">Activer statut Instagram sur l\'écran d\'accueil</string>
     <string name="igstatus_on_home_screen_sum">Afficher le style de statut Instagram sur l\'écran d\'accueil</string>
+    <string name="native_igstatus">IGStatus natif</string>
+    <string name="native_igstatus_sum">Utiliser la barre de statuts native de WhatsApp dans l’onglet Discussions à la place de celle du module</string>
     <string name="chatfilter_no_search">Pas de recherche</string>
     <string name="chatfilter_search_icon">Icône de recherche</string>
     <string name="chatfilter_search_bar">Barre de recherche</string>

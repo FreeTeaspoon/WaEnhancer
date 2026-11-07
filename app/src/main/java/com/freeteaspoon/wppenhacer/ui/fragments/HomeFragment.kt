@@ -542,10 +542,9 @@ class HomeFragment : BaseFragment() {
                         return@use
                     }
 
-                    val parts = tagName.split("-")
-                    val hash = if (parts.size > 1) parts[1].trim() else ""
-                    val isNewVersion = hash.isNotEmpty() && !BuildConfig.VERSION_NAME.lowercase()
-                        .contains(hash.lowercase().trim())
+                    val isNewVersion = com.freeteaspoon.wppenhacer.utils.GithubReleaseUpdates.isUpdateAvailable(
+                        BuildConfig.VERSION_NAME, tagName, client, BuildConfig.GITHUB_REPOSITORY
+                    )
 
                     updateCardState(
                         success = true,

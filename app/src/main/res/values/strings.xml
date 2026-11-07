@@ -114,6 +114,8 @@
     <string name="about">About</string>
     <string name="igstatus_on_home_screen">Enable IGStatus on Home Screen</string>
     <string name="igstatus_on_home_screen_sum">Show status style Instagram in Home Screen</string>
+    <string name="native_igstatus">Native IGStatus</string>
+    <string name="native_igstatus_sum">Use WhatsApp\'s native status bar in the chats tab instead of the module\'s bar</string>
     <string name="chatfilter_no_search">No search</string>
     <string name="chatfilter_search_icon">Search icon</string>
     <string name="chatfilter_search_bar">Search bar</string>
@@ -412,7 +414,6 @@
     <string name="starting_cache">Starting hook cache in WhatsApp. This may take a while.</string>
     <string name="bridge_error">Bridge Failed: Enable System Framework in Lsposed and reboot device</string>
     <string name="disable_battery_optimization">Disable Battery Optimization</string>
-    <string name="bootloader_spoofer">Bootloader Spoofer</string>
     <string name="bootloader_spoofer_sum">Use this if you have been banned and are receiving the unofficial Whatsapp message</string>
     <string name="not_available">not available</string>
     <string name="select_all">Select All</string>
@@ -797,4 +798,11 @@
     <plurals name="manager_contact_count" translatable="false"><item quantity="one">%d contact selected</item><item quantity="other">%d contacts selected</item></plurals>
     <string name="manager_directory_unavailable" translatable="false">Choose an existing directory that WaEnhancer can read and write.</string>
     <string name="manager_import_image_summary" translatable="false">Choose a PNG file name. An existing image with this name will be replaced.</string>
+    <string name="call_blocked_notification_title">Call Blocked</string>
+    <string name="call_blocked_source_global">Global Settings</string>
+    <string name="call_block_notification_enabled">Blocked call notification</string>
+    <string name="call_block_notification_enabled_sum">Show a notification when a call is blocked</string>
+    <string name="custom_keybox">Custom KeyBox</string>
+    <string name="custom_keybox_file">keybox.xml file</string>
+    <string name="custom_keybox_file_none">No file selected</string>
 </resources>

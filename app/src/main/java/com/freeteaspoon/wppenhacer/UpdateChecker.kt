@@ -1,6 +1,8 @@
 package com.freeteaspoon.wppenhacer
 
 import android.app.Activity
+import com.freeteaspoon.wppenhacer.utils.GithubReleaseUpdates
+import com.freeteaspoon.wppenhacer.utils.ReleaseVersion
 import com.freeteaspoon.wppenhacer.xposed.core.WppCore
 import com.freeteaspoon.wppenhacer.xposed.core.components.AlertDialogWpp
 import com.freeteaspoon.wppenhacer.xposed.utils.Utils
@@ -30,7 +32,8 @@ class UpdateChecker(private val mActivity: Activity) : Runnable {
                 .url(BuildConfig.LATEST_RELEASE_API)
                 .build()
 
-            val hash: String
+            val version: ReleaseVersion
+            val tagName: String
             val changelog: String
             val publishedAt: String
 
@@ -39,16 +42,16 @@ class UpdateChecker(private val mActivity: Activity) : Runnable {
 
                 val content = response.body.string()
                 val release = JSONObject(content)
-                val tagName = release.optString("tag_name", "")
+                tagName = release.optString("tag_name", "")
 
                 if (tagName.isBlank()) return
 
-                hash = tagName.split("-")[1].trim()
+                version = ReleaseVersion.parse(tagName) ?: return
                 changelog = release.optString("body", "No changelog available.").trim()
                 publishedAt = release.optString("published_at", "")
             }
 
-            if (hash.isBlank()) return
+            val hash = version.hash ?: return
 
             val packageInfo = try {
                 mActivity.packageManager.getPackageInfo(BuildConfig.APPLICATION_ID, 0)
@@ -57,9 +60,11 @@ class UpdateChecker(private val mActivity: Activity) : Runnable {
                 return
             }
 
-            val isNewVersion =
-                !packageInfo.versionName!!.lowercase().contains(hash.lowercase().trim())
-            val isIgnored = WppCore.getPrivString("ignored_version", "") == hash
+            val isIgnored = WppCore.getPrivString("ignored_version", "").equals(hash, ignoreCase = true)
+            if (isIgnored) return
+            val isNewVersion = GithubReleaseUpdates.isUpdateAvailable(
+                packageInfo.versionName, tagName, httpClient, BuildConfig.GITHUB_REPOSITORY
+            )
 
             if (isNewVersion && !isIgnored) {
                 mActivity.runOnUiThread {

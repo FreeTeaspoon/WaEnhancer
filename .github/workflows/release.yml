@@ -2,6 +2,11 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      draftRelease:
+        description: Keep the release as a draft for installation checks
+        type: boolean
+        default: false
 
 jobs:
   release:
@@ -16,7 +21,7 @@ jobs:
           submodules: recursive
 
       - name: set up JDK 21
-        uses: actions/setup-java@v5.6.0
+        uses: actions/setup-java@v6.2.0
         with:
           java-version: '21'
           distribution: 'temurin'
@@ -55,17 +60,51 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Validate both variants
+        run: >-
+          ./gradlew --no-daemon --no-parallel --max-workers=2
+          -Pkotlin.compiler.execution.strategy=in-process
+          testWhatsappDebugUnitTest testBusinessDebugUnitTest
+          lintWhatsappDebug lintBusinessDebug
+          assembleWhatsappDebug assembleBusinessDebug
+          assembleWhatsappDebugAndroidTest assembleBusinessDebugAndroidTest
+
+      - name: Check patched Miuix formatting and regressions
+        run: >-
+          ./gradlew --no-daemon --no-parallel --max-workers=2
+          -Pkotlin.compiler.execution.strategy=in-process
+          :miuix:spotlessCheck :miuix:miuix-ui:spotlessCheck :miuix:miuix-nav:spotlessCheck
+          :miuix:miuix-nav:desktopTest :miuix:miuix-ui:desktopTest
+
       - name: Build all release variants
-        run: ./gradlew testWhatsappDebugUnitTest testBusinessDebugUnitTest assembleWhatsappRelease assembleBusinessRelease
+        run: >-
+          ./gradlew --no-daemon --no-parallel --max-workers=2
+          -Pkotlin.compiler.execution.strategy=in-process
+          assembleWhatsappRelease assembleBusinessRelease
 
       - name: Verify Xposed module metadata
-        run: python3 scripts/verify-xposed-apk.py app/build/outputs/apk/whatsapp/release/*.apk app/build/outputs/apk/business/release/*.apk
+        run: >-
+          python3 scripts/verify-xposed-apk.py
+          app/build/outputs/apk/whatsapp/debug/*.apk app/build/outputs/apk/business/debug/*.apk
+          app/build/outputs/apk/whatsapp/release/*.apk app/build/outputs/apk/business/release/*.apk
+
+      - name: Upload validation APKs and reports
+        uses: actions/upload-artifact@v7
+        with:
+          name: validation-${{ steps.vars.outputs.tag }}
+          retention-days: 7
+          path: |
+            app/build/outputs/apk/**/debug/*.apk
+            app/build/outputs/apk/androidTest/**/*.apk
+            app/build/test-results/
+            app/build/reports/lint-results-*.html
 
       - name: Upload to GitHub release
         uses: softprops/action-gh-release@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: WaEnhancer ${{ steps.vars.outputs.version }}
+          draft: ${{ inputs.draftRelease }}
           body_path: changelog.txt
           files: |
             app/build/outputs/apk/whatsapp/release/WaEnhancer*.apk
@@ -90,7 +129,7 @@ jobs:
             core.setOutput('content', changelog);
 
       - name: Post to Telegram channel
-        if: ${{ env.BOT_TOKEN != '' }}
+        if: ${{ env.BOT_TOKEN != '' && !inputs.draftRelease }}
         uses: Dev4Mod/telegram-github-action@master
         with:
           to: ${{ env.CHANNEL_ID }}

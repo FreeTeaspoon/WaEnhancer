@@ -44,8 +44,8 @@ android {
         minSdk = 33
         //noinspection OldTargetApi
         targetSdk = 34
-        versionCode = 165
-        versionName = "1.6.5 ($gitHash)"
+        versionCode = 166
+        versionName = "1.6.6 ($gitHash)"
         multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -186,7 +186,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     // AGP locks the tested app classpath into instrumentation; keep Test 1.3 aligned.
-    debugImplementation("androidx.concurrent:concurrent-futures:1.2.0")
+    debugImplementation("androidx.concurrent:concurrent-futures:1.3.0")
 
     implementation(libs.colorpicker)
     implementation(libs.dexkit)
@@ -233,7 +233,7 @@ dependencies {
     implementation(libs.miuix.preference)
     implementation(libs.miuix.blur)
     implementation(libs.miuix.nav)
-    implementation("androidx.navigationevent:navigationevent-compose:1.1.2")
+    implementation("androidx.navigationevent:navigationevent-compose:1.2.0")
     implementation(libs.androidx.datastore.preferences)
 }
 

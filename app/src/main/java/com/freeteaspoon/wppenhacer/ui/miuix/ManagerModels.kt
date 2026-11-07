@@ -265,5 +265,5 @@ internal fun preferenceRoute(specs: List<PreferenceSpec>, spec: PreferenceSpec):
         else ManagerRoute.PreferencePage(spec.source, spec.key)
 }
 
-internal val callBlockingKeys = setOf("call_privacy", "call_type", "call_block_contacts", "call_white_contacts")
+internal val callBlockingKeys = setOf("call_privacy", "call_type", "call_block_notification_enabled", "call_block_contacts", "call_white_contacts")
 internal fun preferenceFeatureOwner(key: String): String? = if (key in callBlockingKeys) "call_privacy" else null

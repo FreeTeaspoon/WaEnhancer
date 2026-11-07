@@ -1,0 +1,55 @@
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+index d4d636be..1ca8c409 100644
+--- a/gradle/libs.versions.toml
++++ b/gradle/libs.versions.toml
+@@ -1,13 +1,13 @@
+ [versions]
+-agp = "9.4.1"
+-kotlin = "2.4.20"
+-kotlinx-serialization = "1.11.0"
+-kotlinx-collections-immutable = "0.5.1"
++agp = "9.5.1"
++kotlin = "2.4.21"
++kotlinx-serialization = "1.12.0"
++kotlinx-collections-immutable = "0.5.2"
+
+ about-libraries = "15.2.0"
+ androidx-activity = "1.13.0"
+-androidx-navigationevent = "1.1.2"
+-jetbrains-compose-multiplatform = "1.12.1"
++androidx-navigationevent = "1.2.0"
++jetbrains-compose-multiplatform = "1.12.2"
+ jetbrains-compose-window-size = "1.12.0-alpha03"
+ jetbrains-dokka = "2.2.0"
+ jetbrains-compose-hotReload = "1.2.0"
+diff --git a/miuix-ui/build.gradle.kts b/miuix-ui/build.gradle.kts
+index 7565752a..3768cf7a 100644
+--- a/miuix-ui/build.gradle.kts
++++ b/miuix-ui/build.gradle.kts
+@@ -130,7 +130,3 @@ val convertBaselineProfile by tasks.registering(ConvertBaselineProfileTask::clas
+ tasks.matching { it.name == "generateBaselineProfile" }.configureEach {
+     finalizedBy(convertBaselineProfile)
+ }
+-
+-dependencies {
+-    baselineProfile(project(":baselineprofile"))
+-}
+diff --git a/settings.gradle.kts b/settings.gradle.kts
+index dc12308f..db359768 100644
+--- a/settings.gradle.kts
++++ b/settings.gradle.kts
+@@ -48,13 +48,4 @@ include(":miuix-squircle")
+ include(":miuix-icons")
+ include(":miuix-nav")
+
+-include(":baselineprofile")
+-
+-include(":example:shared")
+-include(":example:android")
+-include(":example:desktop")
+-include(":example:web")
+-include(":example:macos")
+-
+-include(":docs:demo")
+-include(":docs:iconGen")
++// This vendored build supplies libraries only; demo and documentation apps are not shipped.

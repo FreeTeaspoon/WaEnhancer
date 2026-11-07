@@ -25,6 +25,7 @@ import android.widget.Toast
 import com.freeteaspoon.wppenhacer.ui.miuix.ManagerSnackbarEvents
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import com.freeteaspoon.wppenhacer.App
 import com.freeteaspoon.wppenhacer.xposed.core.FeatureLoader
 import com.freeteaspoon.wppenhacer.xposed.core.WppCore.getClientBridge
@@ -387,6 +388,23 @@ object Utils {
         val match = Pattern.compile("author\\s*=\\s*(.*?)\n").matcher(code)
         if (!match.find()) return null
         return match.group(1)
+    }
+
+    @SuppressLint("MissingPermission")
+    fun showNotification(title: String, content: String, iconRes: Int) {
+        val context: Application = application
+        val notificationManager = NotificationManagerCompat.from(context)
+        val channel =
+            NotificationChannel("wppenhacer", "WAE Enhancer", NotificationManager.IMPORTANCE_HIGH)
+        notificationManager.createNotificationChannel(channel)
+        val icon = DesignUtils.drawableToBitmap(DesignUtils.getDrawable(iconRes))
+        val notification = NotificationCompat.Builder(context, "wppenhacer")
+            .setSmallIcon(IconCompat.createWithBitmap(icon))
+            .setContentTitle(title)
+            .setContentText(content)
+            .setAutoCancel(true)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(content))
+        notificationManager.notify(Random().nextInt(), notification.build())
     }
 
     @SuppressLint("MissingPermission")

@@ -1,12 +1,16 @@
 package com.freeteaspoon.wppenhacer.ui.miuix
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.*
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,11 +73,15 @@ internal fun ManagerOperationHost(operation: ManagerOperation) {
         if (visible) wasVisible = true else if (!wasVisible) operation.dismissed()
     }
     OverlayDialog(show = visible, onDismissRequest = null,
-        onDismissFinished = { wasVisible = false; operation.dismissed() }, cornerRadius = 36.dp) {
+        modifier = Modifier.clip(RoundedCornerShape(36.dp)),
+        onDismissFinished = { wasVisible = false; operation.dismissed() }, cornerRadius = 36.dp,
+        backgroundColor = if (LocalManagerDarkMode.current) MiuixTheme.colorScheme.background else Color.White) {
+        val foreground = if (LocalManagerDarkMode.current) MiuixTheme.colorScheme.onSurface else Color(0xFF333333)
         Row(Modifier.fillMaxWidth().semantics(mergeDescendants = true) { liveRegion = LiveRegionMode.Polite },
             horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-            InfiniteProgressIndicator(size = 24.dp, color = if (LocalManagerDarkMode.current) MiuixTheme.colorScheme.onSurface else Color.Black)
-            Text(label.orEmpty(), style = MiuixTheme.textStyles.body1)
+            InfiniteProgressIndicator(size = 24.dp, color = foreground)
+            Text(label.orEmpty(), style = MiuixTheme.textStyles.body1, fontSize = 16.sp,
+                fontWeight = FontWeight.Normal, color = foreground, modifier = Modifier.weight(1f))
         }
     }
 }

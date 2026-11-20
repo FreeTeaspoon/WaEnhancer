@@ -505,7 +505,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;floating_bottom_bar&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;floating_bottom_bar&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;floating_bottom_bar&quot;>Floating Bottom Bar&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -516,7 +516,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;floating_bottom_bar_sum&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;floating_bottom_bar_sum&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;floating_bottom_bar_sum&quot;>Enable iOS-style floating bottom navigation bar&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -527,7 +527,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;floating_bottom_bar_radius&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;floating_bottom_bar_radius&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;floating_bottom_bar_radius&quot;>Bottom Bar Corner Radius&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -538,7 +538,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;floating_bottom_bar_radius_sum&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;floating_bottom_bar_radius_sum&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;floating_bottom_bar_radius_sum&quot;>Adjust the border radius of the floating bottom bar&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -549,7 +549,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;force_disable_emojis&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;force_disable_emojis&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;force_disable_emojis&quot;>Force Disable Emojis&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -560,7 +560,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;force_disable_emojis_sum&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;force_disable_emojis_sum&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;force_disable_emojis_sum&quot;>Blocks WhatsApp emoji assets, making emojis invisible (use keyboard emoji instead).&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -571,7 +571,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;force_disable_emojis_alert_title&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;force_disable_emojis_alert_title&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;force_disable_emojis_alert_title&quot;>Force Disable Emojis&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -582,7 +582,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;force_disable_emojis_alert_msg&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;force_disable_emojis_alert_msg&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;force_disable_emojis_alert_msg&quot;>This feature will make emojis invisible in the emoji selector. To send emojis, use your device\&apos;s keyboard emoji instead.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -593,7 +593,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;checking_if_contact_added&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;checking_if_contact_added&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;checking_if_contact_added&quot;>Checking if the contact added you...&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -604,7 +604,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;show_contact_added_status&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;show_contact_added_status&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;show_contact_added_status&quot;>Show Contact Added Status in Conversation&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -615,7 +615,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;show_contact_added_status_sum&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;show_contact_added_status_sum&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;show_contact_added_status_sum&quot;>This option verifies whether the contact added you or has a public profile photo.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -626,7 +626,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;contact_added&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;contact_added&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;contact_added&quot;>The contact added you or has a public profile photo.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -637,7 +637,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;alert_module_notfound&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;alert_module_notfound&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;alert_module_notfound&quot;>WaEnhancer module not found, HMA is probably hiding the module, remove WhatsApp from the HMA list and try again.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -648,7 +648,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_title&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_title&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_title&quot;>Root Diagnostics&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~">
         <location
@@ -659,7 +659,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_summary&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_summary&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_summary&quot;>Check for sepolicy issues and Hide My App List blocks affecting WhatsApp.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~">
         <location
@@ -670,7 +670,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_button&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_button&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_button&quot;>Analyze Device&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~">
         <location
@@ -681,7 +681,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_dialog_title&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_dialog_title&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_dialog_title&quot;>Diagnostic Log&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -692,7 +692,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_root_granted&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_root_granted&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_root_granted&quot;>Root access granted.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -703,7 +703,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_root_denied&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_root_denied&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_root_denied&quot;>Root access denied. Diagnostics require root access.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -714,7 +714,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_close&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_close&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_close&quot;>Close&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~">
         <location
@@ -725,7 +725,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_sepolicy_checking&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_sepolicy_checking&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_sepolicy_checking&quot;>Checking sepolicy log...&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -736,7 +736,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_sepolicy_not_found&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_sepolicy_not_found&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_sepolicy_not_found&quot;>LSPosed verbose log not found or empty.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -747,7 +747,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_sepolicy_no_issues&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_sepolicy_no_issues&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_sepolicy_no_issues&quot;>No sepolicy issues found in the log.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -758,7 +758,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_sepolicy_found&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_sepolicy_found&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_sepolicy_found&quot;>Sepolicy issue found:&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -769,7 +769,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_sepolicy_broken&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_sepolicy_broken&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_sepolicy_broken&quot;>Broken sepolicy detected. The root solution and the kernel patch must be the same version. If the error persists, switch to another root provider compatible with your device.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -780,7 +780,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_hma_checking&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_hma_checking&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_hma_checking&quot;>Checking Hide My App List status...&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -791,7 +791,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_hma_not_active&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_hma_not_active&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_hma_not_active&quot;>Hide My App List is not active.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -802,7 +802,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_hma_zygisk_active&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_hma_zygisk_active&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_hma_zygisk_active&quot;>Hide My App List (Zygisk) is active.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -813,7 +813,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_hma_lsposed_active&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_hma_lsposed_active&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_hma_lsposed_active&quot;>Hide My App List (LSPosed) is active.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -824,7 +824,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_hma_not_found&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_hma_not_found&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_hma_not_found&quot;>Hide My App List configuration not found.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -835,7 +835,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_hma_invalid&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_hma_invalid&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_hma_invalid&quot;>Hide My App List configuration is invalid.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -846,7 +846,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_hma_no_blocks&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_hma_no_blocks&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_hma_no_blocks&quot;>No Hide My App List blocks detected for WhatsApp.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -857,7 +857,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_hma_blocked&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_hma_blocked&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_hma_blocked&quot;>Hide My App List is hiding WaEnhancer from:&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -868,7 +868,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_hma_disable&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_hma_disable&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_hma_disable&quot;>Disable the block for WhatsApp/Business in Hide My App List so WaEnhancer can work correctly.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -879,7 +879,7 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;diag_copied&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
+        message="&quot;diag_copied&quot; is not translated in &quot;ar&quot; (Arabic), &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;in&quot; (Indonesian), &quot;id&quot; (Indonesian), &quot;fr&quot; (French), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;tr&quot; (Turkish), &quot;zh&quot; (Chinese)"
         errorLine1="    &lt;string name=&quot;diag_copied&quot;>Line copied to clipboard&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~">
         <location

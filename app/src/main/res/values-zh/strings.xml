@@ -295,6 +295,9 @@
     <string name="failed_save_directory">无法在此文件夹中保存文件，请选择其他位置</string>
     <string name="unable_to_read_this_file">无法读取此文件</string>
     <string name="disabled">已禁用</string>
+    <string name="enabled">已启用</string>
+    <string name="custom_privacy_default">默认</string>
+    <string name="custom_privacy_global_status">全局设置：%s</string>
     <string name="share_as_status">分享到动态</string>
     <string name="audio_transcription">语音转文字</string>
     <string name="audio_transcription_sum">启用原生 WhatsApp 语音转文字（检查连接菜单以了解转文字选项）</string>

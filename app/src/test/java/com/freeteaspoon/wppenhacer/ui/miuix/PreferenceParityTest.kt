@@ -28,7 +28,7 @@ class PreferenceParityTest {
             "FileReaderPreference", "ContactPickerPreference", "ThemePreference", "Preference",
         )
         val keyed = preferenceElements()
-        assertEquals("Update the Miuix registry when upstream adds or removes settings", 149, keyed.size)
+        assertEquals("Update the Miuix registry when upstream adds or removes settings", 153, keyed.size)
         assertTrue(keyed.any { it.xmlKey() == "native_igstatus" })
         assertTrue(keyed.any { it.xmlKey() == "call_block_notification_enabled" })
         assertFalse(keyed.any { it.xmlKey() == "bootloader_spoofer" })

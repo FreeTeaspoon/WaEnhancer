@@ -44,8 +44,8 @@ android {
         minSdk = 33
         //noinspection OldTargetApi
         targetSdk = 34
-        versionCode = 166
-        versionName = "1.6.6 ($gitHash)"
+        versionCode = 167
+        versionName = "1.6.7 ($gitHash)"
         multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -234,7 +234,6 @@ dependencies {
     implementation(libs.miuix.blur)
     implementation(libs.miuix.nav)
     implementation("androidx.navigationevent:navigationevent-compose:1.2.0")
-    implementation(libs.androidx.datastore.preferences)
 }
 
 

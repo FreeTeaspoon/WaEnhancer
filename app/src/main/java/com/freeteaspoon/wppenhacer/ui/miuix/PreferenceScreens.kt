@@ -74,6 +74,9 @@ internal fun PreferencePageScreen(
     val context = LocalContext.current
     val resources = androidx.compose.ui.platform.LocalResources.current
     val fileModel: ManagerFileWorkflowViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val stickerModel: StickerRestoreViewModel? = if (source == PreferenceSource.CONVERSATION) {
+        androidx.lifecycle.viewmodel.compose.viewModel()
+    } else null
     var pendingFileKey by rememberSaveable { mutableStateOf<String?>(null) }
     var pendingContactsKey by rememberSaveable { mutableStateOf<String?>(null) }
     var afterDismiss by remember { mutableStateOf<(() -> Unit)?>(null) }
@@ -127,7 +130,10 @@ internal fun PreferencePageScreen(
                             value = state.preferences[spec.key],
                             enabled = enabled,
                             highlighted = spec.key == highlightKey,
-                            onEdit = { editing = spec; showEditor = true },
+                            onEdit = {
+                                if (spec.key == "restore_stickers") stickerModel?.start()
+                                else { editing = spec; showEditor = true }
+                            },
                             onPut = {
                                 if (spec.key in setOf("downloadstatus", "downloadviewonce") && it == true && !android.os.Environment.isExternalStorageManager()) {
                                     (context as? android.app.Activity)?.let(App::showRequestStoragePermission)
@@ -175,6 +181,7 @@ internal fun PreferencePageScreen(
         )
     }
     ManagerOperationHost(fileModel.operation)
+    stickerModel?.let { StickerRestoreDialogs(it) }
 }
 
 @Composable

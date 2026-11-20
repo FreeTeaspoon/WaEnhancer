@@ -26,10 +26,8 @@ composeUi = "1.12.1"
 miuix = "0.9.4"
 hiddenApiBypass = "6.2"
 androidxTestJunit = "1.3.0"
-datastorePreferences = "1.3.0"
 
 [libraries]
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-documentfile = { module = "androidx.documentfile:documentfile", version.ref = "documentfile" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }

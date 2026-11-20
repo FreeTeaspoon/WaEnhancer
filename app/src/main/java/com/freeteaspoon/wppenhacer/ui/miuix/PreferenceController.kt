@@ -77,6 +77,8 @@ internal class PreferenceController(
             "show_freezeLastSeen", "showonlinetext", "dotonline" -> !bool("freezelastseen")
             "filtergroups" -> !bool("separategroups")
             "separategroups" -> !bool("filtergroups")
+            "floating_bottom_bar" -> bool("floating_bottom_bar") || !bool("native_floating_navigation")
+            "native_floating_navigation" -> bool("native_floating_navigation") || !bool("floating_bottom_bar")
             "call_block_contacts" -> string("call_privacy", "0") == "3"
             "call_white_contacts" -> string("call_privacy", "0") == "4"
             else -> true
@@ -100,6 +102,8 @@ internal class PreferenceController(
             }
             "separategroups" -> if (preferences.getBoolean("separategroups", false)) clearBoolean("filtergroups")
             "filtergroups" -> if (preferences.getBoolean("filtergroups", false)) clearBoolean("separategroups")
+            "floating_bottom_bar" -> if (preferences.getBoolean(changedKey, false)) clearBoolean("native_floating_navigation")
+            "native_floating_navigation" -> if (preferences.getBoolean(changedKey, false)) clearBoolean("floating_bottom_bar")
             "igstatus" -> if (preferences.getBoolean("igstatus", false)) clearBoolean("oldstatus")
             "oldstatus" -> if (preferences.getBoolean("oldstatus", false)) {
                 clearBoolean("verticalstatus")
